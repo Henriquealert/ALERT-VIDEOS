@@ -111,6 +111,16 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `python3 scripts/mix-meetings-voiceover.py` (line times at the top match the video code). 120 BPM grid, card changes at 0:00, 0:04, 0:08 (drop), 0:14, 0:18 (resolve).
   Music: `python3 scripts/make-meetings-music.py "public/audio/Alert Global Tech - Meetings Sorted Music.wav"`.
   `npx remotion render MeetingsSorted-9x16 out/"Alert Global Tech - Meetings Sorted Video 9x16.mp4" --crf=18`
+- `DataSorted-9x16` — "Data, sorted." explainer: why data quality decides AI results. 60 s, 1080×1920,
+  30 fps, fixed copy from Henrique's brief (21 Oct 2026), no people, offscreen narrator only. Engraving-style
+  line drawings that draw themselves on, on Soft Ivory, in the brand palette; Deep Ink end card with the
+  lockup, a blue → sky beam and a lime "Book a Sprint" pill. Scene cuts follow the voiceover: 0, 4.5, 13,
+  21.5, 37.3, 47, 60 s. Stats on screen carry their sources (Forrester via IBM Think; IBM Institute for
+  Business Value).
+  Music: `python3 scripts/make-data-sorted-music.py "public/audio/Alert Global Tech - Data Sorted Music.wav"`.
+  Voiceover (ElevenLabs, "Killian - Clear, Warm, Upbeat & Friendly") is placed and mixed by
+  `python3 scripts/mix-data-sorted-voiceover.py`; line times match `src/videos/DataSorted.tsx`.
+  `npx remotion render DataSorted-9x16 out/"Alert Global Tech - Data Sorted Video 9x16.mp4" --crf=18`
 
 ## Formats
 

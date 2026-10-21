@@ -5,6 +5,7 @@ import { FPS, TOTAL_FRAMES } from "./timing";
 import sample from "../data/specs/data-quality-article.json";
 import { LAPTOPS_SORTED, LaptopsSorted } from "./videos/LaptopsSorted";
 import { MEETINGS_SORTED, MeetingsSorted } from "./videos/MeetingsSorted";
+import { DATA_SORTED, DataSorted } from "./videos/DataSorted";
 import { TECH_UPDATES_WIN11, TECH_UPDATES_WIN11_4X5, TechUpdatesWindows11 } from "./videos/TechUpdatesWindows11";
 
 const FORMATS = [
@@ -33,6 +34,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="LaptopsSorted-9x16" component={LaptopsSorted} {...LAPTOPS_SORTED} />
     <Composition id="TechUpdates-Windows11-9x16" component={TechUpdatesWindows11} {...TECH_UPDATES_WIN11} />
     <Composition id="MeetingsSorted-9x16" component={MeetingsSorted} {...MEETINGS_SORTED} />
+    <Composition id="DataSorted-9x16" component={DataSorted} {...DATA_SORTED} />
     <Composition id="TechUpdates-Windows11-4x5" component={TechUpdatesWindows11} {...TECH_UPDATES_WIN11_4X5} />
   </>
 );
