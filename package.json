@@ -1,12 +1,15 @@
 {
-  "name": "alert-videos",
+  "name": "alert-video-studio",
   "version": "1.0.0",
-  "description": "",
+  "description": "Alert Global Tech video studio: Remotion videos built from Supabase partner_content",
   "scripts": {
     "dev": "remotion studio",
-    "render": "remotion render HelloWorld out/hello-world.mp4",
-    "upgrade": "remotion upgrade",
-    "typecheck": "tsc"
+    "fetch": "node --env-file=.env scripts/fetch-content.mjs",
+    "mark-used": "node --env-file=.env scripts/mark-used.mjs",
+    "validate-spec": "node scripts/validate-spec.mjs",
+    "render": "remotion render AlertPromo-16x9",
+    "typecheck": "tsc",
+    "upgrade": "remotion upgrade"
   },
   "repository": {
     "type": "git",
@@ -20,14 +23,19 @@
   },
   "homepage": "https://github.com/Henriquealert/ALERT-VIDEOS#readme",
   "dependencies": {
-    "@remotion/cli": "^4.0.537",
+    "@remotion/cli": "4.0.537",
+    "@remotion/fonts": "4.0.537",
+    "@supabase/supabase-js": "^2.118.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "remotion": "^4.0.537"
+    "remotion": "4.0.537",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "typescript": "^7.0.2"
-  }
+  },
+  "private": true,
+  "type": "module"
 }

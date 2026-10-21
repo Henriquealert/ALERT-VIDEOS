@@ -1,0 +1,37 @@
+{
+  "slug": "data-quality-article",
+  "sourceRowId": "b40a9717-37cc-4fb0-b226-608a948ecf0e",
+  "channel": "AI and Big Data",
+  "hook": "The Hidden Cost",
+  "painPoints": [
+    "Inaccurate data",
+    "Incomplete data",
+    "Inconsistent data",
+    "Limited value from AI",
+    "Higher operational costs",
+    "Business decisions impacted"
+  ],
+  "stat": null,
+  "statSource": null,
+  "prompt": "How is data quality affecting our AI initiatives?",
+  "answer": "Trusted, high-quality data is becoming a competitive advantage. Successful AI initiatives begin with trustworthy, well-managed data, so a strong data foundation matters as much as the AI tools you choose.",
+  "uiCards": [
+    {
+      "kind": "checklist",
+      "title": "Trusted data",
+      "items": ["Accurate", "Complete", "Consistent", "Well-managed"]
+    },
+    {
+      "kind": "compare",
+      "title": "Where poor data shows up",
+      "rows": [
+        { "label": "Reporting", "value": "Less reliable" },
+        { "label": "Operations", "value": "Higher costs" },
+        { "label": "AI", "value": "Limited value" },
+        { "label": "Decisions", "value": "Impacted" }
+      ]
+    }
+  ],
+  "cta": "Talk to an Expert",
+  "ctaUrl": null
+}

@@ -1,3 +1,6 @@
 node_modules
-out
 .env
+out/
+data/partner-content.json
+reference/*
+!reference/README.txt

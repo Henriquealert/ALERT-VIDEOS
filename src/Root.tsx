@@ -1,15 +1,30 @@
 import { Composition } from "remotion";
-import { HelloWorld } from "./HelloWorld";
+import { AlertPromo } from "./AlertPromo";
+import { VideoSpec } from "./spec";
+import { FPS, TOTAL_FRAMES } from "./timing";
+import sample from "../data/specs/data-quality-article.json";
 
-export const RemotionRoot: React.FC = () => {
-  return (
-    <Composition
-      id="HelloWorld"
-      component={HelloWorld}
-      durationInFrames={90}
-      fps={30}
-      width={1920}
-      height={1080}
-    />
-  );
-};
+const FORMATS = [
+  { id: "AlertPromo-16x9", width: 1920, height: 1080 },
+  { id: "AlertPromo-4x5", width: 1080, height: 1350 },
+  { id: "AlertPromo-9x16", width: 1080, height: 1920 },
+] as const;
+
+// Studio previews the sample spec; renders pass a real one with --props.
+export const RemotionRoot: React.FC = () => (
+  <>
+    {FORMATS.map((f) => (
+      <Composition
+        key={f.id}
+        id={f.id}
+        component={AlertPromo}
+        schema={VideoSpec}
+        defaultProps={VideoSpec.parse(sample)}
+        durationInFrames={TOTAL_FRAMES}
+        fps={FPS}
+        width={f.width}
+        height={f.height}
+      />
+    ))}
+  </>
+);
