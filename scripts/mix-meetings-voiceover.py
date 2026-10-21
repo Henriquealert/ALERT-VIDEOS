@@ -7,7 +7,7 @@ Output: a voiceover stem (on the grid) and the final mix the video plays.
 
 The voice comments on each card rather than reading it: the lines react just after each
 headline lands. The take is split at its pauses and each line's first syllable lands on a
-0.25 s step. The first card-4 line is sped up slightly so both card-4 lines fit before the end card.
+0.25 s step. Delivery is upbeat and positive.
 The music sits well under the voice: about 12 LU below it, ducking a further 6 dB while
 the voice speaks. The final mix is set to about -16 LUFS, peak -1.5 dBFS.
 
@@ -30,12 +30,13 @@ MUSIC_UNDER = 12  # LU between the voice and the music bed, before ducking
 
 # (cut start, cut end) in the take, where the first syllable lands (s), and playback speed.
 PHRASES = [
-    ((0.00, 2.55), 0.50, 1.0),  # An extra day. Lovely.                                  card 1
-    ((2.55, 4.65), 4.75, 1.0),  # The charts didn't get the memo.                        card 2, as the bars draw
-    ((4.65, 8.19), 8.25, 1.0),  # So let Copilot Chat turn your numbers into charts.     card 3, on the drop
-    ((8.19, 11.25), 14.25, 1.08),  # We set up Microsoft 365 and Copilot.               card 4
-    ((11.25, 13.19), 17.00, 1.0),  # Tomorrow, you just show up.
-    ((13.19, 14.24), 18.75, 1.0),  # Request a quote.                                    card 5, under the pill
+    ((0.00, 1.97), 0.50, 1.0),  # Meeting moved? Bonus day.                      card 1
+    ((1.97, 4.06), 4.50, 1.0),  # Perfect time to get those charts done.         card 2, as the bars draw
+    ((4.06, 5.61), 8.25, 1.0),  # Ask Copilot Chat.                              card 3, on the drop
+    ((5.61, 7.47), 10.50, 1.0),  # Numbers in, charts out.                       as the bars fill
+    ((7.47, 10.25), 14.25, 1.0),  # We set up Microsoft 365 and Copilot.         card 4
+    ((10.25, 11.89), 17.00, 1.0),  # Tomorrow? You're ready.
+    ((11.89, 12.96), 18.50, 1.0),  # Request a quote.                            card 5, under the pill
 ]
 
 
