@@ -1,0 +1,42 @@
+{
+  "name": "alert-video-studio",
+  "version": "1.0.0",
+  "description": "Alert Global Tech video studio: Remotion videos built from Supabase partner_content",
+  "scripts": {
+    "dev": "remotion studio",
+    "fetch": "node --env-file=.env scripts/fetch-content.mjs",
+    "mark-used": "node --env-file=.env scripts/mark-used.mjs",
+    "validate-spec": "node scripts/validate-spec.mjs",
+    "render": "remotion render AlertPromo-16x9",
+    "typecheck": "tsc && node scripts/check-fonts.mjs",
+    "upgrade": "remotion upgrade",
+    "check-fonts": "node scripts/check-fonts.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Henriquealert/ALERT-VIDEOS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Henriquealert/ALERT-VIDEOS/issues"
+  },
+  "homepage": "https://github.com/Henriquealert/ALERT-VIDEOS#readme",
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "@remotion/fonts": "4.0.537",
+    "@supabase/supabase-js": "^2.118.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "4.0.537",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  },
+  "private": true,
+  "type": "module"
+}

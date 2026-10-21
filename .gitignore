@@ -1,0 +1,6 @@
+node_modules
+.env
+out/
+data/partner-content.json
+reference/*
+!reference/README.txt
