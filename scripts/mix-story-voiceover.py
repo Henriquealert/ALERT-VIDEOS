@@ -5,7 +5,7 @@ Input:  the ElevenLabs take (voice: Everett - Confident American Ads, model elev
         and the instrumental from make-story-music.py.
 Output: a voiceover stem (on the grid) and the final mix the video plays.
 
-The take is split at its pauses into eleven lines. Each line's first syllable lands on a
+The take is split at its pauses; ten of its eleven lines are used (the eBook line is not). Each line's first syllable lands on a
 0.25 s step, at the moment its words appear on screen (same times as the video code).
 The music sits well under the voice: it starts about 11 LU below it and ducks a further
 6 dB while the voice speaks. The final mix is set to about -16 LUFS, peak -1.5 dBFS.
@@ -38,7 +38,7 @@ PHRASES = [
     ((18.10, 20.63), 17.75),  # Faster, AI-driven workflows.
     ((20.63, 23.32), 20.25),  # Innovation and protection, balanced.      card 4
     ((23.32, 26.86), 22.75),  # Stay secure, productive, and prepared for the future.
-    ((26.86, 30.56), 26.25),  # Download your complimentary copy of The New Mandate for IT.  card 5
+    # Card 5 (end card) has no voice line: the music resolves under the logo and CTA.
 ]
 
 

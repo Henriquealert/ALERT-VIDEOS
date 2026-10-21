@@ -92,7 +92,8 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `npx remotion render LaptopsSorted-9x16 out/"Alert Global Tech - Laptops Sorted Video 9x16.mp4"`
 - `TechUpdates-Windows11-9x16` — "Tech updates for you": Windows 11 Pro for Business. 30 s,
   1080×1920, 24 fps, five flat story cards, built from partner_content row
-  97022741-9b72-4593-ba1f-1da6089b2e14 (gated eBook, so the CTA is "Download the eBook").
+  97022741-9b72-4593-ba1f-1da6089b2e14 (gated eBook). By request the eBook is not offered;
+  the CTA is "Talk to an Expert" and the end card has no voice line.
   One block tower carries the story across the cards. 120 BPM grid: 1 beat = 12 frames,
   animations on 6-frame (0.25 s) steps, card changes at 0:00, 0:04, 0:10, 0:20, 0:26.
   Music (soft bed, no vocals): `python3 scripts/make-story-music.py "public/audio/Alert Global Tech - Tech Updates Windows 11 Music.wav"`.

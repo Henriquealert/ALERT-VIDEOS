@@ -6,9 +6,9 @@ import { F } from "../ui/theme";
 // "Tech updates for you" — Windows 11 Pro for Business. 30 s, 9x16, 24 fps.
 // Source: partner_content row 97022741-9b72-4593-ba1f-1da6089b2e14 (eBook | Gated,
 // "Windows Means Business" / "The New Mandate for IT"). Every line comes from that row.
-// Gated, so the CTA points to the eBook.
+// The eBook itself is not offered in the video (Henrique, 21 Oct 2026); the CTA is Talk to an Expert.
 // Story: the opener -> the pressure on IT -> Windows 11 Pro answers it point by point ->
-// innovation and protection balanced -> get the eBook. One block tower carries the story
+// innovation and protection balanced -> Talk to an Expert. One block tower carries the story
 // across the cards: a foundation in card 1, gaps and askew blocks in card 2, each point
 // fills a slot in card 3, the finished tower in card 4, a small one on the end card.
 // Grid: 120 BPM, 1 beat = 12 frames; animations start on 6-frame (0.25 s) steps.
@@ -429,7 +429,7 @@ const Card4: React.FC<CardProps> = ({ f }) => (
   </Frame>
 );
 
-// 0:26–0:30 · Ink · CTA to the gated eBook. VO: "Download your complimentary copy of The New Mandate for IT." 26.25
+// 0:26–0:30 · Ink · end card: lockup and CTA. No voice line; the music resolves.
 const Card5: React.FC<CardProps> = ({ f }) => {
   const logoW = 560;
   const logoH = logoW / LOGO_RATIO;
@@ -456,13 +456,9 @@ const Card5: React.FC<CardProps> = ({ f }) => {
             }}
           />
         </div>
-        <div style={{ marginTop: 70, fontFamily: F.sans, fontWeight: 400, fontSize: 42, color: IVORY, opacity: step(f, STEP), textAlign: "center", maxWidth: 820 }}>
-          <div style={{ fontWeight: 700 }}>The New Mandate for IT</div>
-          <div>a complimentary eBook</div>
-        </div>
         <div
           style={{
-            marginTop: 40,
+            marginTop: 90,
             display: "flex",
             alignItems: "center",
             gap: 18,
@@ -477,7 +473,7 @@ const Card5: React.FC<CardProps> = ({ f }) => {
             transform: `translateY(${(1 - step(f, 2 * BEAT)) * 24}px)`,
           }}
         >
-          Download the eBook
+          Talk to an Expert
           <Arrow color={INK} width={52} stroke={4} />
         </div>
         <div style={{ marginTop: 34, fontFamily: F.sans, fontWeight: 400, fontSize: 34, color: IVORY, opacity: step(f, 2 * BEAT + STEP) }}>
