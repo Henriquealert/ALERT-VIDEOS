@@ -3,6 +3,7 @@ import { AlertPromo } from "./AlertPromo";
 import { VideoSpec } from "./spec";
 import { FPS, TOTAL_FRAMES } from "./timing";
 import sample from "../data/specs/data-quality-article.json";
+import { LAPTOPS_SORTED, LaptopsSorted } from "./videos/LaptopsSorted";
 
 const FORMATS = [
   { id: "AlertPromo-16x9", width: 1920, height: 1080 },
@@ -26,5 +27,7 @@ export const RemotionRoot: React.FC = () => (
         height={f.height}
       />
     ))}
+    {/* One-off videos with fixed copy */}
+    <Composition id="LaptopsSorted-9x16" component={LaptopsSorted} {...LAPTOPS_SORTED} />
   </>
 );

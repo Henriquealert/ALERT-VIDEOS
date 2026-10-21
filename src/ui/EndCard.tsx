@@ -3,7 +3,8 @@ import { C, F, tag, useLayout } from "./theme";
 
 // The approved Ivory lockup (a!ert + GLOBAL TECH). Always the real file, never redrawn or typeset.
 // The render fails if it's missing, so a video can't ship without the logo.
-export const LOGO_FILE = "brand/alert-global-tech-lockup-ivory.svg";
+export const LOGO_FILE = "brand/alert-global-tech-lockup-ivory.png";
+export const LOGO_RATIO = 1214 / 588; // width / height of the supplied lockup
 
 type Props = { u: number; frame: number; cta: string; ctaUrl: string | null; channel: string };
 

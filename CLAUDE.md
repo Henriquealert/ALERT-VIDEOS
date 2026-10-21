@@ -57,7 +57,7 @@ How the guide applies to video:
 - Graphic elements: two or three per video. This template uses blocks (act 1),
   a fine blue grid (act 2) and one arrow (end card).
 - Logo: every video ends on our logo. One per video, on the end card only: the
-  approved Ivory lockup `public/brand/alert-global-tech-lockup-ivory.svg` on Deep Ink.
+  approved Ivory lockup `public/brand/alert-global-tech-lockup-ivory.png` on Deep Ink.
   Never recolour, stretch, redraw or typeset it. Renders fail if the file is missing.
 - Calls to action: one per video, title-style capitals: Talk to an Expert,
   Request a Quote, Learn More.
@@ -74,6 +74,12 @@ How the guide applies to video:
   competitor brands or made-up prices in tables.
 - Gated content (content_type contains "Gated"): the CTA points to the asset,
   not to the content itself.
+
+## One-off videos
+
+Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
+- `LaptopsSorted-9x16` — 20 s, 1080×1920, 24 fps, one continuous shot, captions only.
+  `npx remotion render LaptopsSorted-9x16 out/"Alert Global Tech - Laptops Sorted Video 9x16.mp4"`
 
 ## Formats
 
