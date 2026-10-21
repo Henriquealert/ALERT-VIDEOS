@@ -3,12 +3,13 @@ import { LOGO_FILE, LOGO_RATIO } from "../ui/EndCard";
 import { WORDMARK_RATIO } from "../ui/Story";
 import { F } from "../ui/theme";
 
-// "Meetings, sorted." — corporate-humour story, 20 s, 9x16, 24 fps, music only (a voiceover is added later).
+// "Meetings, sorted." — corporate-humour story, 20 s, 9x16, 24 fps, with voiceover.
 // Fixed copy from Henrique's brief (21 Oct 2026). Five flat story cards:
 // the meeting moved -> you still need the charts -> Ask Copilot Chat (the drop) -> Meetings, sorted. -> CTA.
 // The three dashed bars drawn in card 2 are the same bars that fill in card 3.
 // Grid: 120 BPM, 1 beat = 12 frames, 1 bar = 48 frames; animations start on 6-frame (0.25 s) steps.
 // Music: scripts/make-meetings-music.py (drop on 0:08, resolve on 0:18).
+// Voiceover lines are placed by scripts/mix-meetings-voiceover.py at the same times used below.
 
 export const MEETINGS_SORTED = { fps: 24, durationInFrames: 480, width: 1080, height: 1920 } as const;
 
@@ -31,7 +32,8 @@ const TEXT_W = W - 2 * SIDE - 60; // keeps type off the right edge
 
 // Card changes, on bar downbeats: 0:00, 0:04, 0:08, 0:14, 0:18, end 0:20.
 const DOWNBEATS = [0, 96, 192, 336, 432, 480];
-const MUSIC = "audio/Alert Global Tech - Meetings Sorted Music.wav";
+// Music + voiceover, mixed by scripts/mix-meetings-voiceover.py.
+const MIX = "audio/Alert Global Tech - Meetings Sorted Mix.wav";
 const WORDMARK_INK = "brand/alert-global-tech-wordmark-ink.png";
 const WORDMARK_IVORY = "brand/alert-global-tech-wordmark-ivory.png";
 
@@ -46,7 +48,7 @@ export const MeetingsSorted: React.FC = () => {
   const cards = [Card1, Card2, Card3, Card4, Card5];
   return (
     <AbsoluteFill style={{ background: INK }}>
-      <Audio src={staticFile(MUSIC)} />
+      <Audio src={staticFile(MIX)} />
       {cards.map((CardBody, i) => {
         const start = DOWNBEATS[i];
         const next = DOWNBEATS[i + 1];
@@ -329,7 +331,7 @@ const Card3: React.FC<CardProps> = ({ f }) => {
         <Headline color={IVORY} size={136} p={step(f, STEP)}>
           Ask Copilot Chat<span style={{ color: LIME }}>.</span>
         </Headline>
-        <Caption color={IVORY} p={step(f, 2 * BEAT)}>
+        <Caption color={IVORY} p={step(f, 3 * BEAT + STEP)}>
           Your data, presentation-ready.
         </Caption>
       </TextColumn>
