@@ -1,4 +1,5 @@
-import { AbsoluteFill, Audio, Easing, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { createContext, useContext } from "react";
+import { AbsoluteFill, Audio, Easing, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { LOGO_FILE, LOGO_RATIO } from "../ui/EndCard";
 import { WORDMARK_RATIO } from "../ui/Story";
 import { F } from "../ui/theme";
@@ -15,6 +16,8 @@ import { F } from "../ui/theme";
 // Voiceover lines are placed by scripts/mix-story-voiceover.py at the same times used below.
 
 export const TECH_UPDATES_WIN11 = { fps: 24, durationInFrames: 720, width: 1080, height: 1920 } as const;
+// LinkedIn feed cut: 4:5, the brand guide's feed-post size. Same story, timing and audio.
+export const TECH_UPDATES_WIN11_4X5 = { ...TECH_UPDATES_WIN11, height: 1350 } as const;
 
 // The only four colours in this video.
 const INK = "#101B32";
@@ -24,12 +27,25 @@ const IVORY = "#F5F4EF";
 const BLUE_TO_INK = (deg: number) => `linear-gradient(${deg}deg, ${BLUE} 0%, ${INK} 100%)`;
 
 const W = 1080;
-const H = 1920;
 const BEAT = 12;
 const STEP = 6; // 0.25 s
 const SIDE = 80;
-const TOP = 250; // Story safe zone; text also stays above the bottom 20% (y < 1536)
-const TEXT_TOP = 560;
+// Height-dependent layout. 9:16 keeps the Story safe zone (250 px top and bottom);
+// the 4:5 LinkedIn feed cut has no app chrome over it, so margins tighten and type scales down.
+type Layout = {
+  h: number;
+  top: number; // wordmark top
+  textTop: number;
+  k: number; // headline scale
+  pointSize: number;
+  tower: { size: number; x0: number; baseY: number };
+  miniBase: number; // end-card mini tower baseline
+  endPad: number; // lifts the end-card stack above centre
+};
+const STORY: Layout = { h: 1920, top: 250, textTop: 560, k: 1, pointSize: 44, tower: { size: 140, x0: 580, baseY: 1600 }, miniBase: 1560, endPad: 260 };
+const FEED: Layout = { h: 1350, top: 90, textTop: 290, k: 0.86, pointSize: 40, tower: { size: 120, x0: 640, baseY: 1180 }, miniBase: 1190, endPad: 120 };
+const LayoutCtx = createContext<Layout>(STORY);
+const useL = () => useContext(LayoutCtx);
 const TEXT_W = W - 2 * SIDE - 60; // keeps type off the right edge
 
 // Card changes, on bar downbeats: 0:00, 0:04, 0:10, 0:20, 0:26, end 0:30.
@@ -47,24 +63,29 @@ const step = (f: number, at: number, len = STEP) => interpolate(f, [at, at + len
 
 export const TechUpdatesWindows11: React.FC = () => {
   const frame = useCurrentFrame();
+  const { height } = useVideoConfig();
+  const L = height < 1600 ? FEED : STORY;
+  const H = L.h;
   const cards = [Card1, Card2, Card3, Card4, Card5];
   return (
-    <AbsoluteFill style={{ background: INK }}>
-      <Audio src={staticFile(MIX)} />
-      {cards.map((CardBody, i) => {
-        const start = DOWNBEATS[i];
-        const next = DOWNBEATS[i + 1];
-        const f = frame - start;
-        // Slide-up wipe: the card rises over the last 0.25 s before its downbeat and lands on it.
-        if (frame < start - (i === 0 ? 0 : STEP) || frame >= next) return null;
-        const y = i === 0 ? 0 : interpolate(f, [-STEP, 0], [H, 0], { ...clamp, easing: Easing.out(Easing.quad) });
-        return (
-          <AbsoluteFill key={i} style={{ transform: `translateY(${y}px)` }}>
-            <CardBody f={f} />
-          </AbsoluteFill>
-        );
-      })}
-    </AbsoluteFill>
+    <LayoutCtx.Provider value={L}>
+      <AbsoluteFill style={{ background: INK }}>
+        <Audio src={staticFile(MIX)} />
+        {cards.map((CardBody, i) => {
+          const start = DOWNBEATS[i];
+          const next = DOWNBEATS[i + 1];
+          const f = frame - start;
+          // Slide-up wipe: the card rises over the last 0.25 s before its downbeat and lands on it.
+          if (frame < start - (i === 0 ? 0 : STEP) || frame >= next) return null;
+          const y = i === 0 ? 0 : interpolate(f, [-STEP, 0], [H, 0], { ...clamp, easing: Easing.out(Easing.quad) });
+          return (
+            <AbsoluteFill key={i} style={{ transform: `translateY(${y}px)` }}>
+              <CardBody f={f} />
+            </AbsoluteFill>
+          );
+        })}
+      </AbsoluteFill>
+    </LayoutCtx.Provider>
   );
 };
 
@@ -78,16 +99,17 @@ const Frame: React.FC<{ ground: "ivory" | "ink"; children: React.ReactNode; word
   wordmark = true,
 }) => {
   const fg = ground === "ivory" ? INK : IVORY;
+  const L = useL();
   return (
     <AbsoluteFill style={{ background: ground === "ivory" ? IVORY : INK, overflow: "hidden" }}>
       {children}
       {wordmark ? (
         <Img
           src={staticFile(ground === "ivory" ? WORDMARK_INK : WORDMARK_IVORY)}
-          style={{ position: "absolute", left: SIDE, top: TOP, width: 170, height: 170 / WORDMARK_RATIO }}
+          style={{ position: "absolute", left: SIDE, top: L.top, width: 170, height: 170 / WORDMARK_RATIO }}
         />
       ) : null}
-      <Arrow color={fg} width={96} style={{ position: "absolute", left: SIDE, top: H - TOP - 40 }} />
+      <Arrow color={fg} width={96} style={{ position: "absolute", left: SIDE, top: L.h - L.top - 40 }} />
     </AbsoluteFill>
   );
 };
@@ -125,7 +147,7 @@ const Headline: React.FC<{ color: string; size?: number; p: number; children: Re
     style={{
       fontFamily: F.sans,
       fontWeight: 700,
-      fontSize: size,
+      fontSize: size * useL().k,
       lineHeight: 1.0,
       letterSpacing: "-0.035em",
       color,
@@ -180,7 +202,7 @@ const Pill: React.FC<{ text: string; p: number }> = ({ text, p }) => (
 );
 
 const TextColumn: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div style={{ position: "absolute", left: SIDE, top: TEXT_TOP, display: "flex", flexDirection: "column" }}>{children}</div>
+  <div style={{ position: "absolute", left: SIDE, top: useL().textTop, display: "flex", flexDirection: "column" }}>{children}</div>
 );
 
 // A flat square that pops in (scale from its corner) on a step.
@@ -209,9 +231,8 @@ const Block: React.FC<{ x: number; y: number; size: number; fill: string; p: num
 
 // ---------- The tower that runs through the video ----------
 
-const T = { size: 140, x0: 580, baseY: 1600 };
 type Slot = { c: number; r: number; fill: string };
-const slotPos = (s: { c: number; r: number }) => ({ x: T.x0 + s.c * T.size, y: T.baseY - (s.r + 1) * T.size });
+const slotPos = (T: Layout["tower"], s: { c: number; r: number }) => ({ x: T.x0 + s.c * T.size, y: T.baseY - (s.r + 1) * T.size });
 const FOUNDATION: Slot = { c: 0, r: 0, fill: LIME };
 const BASE: Slot[] = [
   { c: 1, r: 0, fill: BLUE },
@@ -229,8 +250,9 @@ const ASKEW = [
 ];
 
 const TowerBlock: React.FC<{ slot: Slot; p: number; dx?: number; dy?: number; rot?: number }> = ({ slot, p, dx = 0, dy = 0, rot = 0 }) => {
+  const T = useL().tower;
   if (p <= 0) return null;
-  const { x, y } = slotPos(slot);
+  const { x, y } = slotPos(T, slot);
   return (
     <div
       style={{
@@ -250,8 +272,10 @@ const TowerBlock: React.FC<{ slot: Slot; p: number; dx?: number; dy?: number; ro
 
 // Dashed outline drawn by revealing a dashed path along its length.
 const DashedOutline: React.FC<{ slot: Slot; p: number }> = ({ slot, p }) => {
+  const L = useL();
+  const T = L.tower;
   if (p <= 0) return null;
-  const { x, y } = slotPos(slot);
+  const { x, y } = slotPos(T, slot);
   const s = T.size;
   const sides = [
     [x, y, x + s, y],
@@ -261,7 +285,7 @@ const DashedOutline: React.FC<{ slot: Slot; p: number }> = ({ slot, p }) => {
   ];
   const k = p * 4;
   return (
-    <svg width={W} height={H} style={{ position: "absolute", inset: 0 }}>
+    <svg width={W} height={L.h} style={{ position: "absolute", inset: 0 }}>
       {sides.map(([x1, y1, x2, y2], i) => {
         const q = Math.max(0, Math.min(1, k - i));
         return q > 0 ? (
@@ -285,7 +309,7 @@ const Card1: React.FC<CardProps> = ({ f }) => (
         style={{
           fontFamily: F.accent, // Instrument Serif Italic
           fontStyle: "italic",
-          fontSize: 190,
+          fontSize: 190 * useL().k,
           lineHeight: 0.95,
           color: BLUE,
           marginBottom: 56,
@@ -329,6 +353,7 @@ const Card2: React.FC<CardProps> = ({ f }) => (
 const POINTS = ["Advanced built-in security", "Simplified hybrid device management", "Faster AI-driven workflows"];
 const POINT_AT = [84, 132, 186]; // local frames for 13.5, 15.5, 17.75 s
 const Card3: React.FC<CardProps> = ({ f }) => {
+  const L = useL();
   const beam = step(f, 0, 2 * STEP);
   const straighten = step(f, 0, 2 * STEP);
   return (
@@ -337,7 +362,7 @@ const Card3: React.FC<CardProps> = ({ f }) => {
         style={{
           position: "absolute",
           left: -600,
-          top: H / 2 - 260,
+          top: L.h / 2 - 260,
           width: 2600,
           height: 520,
           background: `linear-gradient(90deg, ${BLUE} 0%, ${BLUE} 25%, ${INK} 100%)`,
@@ -363,7 +388,7 @@ const Card3: React.FC<CardProps> = ({ f }) => {
                   transform: `translateX(${(1 - p) * -24}px)`,
                   fontFamily: F.sans,
                   fontWeight: 400,
-                  fontSize: 44,
+                  fontSize: L.pointSize,
                   color: IVORY,
                 }}
               >
@@ -409,7 +434,7 @@ const Card4: React.FC<CardProps> = ({ f }) => (
         style={{
           fontFamily: F.accent,
           fontStyle: "italic",
-          fontSize: 180,
+          fontSize: 180 * useL().k,
           lineHeight: 0.95,
           color: BLUE,
           opacity: step(f, 48),
@@ -431,6 +456,7 @@ const Card4: React.FC<CardProps> = ({ f }) => (
 
 // 0:26–0:30 · Ink · end card: lockup and CTA. No voice line; the music resolves.
 const Card5: React.FC<CardProps> = ({ f }) => {
+  const L = useL();
   const logoW = 560;
   const logoH = logoW / LOGO_RATIO;
   const logo = step(f, 0);
@@ -439,7 +465,7 @@ const Card5: React.FC<CardProps> = ({ f }) => {
   const tower = [FOUNDATION, ...BASE, ...MANDATES];
   return (
     <Frame ground="ink" wordmark={false}>
-      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", paddingBottom: 260 }}>
+      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", paddingBottom: L.endPad }}>
         <div style={{ position: "relative", opacity: logo, transform: `scale(${0.94 + 0.06 * logo})` }}>
           <Img src={staticFile(LOGO_FILE)} style={{ width: logoW, height: logoH, display: "block" }} />
           <div
@@ -487,7 +513,7 @@ const Card5: React.FC<CardProps> = ({ f }) => {
           style={{
             position: "absolute",
             left: W - SIDE - 3 * mini + s.c * mini,
-            top: 1560 - (s.r + 1) * mini,
+            top: L.miniBase - (s.r + 1) * mini,
             width: mini,
             height: mini,
             background: s.fill,

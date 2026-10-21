@@ -101,6 +101,9 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `python3 scripts/mix-story-voiceover.py`; line times are at the top of that script and
   match the times in the video code.
   `npx remotion render TechUpdates-Windows11-9x16 out/"Alert Global Tech - Tech Updates Windows 11 Video 9x16.mp4"`
+  LinkedIn feed cut (4:5, 1080×1350, same story and audio; layout tightens via the `FEED` layout):
+  `npx remotion render TechUpdates-Windows11-4x5 out/"Alert Global Tech - Tech Updates Windows 11 Video LinkedIn 4x5.mp4" --crf=18`
+  Post copy, alt text and captions (.srt) are in `docs/social/`.
 
 ## Formats
 
