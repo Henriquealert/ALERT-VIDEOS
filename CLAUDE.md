@@ -90,13 +90,16 @@ How the guide applies to video:
 Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
 - `LaptopsSorted-9x16` — 20 s, 1080×1920, 24 fps, one continuous shot, captions only.
   `npx remotion render LaptopsSorted-9x16 out/"Alert Global Tech - Laptops Sorted Video 9x16.mp4"`
-- `StoryCards-9x16` — 20 s, 1080×1920, 24 fps, five flat story cards on an original 120 BPM
-  instrumental with a voiceover. 1 beat = 12 frames; animations
-  start on 6-frame (0.25 s) steps; card changes land on 0:00, 0:04, 0:08, 0:14, 0:18.
-  Rebuild the music with `python3 scripts/make-story-music.py "public/audio/Alert Global Tech - Story Cards Music.wav"` (numpy + scipy).
-  Voiceover (ElevenLabs, voice "Everett - Confident American Ads") is placed on the grid and mixed with
-  `python3 scripts/mix-story-voiceover.py`; phrase timings are listed at the top of that script.
-  `npx remotion render StoryCards-9x16 out/"Alert Global Tech - Story Cards Video 9x16.mp4"`
+- `TechUpdates-Windows11-9x16` — "Tech updates for you": Windows 11 Pro for Business. 30 s,
+  1080×1920, 24 fps, five flat story cards, built from partner_content row
+  97022741-9b72-4593-ba1f-1da6089b2e14 (gated eBook, so the CTA is "Download the eBook").
+  One block tower carries the story across the cards. 120 BPM grid: 1 beat = 12 frames,
+  animations on 6-frame (0.25 s) steps, card changes at 0:00, 0:04, 0:10, 0:20, 0:26.
+  Music (soft bed, no vocals): `python3 scripts/make-story-music.py "public/audio/Alert Global Tech - Tech Updates Windows 11 Music.wav"`.
+  Voiceover (ElevenLabs, "Everett - Confident American Ads") is placed and mixed by
+  `python3 scripts/mix-story-voiceover.py`; line times are at the top of that script and
+  match the times in the video code.
+  `npx remotion render TechUpdates-Windows11-9x16 out/"Alert Global Tech - Tech Updates Windows 11 Video 9x16.mp4"`
 
 ## Formats
 

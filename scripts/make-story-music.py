@@ -1,15 +1,17 @@
-"""Original instrumental for the Story Cards video. No samples, no vocals.
+"""Original instrumental for the "Tech updates for you" Windows 11 video. No samples, no vocals.
 
-Exactly 120 BPM, 4/4, 10 bars of 2 s (20 s total), 48 kHz stereo.
-  Bars 1-4  (0-8 s)   sparse: kick on every beat, closed hats on the offbeats
-  Bars 5-9  (8-18 s)  full drop on 0:08: kick, clap on 2 and 4, 16th hats, open hats,
-                      deep synth bass and a pad (C - Am - F - Dm - G), sidechained to the kick
-  Bar 10    (18-20 s) clean resolve on 0:18: kick, C chord and bass, cymbal, ringing out to 0:20
+Calm bed for a voiceover: exactly 120 BPM, 4/4, 15 bars of 2 s (30 s), 48 kHz stereo.
+Soft on purpose: no clap, a felt kick (low-passed, no click) on beats 1 and 3 only,
+quiet shaker, warm pad, a gentle pluck arpeggio and a round sub bass.
 
-Every hit is placed on an exact sample index (beat = 24000 samples), so the
-grid is sample-accurate against the 24 fps video (beat = 12 frames).
+  Bars 1-2   (0-4 s)    opener: pad and a soft bell on the downbeat
+  Bars 3-5   (4-10 s)   the pressure: felt kick and shaker come in
+  Bars 6-13  (10-26 s)  the answer: sub bass and pluck arpeggio join (a lift, not a drop)
+  Bars 14-15 (26-30 s)  resolve on 0:26 to F, bell, everything rings out to 0:30
 
-Run: python3 scripts/make-story-music.py "public/audio/Alert Global Tech - Story Cards Music.wav"
+Every hit sits on an exact sample index (beat = 24000 samples = 12 video frames at 24 fps).
+
+Run: python3 scripts/make-story-music.py "public/audio/Alert Global Tech - Tech Updates Windows 11 Music.wav"
 Needs numpy and scipy.
 """
 
@@ -21,11 +23,11 @@ from scipy.signal import butter, sosfilt
 
 SR = 48000
 BPM = 120
-BEAT = 60 / BPM  # 0.5 s
-BAR = 4 * BEAT  # 2 s
-BARS = 10
+BEAT = 60 / BPM
+BAR = 4 * BEAT
+BARS = 15
 N = int(BARS * BAR * SR)
-rng = np.random.default_rng(120)
+rng = np.random.default_rng(1120)
 
 L = np.zeros(N)
 R = np.zeros(N)
@@ -35,163 +37,139 @@ def at(t):
     return int(round(t * SR))
 
 
-def add(sig, t, gain=1.0, pan=0.0):
-    """Mix a mono signal in at time t (seconds), equal-power pan -1..1."""
+def add(sig, t, gain=1.0, pan=0.0, duck=None):
     i = at(t)
-    sig = sig[: max(0, N - i)]
+    sig = sig[: max(0, N - i)] * gain
+    if duck is not None:
+        sig = sig * duck[i : i + len(sig)]
     a = (pan + 1) * np.pi / 4
-    L[i : i + len(sig)] += sig * gain * np.cos(a)
-    R[i : i + len(sig)] += sig * gain * np.sin(a)
+    L[i : i + len(sig)] += sig * np.cos(a)
+    R[i : i + len(sig)] += sig * np.sin(a)
 
 
 def filt(x, kind, freq, order=2):
-    sos = butter(order, freq, btype=kind, fs=SR, output="sos")
-    return sosfilt(sos, x)
+    return sosfilt(butter(order, freq, btype=kind, fs=SR, output="sos"), x)
 
 
-def env(n, attack, decay):
-    t = np.arange(n) / SR
-    e = np.exp(-t / decay)
-    a = max(1, int(attack * SR))
-    e[:a] *= np.linspace(0, 1, a)
+def adsr(n, a, d, s, r):
+    e = np.full(n, float(s))
+    ia, id_, ir = int(a * SR), int(d * SR), int(r * SR)
+    e[:ia] = np.linspace(0, 1, ia) if ia else e[:ia]
+    seg = e[ia : ia + id_]
+    e[ia : ia + id_] = np.linspace(1, s, len(seg))
+    if ir:
+        e[-ir:] *= np.linspace(1, 0, ir)
     return e
 
 
-def kick():
-    n = int(0.45 * SR)
-    t = np.arange(n) / SR
-    f = 48 + 110 * np.exp(-t / 0.035)  # pitch sweep down to a deep 48 Hz
-    phase = 2 * np.pi * np.cumsum(f) / SR
-    body = np.sin(phase) * np.exp(-t / 0.28)
-    click = filt(rng.standard_normal(n), "highpass", 3000) * np.exp(-t / 0.004) * 0.25
-    return np.tanh(1.6 * (body + click))
-
-
-def clap():
-    n = int(0.3 * SR)
-    t = np.arange(n) / SR
-    noise = filt(rng.standard_normal(n), "bandpass", [900, 2600])
-    e = np.zeros(n)
-    for k, d in enumerate([0.0, 0.011, 0.022]):  # three quick bursts, then the tail
-        i = int(d * SR)
-        e[i:] += np.exp(-(t[: n - i]) / (0.006 if k < 2 else 0.13))
-    return noise * e * 0.9
-
-
-def hat(decay):
-    n = int((decay * 6) * SR)
-    return filt(rng.standard_normal(n), "highpass", 7500) * env(n, 0.0005, decay)
-
-
-def cymbal(decay):
-    n = int(min(decay * 5, 2.2) * SR)
-    return filt(rng.standard_normal(n), "highpass", 4500) * env(n, 0.002, decay) * 0.5
-
-
-def saw(freq, n, detune=0.0):
-    t = np.arange(n) / SR
-    f = freq * (1 + detune)
-    return 2 * ((t * f) % 1.0) - 1
-
-
-def bass_note(freq, length):
-    n = int(length * SR)
-    t = np.arange(n) / SR
-    sub = np.sin(2 * np.pi * freq * t)
-    body = filt(saw(freq, n), "lowpass", 380)
-    e = env(n, 0.004, length * 0.6)
-    e[-int(0.01 * SR) :] *= np.linspace(1, 0, int(0.01 * SR))
-    return np.tanh(1.4 * (0.75 * sub + 0.5 * body)) * e
-
-
-def pad(freqs, length, decay):
-    n = int(length * SR)
-    out = np.zeros(n)
-    for f in freqs:
-        for d in (-0.004, 0.0, 0.004):
-            out += saw(f, n, d)
-    out = filt(out / (3 * len(freqs)), "lowpass", 2200)
-    return out * env(n, 0.02, decay)
-
-
 def note(name):
-    names = {"C": -9, "D": -7, "E": -5, "F": -4, "G": -2, "A": 0, "B": 2}
-    letter, octave = name[0], int(name[1:])
+    names = {"C": -9, "D": -7, "E": -5, "F": -4, "G": -2, "A": 0, "Bb": 1, "B": 2}
+    letter, octave = name[:-1], int(name[-1])
     return 440.0 * 2 ** ((names[letter] + 12 * (octave - 4)) / 12)
 
 
-# Chords for the drop (bars 5-9) and the resolve (bar 10)
-CHORDS = [
-    ("C2", ["C4", "E4", "G4"]),
-    ("A1", ["A3", "C4", "E4"]),
-    ("F1", ["F3", "A3", "C4"]),
-    ("D2", ["A3", "D4", "F4"]),
-    ("G1", ["G3", "B3", "D4"]),
-]
-RESOLVE = ("C2", ["C3", "G3", "C4", "E4", "G4"])
+def felt_kick():
+    n = int(0.35 * SR)
+    t = np.arange(n) / SR
+    f = 52 + 38 * np.exp(-t / 0.05)
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.18)
+    body *= np.minimum(1, t / 0.004)  # soft attack, no click
+    return filt(body, "lowpass", 180)
 
-K, CL = kick(), clap()
-HC, HO = hat(0.035), hat(0.12)
 
-# Sidechain envelope: bass and pad duck under every kick
-duck = np.ones(N)
+def shaker():
+    n = int(0.09 * SR)
+    t = np.arange(n) / SR
+    e = np.minimum(1, t / 0.012) * np.exp(-t / 0.03)
+    return filt(rng.standard_normal(n), "bandpass", [5000, 9000]) * e
 
-for bar in range(BARS):
+
+def pad(freqs, length):
+    n = int(length * SR)
+    t = np.arange(n) / SR
+    out = np.zeros(n)
+    for f in freqs:
+        for d in (-0.003, 0.003):
+            ph = 2 * np.pi * f * (1 + d) * t
+            out += np.sin(ph) + 0.25 * np.sin(2 * ph) + 0.08 * np.sin(3 * ph)
+    out = filt(out / (2 * len(freqs)), "lowpass", 1400)
+    return out * adsr(n, 0.35, 0.4, 0.8, 0.5)
+
+
+def pluck(f, length=0.4):
+    n = int(length * SR)
+    t = np.arange(n) / SR
+    tone = np.sin(2 * np.pi * f * t) + 0.3 * np.sin(4 * np.pi * f * t)
+    return filt(tone * np.minimum(1, t / 0.003) * np.exp(-t / 0.12), "lowpass", 2500)
+
+
+def sub(f, length):
+    n = int(length * SR)
+    t = np.arange(n) / SR
+    return np.tanh(1.2 * np.sin(2 * np.pi * f * t)) * adsr(n, 0.06, 0.3, 0.7, 0.25)
+
+
+def bell(f, length=2.5):
+    n = int(length * SR)
+    t = np.arange(n) / SR
+    tone = sum(a * np.sin(2 * np.pi * f * m * t) * np.exp(-t / (0.9 / m)) for m, a in ((1, 1), (2.76, 0.35), (5.4, 0.12)))
+    return tone * np.minimum(1, t / 0.002)
+
+
+CHORDS = {
+    "Fmaj7": ("F2", ["F3", "A3", "C4", "E4"]),
+    "Am7": ("A1", ["E3", "G3", "A3", "C4"]),
+    "Dm7": ("D2", ["F3", "A3", "C4", "D4"]),
+    "Bbmaj7": ("Bb1", ["F3", "A3", "Bb3", "D4"]),
+    "C": ("C2", ["E3", "G3", "C4", "E4"]),
+    "F": ("F2", ["F3", "A3", "C4", "F4"]),
+}
+PROG = ["Fmaj7", "Am7", "Dm7", "Bbmaj7", "Fmaj7", "C", "Dm7", "Bbmaj7", "F", "Am7", "Dm7", "Bbmaj7", "C", "F", "F"]
+
+duck = np.ones(N)  # gentle sidechain so the pad breathes with the kick
+K, SH = felt_kick(), shaker()
+
+for bar, name in enumerate(PROG):
     t0 = bar * BAR
-    drop = 4 <= bar <= 8
-    if bar <= 8:
-        for b in range(4):
-            tb = t0 + b * BEAT
-            add(K, tb, 0.95 if drop else 0.7)  # sparse intro sits lower so the drop lands
-            i = at(tb)
+    root, chord = CHORDS[name]
+    groove = 2 <= bar <= 12
+    lift = 5 <= bar <= 12
+    if groove:
+        for b in (0, 2):  # half-time feel: beats 1 and 3
+            add(K, t0 + b * BEAT, 0.55)
+            i = at(t0 + b * BEAT)
             m = min(N - i, int(BEAT * SR))
-            duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.7 * np.exp(-np.arange(m) / SR / 0.11))
-            # Hats: offbeat 8ths always; 16ths and open hats in the drop
-            add(HC, tb + BEAT / 2, 0.30, pan=0.25)
-            if drop:
-                add(HC, tb + BEAT / 4, 0.14, pan=-0.2)
-                add(HC, tb + 3 * BEAT / 4, 0.14, pan=-0.2)
-                add(HO, tb + BEAT / 2, 0.16, pan=0.3)
-                if b in (1, 3):
-                    add(CL, tb, 0.75)
-    if drop:
-        root, chord = CHORDS[bar - 4]
-        f = note(root)
-        bass = np.zeros(N)
-        # Deep bass: root on the downbeat, then driving offbeat 8ths
-        seg = bass_note(f, 0.22)
-        for b in range(4):
-            for off in ((0.0, BEAT / 2) if b == 0 else (BEAT / 2,)):
-                i = at(t0 + b * BEAT + off)
-                bass[i : i + len(seg)] += seg[: N - i]
-        p = pad([note(x) for x in chord], BAR, 1.6)
-        padsig = np.zeros(N)
-        i = at(t0)
-        padsig[i : i + len(p)] += p[: N - i]
-        L[:] += (bass * 0.8 + padsig * 0.24) * duck
-        R[:] += (bass * 0.8 + padsig * 0.25) * duck
+            duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.25 * np.exp(-np.arange(m) / SR / 0.15))
+        for e in range(8):
+            add(SH, t0 + e * BEAT / 2, 0.10 if e % 2 else 0.05, pan=0.3)
+    if lift:
+        add(sub(note(root), BAR - 0.05), t0, 0.35)
+        arp = [note(x) * 2 for x in chord]  # an octave up
+        for e in range(8):
+            add(pluck(arp[[0, 1, 2, 3, 2, 1, 2, 3][e]]), t0 + e * BEAT / 2, 0.09, pan=-0.25 if e % 2 else 0.25)
 
-# Cymbal on the drop
-add(cymbal(0.7), 8.0, 0.35, pan=-0.1)
+for bar, name in enumerate(PROG[:13]):
+    root, chord = CHORDS[name]
+    for pan in (-0.1, 0.1):
+        add(pad([note(x) for x in chord], BAR + 0.5), bar * BAR, 0.32, pan=pan, duck=duck)
 
-# Resolve on 0:18: kick, long bass and chord, cymbal, ringing out to 0:20
-t_res = 9 * BAR
-add(K, t_res, 0.95)
-root, chord = RESOLVE
-add(bass_note(note(root), 1.95), t_res, 0.6)
-add(pad([note(x) for x in chord], 2.0, 0.75), t_res, 0.22, pan=-0.05)
-add(pad([note(x) for x in chord], 2.0, 0.75), t_res, 0.22, pan=0.05)
-add(cymbal(0.55), t_res, 0.4)
+# Opener bell, and the resolve on 0:26 ringing out to 0:30
+add(bell(note("C6"), 2.5), 0.0, 0.10, pan=0.15)
+t_res = 13 * BAR
+root, chord = CHORDS["F"]
+for pan in (-0.1, 0.1):
+    add(pad([note(x) for x in chord], 4.0), t_res, 0.34, pan=pan)
+add(sub(note(root), 3.8), t_res, 0.32)
+add(bell(note("F5"), 3.8), t_res, 0.12, pan=-0.15)
+add(K, t_res, 0.45)
 
-# Master: gentle glue, soft clip, then set the level for a bed under a voiceover
-# (about -16 LUFS integrated, true peak well under -1 dBTP). 10 ms fade at the very end.
-PEAK_DB = -7.0
+# Master: soft limit, quiet level for a bed under a voice, fade the last 1.5 s to silence
 mix = np.stack([L, R], axis=1)
-mix = np.tanh(mix * 1.15)
-mix /= np.max(np.abs(mix)) / 10 ** (PEAK_DB / 20)
-fade = int(0.01 * SR)
-mix[-fade:] *= np.linspace(1, 0, fade)[:, None]
+mix = np.tanh(mix * 1.05)
+mix /= np.max(np.abs(mix)) / 10 ** (-9 / 20)
+fade = int(1.5 * SR)
+mix[-fade:] *= (np.linspace(1, 0, fade) ** 1.5)[:, None]
 
-out = sys.argv[1] if len(sys.argv) > 1 else "story-music.wav"
+out = sys.argv[1] if len(sys.argv) > 1 else "music.wav"
 wavfile.write(out, SR, (mix * 32767).astype(np.int16))
 print(f"Wrote {out}: {N / SR:.3f} s, {SR} Hz stereo, {BPM} BPM")

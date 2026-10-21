@@ -1,12 +1,14 @@
-"""Places the Story Cards voiceover on the beat grid and mixes it over the music.
+"""Places the voiceover on the beat grid and mixes it over the music.
 
+Video: "Tech updates for you" - Windows 11 Pro for Business (TechUpdates-Windows11-9x16).
 Input:  the ElevenLabs take (voice: Everett - Confident American Ads, model eleven_v4)
         and the instrumental from make-story-music.py.
 Output: a voiceover stem (on the grid) and the final mix the video plays.
 
-The take is split at its pauses into seven phrases. Each phrase's first syllable is
-placed on a 0.25 s step, timed to when its words appear on screen. The music ducks
-under the voice (sidechain, about -9 dB) and the mix is set to -14 LUFS, -1 dBTP.
+The take is split at its pauses into eleven lines. Each line's first syllable lands on a
+0.25 s step, at the moment its words appear on screen (same times as the video code).
+The music sits well under the voice: it starts about 11 LU below it and ducks a further
+6 dB while the voice speaks. The final mix is set to about -16 LUFS, peak -1.5 dBFS.
 
 Run (numpy + scipy, ffmpeg on PATH):
   python3 scripts/mix-story-voiceover.py
@@ -19,20 +21,24 @@ from scipy.io import wavfile
 
 SR = 48000
 DIR = "public/audio/"
-TAKE = DIR + "Alert Global Tech - Story Cards Voiceover Take.mp3"
-MUSIC = DIR + "Alert Global Tech - Story Cards Music.wav"
-VO_OUT = DIR + "Alert Global Tech - Story Cards Voiceover.wav"
-MIX_OUT = DIR + "Alert Global Tech - Story Cards Mix.wav"
+TAKE = DIR + "Alert Global Tech - Tech Updates Windows 11 Voiceover Take.mp3"
+MUSIC = DIR + "Alert Global Tech - Tech Updates Windows 11 Music.wav"
+VO_OUT = DIR + "Alert Global Tech - Tech Updates Windows 11 Voiceover.wav"
+MIX_OUT = DIR + "Alert Global Tech - Tech Updates Windows 11 Mix.wav"
 
 # (cut start, cut end) in the take, and where the phrase's first syllable lands (s).
 PHRASES = [
-    ((0.00, 1.75), 0.25),  # Still running Windows 10?            card 1, with the headline
-    ((1.75, 5.47), 4.25),  # Free security updates ended in ...   card 2
-    ((5.47, 9.59), 8.25),  # Windows 11 Pro laptops from Dell ... card 3, on the drop
-    ((9.59, 11.10), 12.25),  # Licensed and set up.
-    ((11.10, 12.59), 14.25),  # Laptops, sorted.                  card 4
-    ((12.59, 14.97), 15.75),  # One supplier, from quote to setup. (one step after "sorted." ends)
-    ((14.97, 16.04), 18.50),  # Request a quote.                  card 5, with the button
+    ((0.00, 1.57), 0.25),  # Tech updates for you.                      card 1
+    ((1.57, 4.11), 2.00),  # Windows 11 Pro for business.
+    ((4.11, 8.19), 4.50),  # You're expected to balance AI, security...  card 2
+    ((8.19, 9.88), 8.50),  # It can be hard to keep up.
+    ((9.88, 13.60), 10.00),  # Windows 11 Pro helps you meet new IT mandates.  card 3, on the downbeat
+    ((13.60, 15.78), 13.50),  # Advanced, built-in security.
+    ((15.78, 18.10), 15.50),  # Simplified hybrid device management.
+    ((18.10, 20.63), 17.75),  # Faster, AI-driven workflows.
+    ((20.63, 23.32), 20.25),  # Innovation and protection, balanced.      card 4
+    ((23.32, 26.86), 22.75),  # Stay secure, productive, and prepared for the future.
+    ((26.86, 30.56), 26.25),  # Download your complimentary copy of The New Mandate for IT.  card 5
 ]
 
 
@@ -61,7 +67,7 @@ music = music.astype(np.float64) / 32768
 N = len(music)
 
 vo = np.zeros(N)
-thresh = 10 ** (-40 / 20) * np.max(np.abs(take))
+thresh = 10 ** (-30 / 20) * np.max(np.abs(take))  # speech onset, not breaths
 for (a, b), target in PHRASES:
     seg = take[int(a * SR) : int(b * SR)].copy()
     onset = int(np.argmax(np.abs(seg) > thresh))
@@ -73,7 +79,7 @@ for (a, b), target in PHRASES:
     vo[i:end] += seg[: end - i]
     print(f"{target:5.2f}s  phrase {a:5.2f}-{b:5.2f}s of the take, onset +{onset / SR * 1000:.0f} ms")
 
-# Sidechain: smooth envelope of the voice, music ducks up to 9 dB under it.
+# Sidechain: smooth envelope of the voice, music ducks up to 6 dB under it.
 env = np.abs(vo)
 att, rel = np.exp(-1 / (0.03 * SR)), np.exp(-1 / (0.35 * SR))
 sm = np.zeros(N)
@@ -83,15 +89,15 @@ for k in range(N):
     level = c * level + (1 - c) * env[k]
     sm[k] = level
 amount = np.clip(sm / (0.2 * np.max(sm)), 0, 1)
-duck = 10 ** (-9 * amount / 20)
+duck = 10 ** (-6 * amount / 20)
 
 vo_st = np.stack([vo, vo], axis=1)
 music_d = music * duck[:, None]
 
-# Voice sits about 10 LU above the ducked music, then the whole mix goes to -14 LUFS.
+# Voice at -16 LUFS; the music bed about 11 LU under it before ducking. Mix to -16 LUFS.
 vo_st *= 10 ** ((-16 - lufs(vo_st)) / 20)
-mix = vo_st + music_d * 10 ** ((-26 - lufs(music_d)) / 20) * 10 ** (8 / 20)
-mix *= 10 ** ((-14 - lufs(mix)) / 20)
+mix = vo_st + music_d * 10 ** ((-27 - lufs(music)) / 20)
+mix *= 10 ** ((-16 - lufs(mix)) / 20)
 peak = np.max(np.abs(mix))
 if peak > 10 ** (-1.5 / 20):
     mix /= peak / 10 ** (-1.5 / 20)
