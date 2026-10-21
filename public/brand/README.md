@@ -10,3 +10,7 @@ or redraw it. Renders fail if the file is missing.
 lockup (top 460px, trimmed). Same artwork, no redrawing. Used top-left on Story
 scenes, per the guide ("wordmark top-left on posts"). Replace it with an official
 wordmark file if one exists.
+
+`alert-global-tech-wordmark-ink.png` is the same wordmark in Deep Ink (#101B32),
+made from the ivory file's own transparency (shape untouched), for ivory grounds,
+where the guide calls for the Ink logo. Replace it with an official Ink file if one exists.

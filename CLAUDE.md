@@ -90,6 +90,11 @@ How the guide applies to video:
 Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
 - `LaptopsSorted-9x16` — 20 s, 1080×1920, 24 fps, one continuous shot, captions only.
   `npx remotion render LaptopsSorted-9x16 out/"Alert Global Tech - Laptops Sorted Video 9x16.mp4"`
+- `StoryCards-9x16` — 20 s, 1080×1920, 24 fps, five flat story cards on an original 120 BPM
+  instrumental (no vocals; voiceover added separately). 1 beat = 12 frames; animations
+  start on 6-frame (0.25 s) steps; card changes land on 0:00, 0:04, 0:08, 0:14, 0:18.
+  Rebuild the music with `python3 scripts/make-story-music.py "public/audio/Alert Global Tech - Story Cards Music.wav"` (numpy + scipy).
+  `npx remotion render StoryCards-9x16 out/"Alert Global Tech - Story Cards Video 9x16.mp4"`
 
 ## Formats
 
