@@ -105,6 +105,12 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `npx remotion render TechUpdates-Windows11-4x5 out/"Alert Global Tech - Tech Updates Windows 11 Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
 
+- `MeetingsSorted-9x16` — "Meetings, sorted." corporate-humour story (Microsoft 365 and Copilot). 20 s,
+  1080×1920, 24 fps, five flat story cards, fixed copy from Henrique's brief (21 Oct 2026). Music only for now;
+  a voiceover is added later. 120 BPM grid, card changes at 0:00, 0:04, 0:08 (drop), 0:14, 0:18 (resolve).
+  Music: `python3 scripts/make-meetings-music.py "public/audio/Alert Global Tech - Meetings Sorted Music.wav"`.
+  `npx remotion render MeetingsSorted-9x16 out/"Alert Global Tech - Meetings Sorted Video 9x16.mp4" --crf=18`
+
 ## Formats
 
 Register one composition per format, all driven by the same spec:
