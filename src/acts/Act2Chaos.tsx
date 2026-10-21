@@ -116,8 +116,8 @@ const StatBeat: React.FC<{ stat: string; source: string }> = ({ stat, source }) 
         style={{
           display: "flex",
           alignItems: "baseline",
-          fontFamily: F.headline,
-          fontWeight: 800,
+          fontFamily: F.numeral,
+          fontWeight: 700,
           fontSize,
           lineHeight: 0.9,
           letterSpacing: "-0.025em",

@@ -19,27 +19,40 @@ export const C = {
 } as const;
 // Contrast: never blue text on ink or ink text on blue.
 
+// The ONLY fonts allowed, as supplied in "Alert Global Tech - Brand Fonts" (public/fonts/).
+// No other family may appear on screen; `npm run check-fonts` enforces it.
 export const F = {
-  headline: "Archivo", // ExtraBold 800, tight leading, -2.5% tracking
-  statement: "Archivo Narrow", // Bold Italic, uppercase
+  headline: "DM Sans", // SemiBold 600, sentence case, left-aligned (brand Story layouts)
+  numeral: "Archivo Narrow", // Bold 700: big numbers
+  statement: "Archivo Narrow", // Bold Italic, uppercase: statement titles
   accent: "Instrument Serif", // Italic, one or two words only
-  sans: "DM Sans", // functional: UI text, body, eyebrows
-  mono: "DM Mono", // tags, and the act 2 old-OS dialogs
+  serif: "Instrument Serif", // Regular, when an upright serif is needed
+  sans: "DM Sans", // UI text, body, eyebrows, tags
 } as const;
-// Brand fonts only. Never add another family.
 
-// Self-hosted from public/fonts (see LICENSES.md there); loadFont holds the render until they're ready.
+// Static faces from the supplied files. Every weight used in code must be listed here.
 const FONT_FILES: [string, string, string, "normal" | "italic"][] = [
-  [F.headline, "archivo-latin-800-normal.woff2", "800", "normal"],
-  [F.statement, "archivo-narrow-latin-700-italic.woff2", "700", "italic"],
-  [F.accent, "instrument-serif-latin-400-italic.woff2", "400", "italic"],
-  [F.sans, "dm-sans-latin-400-normal.woff2", "400", "normal"],
-  [F.sans, "dm-sans-latin-500-normal.woff2", "500", "normal"],
-  [F.sans, "dm-sans-latin-600-normal.woff2", "600", "normal"],
-  [F.mono, "dm-mono-latin-500-normal.woff2", "500", "normal"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-Regular.ttf", "400", "normal"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-Italic.ttf", "400", "italic"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-Medium.ttf", "500", "normal"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-MediumItalic.ttf", "500", "italic"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-SemiBold.ttf", "600", "normal"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-SemiBoldItalic.ttf", "600", "italic"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-Bold.ttf", "700", "normal"],
+  ["Archivo Narrow", "Archivo Narrow/static/ArchivoNarrow-BoldItalic.ttf", "700", "italic"],
+  ["DM Sans", "DM Sans/static/DMSans-Regular.ttf", "400", "normal"],
+  ["DM Sans", "DM Sans/static/DMSans-Italic.ttf", "400", "italic"],
+  ["DM Sans", "DM Sans/static/DMSans-Medium.ttf", "500", "normal"],
+  ["DM Sans", "DM Sans/static/DMSans-MediumItalic.ttf", "500", "italic"],
+  ["DM Sans", "DM Sans/static/DMSans-SemiBold.ttf", "600", "normal"],
+  ["DM Sans", "DM Sans/static/DMSans-SemiBoldItalic.ttf", "600", "italic"],
+  ["DM Sans", "DM Sans/static/DMSans-Bold.ttf", "700", "normal"],
+  ["DM Sans", "DM Sans/static/DMSans-BoldItalic.ttf", "700", "italic"],
+  ["Instrument Serif", "Instrument Serif/InstrumentSerif-Regular.ttf", "400", "normal"],
+  ["Instrument Serif", "Instrument Serif/InstrumentSerif-Italic.ttf", "400", "italic"],
 ];
 for (const [family, file, weight, style] of FONT_FILES) {
-  loadFont({ family, url: staticFile(`fonts/${file}`), weight, style, format: "woff2" });
+  loadFont({ family, url: staticFile(`fonts/${file}`), weight, style, format: "truetype" });
 }
 
 // Eyebrow label: DM Sans 600, caps, +20% tracking.
@@ -52,12 +65,12 @@ export const eyebrow = (size: number, color: string): React.CSSProperties => ({
   color,
 });
 
-// Tag: DM Mono 500, caps.
+// Tag: DM Sans 500, caps, light tracking (the brand font set has no mono face).
 export const tag = (size: number, color: string): React.CSSProperties => ({
-  fontFamily: F.mono,
+  fontFamily: F.sans,
   fontWeight: 500,
   textTransform: "uppercase",
-  letterSpacing: "0.06em",
+  letterSpacing: "0.12em",
   fontSize: size,
   color,
 });

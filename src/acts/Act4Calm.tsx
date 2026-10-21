@@ -2,7 +2,8 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import type { VideoSpec } from "../spec";
 import { ChecklistCard, CompareTable, ScoreBars } from "../ui/Cards";
 import { PromptBox, promptDuration } from "../ui/PromptBox";
-import { C, F, eyebrow, useLayout } from "../ui/theme";
+import { Badge, StoryChrome } from "../ui/Story";
+import { C, F, useLayout } from "../ui/theme";
 
 const TYPE_FROM = 18;
 const CARD_GAP = 55; // slow, even holds between cards
@@ -28,7 +29,9 @@ export const Act4Calm: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
   return (
     <AbsoluteFill style={{ background: C.ivory, alignItems: "center", justifyContent: "center", padding: `${safeY}px 0` }}>
       <div style={{ width: contentW, display: "flex", flexDirection: "column", gap: u * 3 }}>
-        <div style={eyebrow(u * 1.8, C.mutedLight)}>{spec.channel}</div>
+        <div style={{ display: "flex" }}>
+          <Badge text={spec.channel} size={u * 1.8} />
+        </div>
 
         <PromptBox text={spec.prompt} frame={frame - TYPE_FROM} u={u} width={contentW} />
 
@@ -90,6 +93,7 @@ export const Act4Calm: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
           })}
         </div>
       </div>
+      <StoryChrome u={layout.u} safeY={safeY} ground="ivory" wordmark={false} />
     </AbsoluteFill>
   );
 };

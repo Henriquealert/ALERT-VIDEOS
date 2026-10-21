@@ -5,3 +5,8 @@ Supplied by Henrique, 21 Oct 2026: 1214x588 PNG, transparent background.
 Use the approved file only: light lockup,
 a!ert + GLOBAL TECH, transparent background. Never recolour, stretch, outline
 or redraw it. Renders fail if the file is missing.
+
+`alert-global-tech-wordmark-ivory.png` is the a!ert wordmark cut from the supplied
+lockup (top 460px, trimmed). Same artwork, no redrawing. Used top-left on Story
+scenes, per the guide ("wordmark top-left on posts"). Replace it with an official
+wordmark file if one exists.

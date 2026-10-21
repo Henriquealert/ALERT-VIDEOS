@@ -29,7 +29,7 @@ devices; render them in the brand identity (below), not the reference's look.
 | 2. Chaos | 5–20 s | Retro desktop on Deep Ink with a fine blue grid. Old-OS dialog windows pop up one at a time with the pain points (`painPoints[]`), then multiply until they bury the screen. Pixel flames in the blue family lick the window tops. Snap cut to one big Archivo numeral (`stat`) with a blinking lime dot — skip this beat if `stat` is null. |
 | 3. Maze | 20–30 s | Isometric maze with sky-lit walls, cursors wandering lost, camera pulls back to show the whole maze. This is the "it's complicated" beat. |
 | 4. Calm | 30–50 s | Hard cut to a clean Soft Ivory product UI. A prompt box types `prompt` letter by letter, send button pulses, an answer card appears with inline chips, then 2–3 UI cards from `uiCards[]` (checklist ticking down, comparison table, score bars filling). Generous whitespace, slow eased motion. |
-| 5. Close | 50–60 s | Top-down maze dissolves, cut to end card on Deep Ink: Ivory logo centred, lime pill CTA below (`cta`), channel tag bottom-left, one blue-to-sky arrow bottom-right, its tail bleeding off the bottom edge. |
+| 5. Close | 50–60 s | Top-down maze dissolves, cut to end card on Deep Ink: Ivory lockup centred, lime pill CTA below (`cta`), block composition bottom-right, line arrow bottom-left. |
 
 Pacing rules from the reference: cuts every 1.5–3 s in acts 1–3, slower holds in
 act 4, every pop/click lands on a beat. Chaos acts are loud and crowded; the calm
@@ -46,19 +46,29 @@ How the guide applies to video:
   and Acid Lime are accents; lime for the full stop, click rings and the CTA pill.
   Gradients only on blue (blue → #9DBDF5 → #E2ECFA, or blue → #0B2A7A), never on lime.
   Never blue text on ink or ink text on blue.
-- Type: statement Archivo Narrow Bold Italic caps (act 1); headline and numerals
-  Archivo ExtraBold; editorial accent Instrument Serif Italic (one or two words only);
-  UI text and eyebrow labels DM Sans; tags DM Mono caps. Headlines end in the
+- Fonts: ONLY the supplied brand fonts in `public/fonts/` — Archivo Narrow,
+  DM Sans, Instrument Serif. No other font may be used anywhere, including props,
+  fallbacks and web fonts. This overrides the guide's Archivo ExtraBold and DM Mono.
+  `npm run check-fonts` (part of `npm run typecheck`) fails on anything else.
+- Type roles: statement Archivo Narrow Bold Italic caps; headlines DM Sans SemiBold,
+  sentence case, left-aligned, tight leading (as in the brand Story layouts);
+  big numerals Archivo Narrow Bold; editorial accent Instrument Serif Italic (one or
+  two words only); UI text, eyebrows, badges and tags DM Sans. Headlines end in the
   coloured full stop (`<Dot>`). Accent rule: colour the last phrase or switch it to
   Instrument Serif Italic, not both.
-- Always use our fonts, and only our fonts: Archivo, Archivo Narrow, Instrument Serif,
-  DM Sans, DM Mono (self-hosted in `public/fonts/`). No pixel or other fonts, even for
-  props: the act 2 old-OS dialogs use DM Mono caps.
-- Graphic elements: two or three per video. This template uses blocks (act 1),
-  a fine blue grid (act 2) and one arrow (end card).
-- Logo: every video ends on our logo. One per video, on the end card only: the
-  approved Ivory lockup `public/brand/alert-global-tech-lockup-ivory.png` on Deep Ink.
-  Never recolour, stretch, redraw or typeset it. Renders fail if the file is missing.
+- Scene layout (brand Story mock-ups, `src/ui/Story.tsx`): every scene uses the
+  Story frame — wordmark top-left on dark grounds, a blue badge pill (channel or
+  series label) under it, big left-aligned sentence-case headline in DM Sans
+  SemiBold, a block composition (blue-gradient, lime and blue squares) lower right,
+  and a thin line arrow bottom-left. Use `StoryChrome`, `StoryHeadline`, `Badge`,
+  `BlockStack`, `LineArrow`. Grounds rotate ink, blue, ivory.
+- Graphic elements: two or three per video. This template uses blocks (act 1 and end card),
+  a fine blue grid (act 2) and the line arrow (Story frame).
+- Logo: every video ends on our lockup, `public/brand/alert-global-tech-lockup-ivory.png`,
+  centred on the Deep Ink end card. Scenes before it carry the wordmark top-left
+  (`alert-global-tech-wordmark-ivory.png`, cut from the same file). Only one logo is
+  on screen at a time. Ivory artwork only, so no logo on ivory scenes until an Ink
+  file is supplied. Never recolour, stretch, redraw or typeset it.
 - Calls to action: one per video, title-style capitals: Talk to an Expert,
   Request a Quote, Learn More.
 - Stories (9x16): keep the top and bottom 250px clear (`safeY` in `useLayout`).
@@ -91,7 +101,7 @@ Lay out with relative units so all three work.
 
 - One component per act in `src/acts/`, shared pieces in `src/ui/`
   (PixelWindow, PixelCursor, IsoMaze, PromptBox, ChecklistCard, CompareTable, ScoreBars, EndCard).
-- Fonts are self-hosted in `public/fonts/` (licences in `LICENSES.md` there); don't load web fonts at render time.
+- Fonts load only through `src/ui/theme.tsx` from `public/fonts/` (each family's `OFL.txt` is its licence). Never load web fonts.
 - Seed anything random (`random('seed-' + spec.slug)`) so re-renders match.
 - Use `spring()` / `interpolate()`; no CSS transitions.
 - Music and SFX go in `public/audio/`, royalty-free only; record the licence in `public/audio/LICENSES.md`.

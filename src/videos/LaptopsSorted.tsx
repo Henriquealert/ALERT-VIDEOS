@@ -1,9 +1,11 @@
 import { AbsoluteFill, Easing, Img, interpolate, random, spring, staticFile, useCurrentFrame } from "remotion";
 import { LOGO_FILE, LOGO_RATIO } from "../ui/EndCard";
-import { C, Dot, eyebrow, F } from "../ui/theme";
+import { Badge, BlockStack, LineArrow, StoryHeadline, Wordmark } from "../ui/Story";
+import { C, F } from "../ui/theme";
 
 // "Laptops, sorted." — 20 s, 9x16, 24 fps, one continuous shot, captions only (no voiceover).
-// Built on the 2026 brand: Deep Ink ground, sky/blue pixels, lime accents, our fonts and logo.
+// Built on the 2026 brand and its Story layout: wordmark top-left, badge, big left-aligned
+// headline, block composition, line arrow bottom-left. Brand fonts only.
 
 export const LAPTOPS_SORTED = { fps: 24, durationInFrames: 480, width: 1080, height: 1920 } as const;
 
@@ -11,13 +13,13 @@ const s = (sec: number) => Math.round(sec * LAPTOPS_SORTED.fps);
 
 const COPY = {
   label: "NO. 01 — HARDWARE",
-  captions: [ // "\n" sets the line break
-    { text: "Still running Windows 10?", from: s(0.5), to: s(3) },
+  captions: [
+    { lines: ["Still running", "Windows 10?"], dot: false, from: s(0.5), to: s(3) },
     // Microsoft: Windows 10 support ended 14 October 2025 (microsoft.com/windows/end-of-support).
-    { text: "Free security updates\nended October 2025", from: s(3.2), to: s(7) },
-    { text: "Windows 11 Pro\non Dell, HP and Lenovo", from: s(7.4), to: s(13) },
+    { lines: ["Free security", "updates ended", "October 2025"], dot: true, from: s(3.2), to: s(7) },
+    { lines: ["Windows 11 Pro", "on Dell, HP", "and Lenovo"], dot: true, from: s(7.4), to: s(13) },
   ],
-  headline: ["Laptops,", "sorted"], // second line in lime, then the lime full stop
+  headline: { lines: ["Laptops,", ""], accent: "sorted" }, // accent in lime, then the lime full stop
   sub: "One supplier, from quote to setup.",
   cta: "Request a Quote",
   url: "alertglobaltech.com", // unverified: confirm the domain before publishing
@@ -26,7 +28,10 @@ const COPY = {
 const W = 1080;
 const H = 1920;
 const SAFE = 250; // Story top/bottom safe zone
-const TEXT_Y = 1180; // captions and headline sit here: below centre, above the bottom 20%
+const SIDE = 72; // left/right margin
+const TEXT_TOP = 560; // headline block top, under the badge
+const TEXT_Y = 800; // centre of the headline block, for dimming the pixels behind it
+const BLOCKS_Y = 1300; // block composition, lower right
 const CELL = 40;
 const COLS = 34; // field overflows the frame so drift and push-in never show an edge
 const ROWS = 56;
@@ -103,7 +108,7 @@ export const LaptopsSorted: React.FC = () => {
   const zoom = interpolate(frame, PUSH, [1, 1.1], { ...clamp, easing: Easing.inOut(Easing.sin) });
 
   // Pixels behind the text dim; in 13–17 s the lower-middle falls to deep navy.
-  const textDim = interpolate(frame, [PUSH[0], PUSH[0] + s(1.2)], [0.7, 0.985], clamp);
+  const textDim = interpolate(frame, [PUSH[0], PUSH[0] + s(1.2)], [0.86, 0.985], clamp);
 
   const rects = FIELD.map((p, i) => {
     const sx = (p.x + drift - W / 2) * zoom + W / 2;
@@ -130,9 +135,13 @@ export const LaptopsSorted: React.FC = () => {
     const fill = frame < p.act ? C.mutedDark : flash > 0.4 ? C.skyLight : C.sky;
 
     const wide = interpolate(frame, [PUSH[0], PUSH[0] + s(1.2)], [0, 1], clamp);
-    const dx = (sx - W / 2) / interpolate(wide, [0, 1], [480, 640]);
-    const dy = (sy - TEXT_Y) / interpolate(wide, [0, 1], [200, 330]);
-    const dim = 1 - textDim * Math.exp(-(dx * dx + dy * dy));
+    // Text zone: a wide band behind the left-aligned headline.
+    const dx = (sx - W / 2) / 700;
+    const dy = (sy - TEXT_Y) / interpolate(wide, [0, 1], [260, 330]);
+    // From 13 s the lower-middle also falls to deep navy, under the block composition.
+    const lx = (sx - W * 0.62) / 420;
+    const ly = (sy - BLOCKS_Y) / 300;
+    const dim = (1 - textDim * Math.exp(-(dx * dx + dy * dy))) * (1 - 0.9 * wide * Math.exp(-(lx * lx + ly * ly)));
 
     // Dissolve into fine dust that drifts up and away.
     const dt = frame - p.dissolveAt;
@@ -169,7 +178,7 @@ export const LaptopsSorted: React.FC = () => {
   const endIn = interpolate(frame, [END_CARD, END_CARD + s(0.8)], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
   const ctaIn = interpolate(frame, [END_CARD + s(0.4), END_CARD + s(1.2)], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
 
-  const headlineSize = 170;
+  const headlineSize = 168;
   const headlineIn = interpolate(frame, [s(13.6), s(14.6)], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
   const subIn = interpolate(frame, [s(14.4), s(15.4)], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
   const headlineOut = interpolate(frame, [DISSOLVE - s(0.2), DISSOLVE + s(0.5)], [1, 0], clamp);
@@ -195,7 +204,11 @@ export const LaptopsSorted: React.FC = () => {
           </linearGradient>
         </defs>
         <g filter="url(#px-glow)">{rects}</g>
-        <g opacity={beamAlpha}>
+        <mask id="beam-mask">
+          <rect width={W} height={H} fill="#fff" />
+          <rect x={0} y={TEXT_TOP - 40} width={W} height={480} fill="#262626" />
+        </mask>
+        <g opacity={beamAlpha} mask="url(#beam-mask)">
           <rect x={W / 2 - 14} y={0} width={28} height={Math.max(0, headY)} fill="url(#beam)" opacity={0.35} filter="url(#px-glow)" />
           <rect x={W / 2 - 1.5} y={0} width={3} height={Math.max(0, headY)} fill="url(#beam)" />
           <rect x={W / 2 - 4} y={headY - 40} width={8} height={40} fill={C.skyLight} filter="url(#px-glow)" />
@@ -204,45 +217,42 @@ export const LaptopsSorted: React.FC = () => {
 
       <Grain frame={frame} />
 
-      {/* Persistent: logo top-left, label top-right (inside the Story safe zone). One logo on screen at a time. */}
-      <Img
-        src={staticFile(LOGO_FILE)}
-        style={{ position: "absolute", left: 72, top: SAFE, width: 210, height: 210 / LOGO_RATIO, opacity: chromeOut * (1 - endIn) }}
+      {/* Persistent Story chrome, inside the safe zone. One logo on screen at a time. */}
+      <Wordmark width={150} opacity={chromeOut * (1 - endIn)} style={{ position: "absolute", left: SIDE, top: SAFE }} />
+      <div style={{ position: "absolute", left: SIDE, top: SAFE + 150, display: "flex", opacity: chromeOut }}>
+        <Badge text={COPY.label} size={26} />
+      </div>
+      <LineArrow
+        width={110}
+        color={C.ivory}
+        progress={interpolate(frame, [s(0.3), s(1.3)], [0, 1], clamp) * chromeOut}
+        style={{ position: "absolute", left: SIDE, top: H - SAFE - 90 }}
       />
-      <div style={{ position: "absolute", right: 72, top: SAFE + 12, ...eyebrow(24, C.ivory), opacity: chromeOut }}>{COPY.label}</div>
 
-      {/* Captions */}
+      {/* Headlines, left-aligned, sentence case */}
       {COPY.captions.map((c) => (
-        <Centered key={c.text} y={TEXT_Y} opacity={fade(c.from, c.to)}>
-          <div style={{ fontFamily: F.sans, fontWeight: 500, fontSize: 54, lineHeight: 1.25, color: C.ivory, textAlign: "center", whiteSpace: "pre-line" }}>
-            {c.text}
-          </div>
-        </Centered>
+        <TextBlock key={c.lines.join(" ")}>
+          <StoryHeadline lines={c.lines} size={108} color={C.ivory} endDot={c.dot} progress={fade(c.from, c.to)} />
+        </TextBlock>
       ))}
 
-      {/* Headline: Archivo ExtraBold, last word lime, lime full stop */}
-      <Centered y={TEXT_Y - 40} opacity={headlineIn * headlineOut}>
-        <div
-          style={{
-            fontFamily: F.headline,
-            fontWeight: 800,
-            fontSize: headlineSize,
-            lineHeight: 0.9,
-            letterSpacing: "-0.025em",
-            color: C.ivory,
-            textAlign: "center",
-            transform: `translateY(${interpolate(headlineIn, [0, 1], [24, 0])}px)`,
-          }}
-        >
-          {COPY.headline[0]}
-          <br />
-          <span style={{ color: C.lime }}>{COPY.headline[1]}</span>
-          <Dot fontSize={headlineSize} color={C.lime} />
-        </div>
-        <div style={{ marginTop: 44, fontFamily: F.sans, fontSize: 40, color: C.ivory, opacity: subIn, textAlign: "center" }}>
+      <TextBlock>
+        <StoryHeadline
+          lines={COPY.headline.lines}
+          accent={{ text: COPY.headline.accent, color: C.lime }}
+          size={headlineSize}
+          color={C.ivory}
+          progress={headlineIn * headlineOut}
+        />
+        <div style={{ marginTop: 40, fontFamily: F.sans, fontSize: 44, color: C.ivory, opacity: subIn * headlineOut }}>
           {COPY.sub}
         </div>
-      </Centered>
+      </TextBlock>
+
+      {/* Block composition, lower right, steps in with the headline */}
+      <div style={{ position: "absolute", right: SIDE + 40, top: BLOCKS_Y - 180, opacity: headlineOut }}>
+        <BlockStack unit={190} frame={frame - s(14)} ground="ink" />
+      </div>
 
       {/* End card */}
       <AbsoluteFill style={{ opacity: endIn, background: C.ink }}>
@@ -268,26 +278,15 @@ export const LaptopsSorted: React.FC = () => {
             <div style={{ fontFamily: F.sans, fontSize: 30, color: C.mutedDark }}>{COPY.url}</div>
           </div>
         </AbsoluteFill>
+        <LineArrow width={110} color={C.ivory} progress={ctaIn} style={{ position: "absolute", left: SIDE, top: H - SAFE - 90 }} />
       </AbsoluteFill>
     </AbsoluteFill>
   );
 };
 
-// Text block centred horizontally on a given y, with side margins so it never touches the right edge.
-const Centered: React.FC<{ y: number; opacity: number; children: React.ReactNode }> = ({ y, opacity, children }) => (
-  <div
-    style={{
-      position: "absolute",
-      left: 90,
-      right: 90,
-      top: y,
-      transform: "translateY(-50%)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      opacity,
-    }}
-  >
+// Left-aligned text block under the badge, with side margins so it never touches the right edge.
+const TextBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div style={{ position: "absolute", left: SIDE, right: SIDE, top: TEXT_TOP, display: "flex", flexDirection: "column" }}>
     {children}
   </div>
 );

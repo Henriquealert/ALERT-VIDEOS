@@ -21,7 +21,7 @@ npm run fetch                                 # pull unused rows into data/partn
 npm run validate-spec -- data/specs/<slug>.json
 npx remotion render AlertPromo-16x9 out/"Alert Global Tech - <Topic> Video 16x9.mp4" --props=data/specs/<slug>.json
 npm run mark-used -- <row id>                 # only after the render is approved
-npm run typecheck
+npm run typecheck                             # TypeScript + brand font check
 ```
 
 ## Layout
@@ -33,7 +33,7 @@ src/AlertPromo.tsx the five acts in sequence
 src/acts/          one component per act
 src/ui/            shared pieces and theme.tsx (brand tokens, fonts)
 data/specs/        spec files (data-quality-article.json is the sample)
-public/fonts/      self-hosted brand fonts + licences
+public/fonts/      the only allowed brand fonts (as supplied) + OFL licences
 public/brand/      logo (alert-global-tech-lockup-ivory.png, required)
 public/audio/      royalty-free audio + LICENSES.md
 reference/         reference video (gitignored, never rendered)

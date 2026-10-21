@@ -1,6 +1,7 @@
 import { AbsoluteFill, interpolate, random, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import type { VideoSpec } from "../spec";
 import { GlowPlate } from "../ui/GlowPlate";
+import { StoryChrome } from "../ui/Story";
 import { PixelCursor } from "../ui/PixelCursor";
 import { C, Dot, F, useLayout } from "../ui/theme";
 
@@ -20,7 +21,7 @@ export const Act1Title: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
   const words = spec.hook.toUpperCase().split(/\s+/);
   const lines = portrait ? words : [words.join(" ")];
   const longest = Math.max(...lines.map((l) => l.length));
-  const fontSize = Math.min((width * 0.86) / (longest * 0.56 + 0.3), ((height - 2 * safeY) * 0.62) / lines.length / 0.95);
+  const fontSize = Math.min((width * 0.8) / (longest * 0.56 + 0.3), ((height - 2 * safeY) * 0.62) / lines.length / 0.95);
 
   // Snap zooms on the click beats keep the 1.5-3 s cut rhythm.
   const zoom = frame < CLICKS[1] ? 1 : frame < CLICKS[2] + 6 ? 1.06 : 1.12;
@@ -30,10 +31,13 @@ export const Act1Title: React.FC<{ spec: VideoSpec }> = ({ spec }) => {
   return (
     <AbsoluteFill style={{ background: C.ink }}>
       <GlowPlate frame={frame} seed={seed} />
+      <StoryChrome u={u} safeY={safeY} ground="ink" badge={spec.channel} arrow={interpolate(frame, [6, 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
       <AbsoluteFill
         style={{
-          alignItems: "center",
+          alignItems: "flex-start",
           justifyContent: "center",
+          paddingLeft: u * 6.5,
+          transformOrigin: "left center",
           transform: `scale(${zoom * appear})`,
         }}
       >
