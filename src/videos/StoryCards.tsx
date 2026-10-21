@@ -4,7 +4,7 @@ import { WORDMARK_RATIO } from "../ui/Story";
 import { F } from "../ui/theme";
 
 // Story Cards: five flat cards, 20 s, 9x16, 24 fps, on an original 120 BPM instrumental
-// (scripts/make-story-music.py). The music has no voice; a voiceover is added separately.
+// (scripts/make-story-music.py) with an ElevenLabs voiceover placed on the grid.
 // Grid: 1 beat = 12 frames, 1 bar = 48 frames, every animation starts and ends on a 6-frame
 // (0.25 s) step. Card changes land on the downbeats at 0:00, 0:04, 0:08, 0:14 and 0:18.
 
@@ -27,7 +27,8 @@ const TEXT_TOP = 560;
 const TEXT_W = W - 2 * SIDE - 60; // keeps type off the right edge
 
 const DOWNBEATS = [0, 96, 192, 336, 432, 480];
-const MUSIC = "audio/Alert Global Tech - Story Cards Music.wav";
+// Music + voiceover, mixed by scripts/mix-story-voiceover.py (music alone: "...Story Cards Music.wav").
+const MUSIC = "audio/Alert Global Tech - Story Cards Mix.wav";
 const WORDMARK_INK = "brand/alert-global-tech-wordmark-ink.png";
 const WORDMARK_IVORY = "brand/alert-global-tech-wordmark-ivory.png";
 
@@ -399,7 +400,7 @@ const Card5: React.FC<CardProps> = ({ f }) => {
           <Arrow color={INK} width={52} stroke={4} />
         </div>
         <div style={{ marginTop: 36, fontFamily: F.sans, fontWeight: 400, fontSize: 36, color: IVORY, opacity: url }}>
-          alertglobaltech.com
+          alertglobal.tech
         </div>
       </AbsoluteFill>
       {/* Small stepped blocks, lower right, one per step */}

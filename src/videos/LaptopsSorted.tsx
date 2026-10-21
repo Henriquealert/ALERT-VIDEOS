@@ -22,7 +22,7 @@ const COPY = {
   headline: { lines: ["Laptops,", ""], accent: "sorted" }, // accent in lime, then the lime full stop
   sub: "One supplier, from quote to setup.",
   cta: "Request a Quote",
-  url: "alertglobaltech.com", // unverified: confirm the domain before publishing
+  url: "alertglobal.tech", // confirmed by Henrique, 21 Oct 2026
 };
 
 const W = 1080;
