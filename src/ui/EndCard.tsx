@@ -1,9 +1,9 @@
 import { AbsoluteFill, Img, interpolate, spring, staticFile, useVideoConfig } from "remotion";
 import { C, F, tag, useLayout } from "./theme";
 
-// Set to the file name once the approved Ivory lockup is in public/brand/ (e.g. "lockup-ivory.svg").
-// Until then the end card shows a typeset stand-in, which must not ship.
-const LOGO_FILE: string | null = null;
+// The approved Ivory lockup (a!ert + GLOBAL TECH). Always the real file, never redrawn or typeset.
+// The render fails if it's missing, so a video can't ship without the logo.
+export const LOGO_FILE = "brand/alert-global-tech-lockup-ivory.svg";
 
 type Props = { u: number; frame: number; cta: string; ctaUrl: string | null; channel: string };
 
@@ -44,23 +44,8 @@ export const EndCard: React.FC<Props> = ({ u, frame, cta, ctaUrl, channel }) => 
 
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", gap: u * 5 }}>
         <div style={{ opacity: logoIn, transform: `scale(${interpolate(logoIn, [0, 1], [0.96, 1])})` }}>
-          {LOGO_FILE ? (
-            <Img src={staticFile(`brand/${LOGO_FILE}`)} style={{ height: u * 12 }} />
-          ) : (
-            <div
-              style={{
-                fontFamily: F.headline,
-                fontWeight: 800,
-                fontSize: u * 8,
-                lineHeight: 0.9,
-                letterSpacing: "-0.025em",
-                color: C.ivory,
-                textAlign: "center",
-              }}
-            >
-              ALERT GLOBAL TECH
-            </div>
-          )}
+          {/* Clear space = the height of the "a"; never below the 120px minimum width */}
+          <Img src={staticFile(LOGO_FILE)} style={{ height: u * 12, minWidth: 120, display: "block" }} />
         </div>
         <div
           style={{

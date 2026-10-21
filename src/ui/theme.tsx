@@ -24,9 +24,9 @@ export const F = {
   statement: "Archivo Narrow", // Bold Italic, uppercase
   accent: "Instrument Serif", // Italic, one or two words only
   sans: "DM Sans", // functional: UI text, body, eyebrows
-  mono: "DM Mono", // tags
-  pixel: "Silkscreen", // act 2 old-OS dialogs only: an on-screen prop, not brand type
+  mono: "DM Mono", // tags, and the act 2 old-OS dialogs
 } as const;
+// Brand fonts only. Never add another family.
 
 // Self-hosted from public/fonts (see LICENSES.md there); loadFont holds the render until they're ready.
 const FONT_FILES: [string, string, string, "normal" | "italic"][] = [
@@ -37,7 +37,6 @@ const FONT_FILES: [string, string, string, "normal" | "italic"][] = [
   [F.sans, "dm-sans-latin-500-normal.woff2", "500", "normal"],
   [F.sans, "dm-sans-latin-600-normal.woff2", "600", "normal"],
   [F.mono, "dm-mono-latin-500-normal.woff2", "500", "normal"],
-  [F.pixel, "silkscreen-latin-400-normal.woff2", "400", "normal"],
 ];
 for (const [family, file, weight, style] of FONT_FILES) {
   loadFont({ family, url: staticFile(`fonts/${file}`), weight, style, format: "woff2" });

@@ -11,4 +11,3 @@ SIL Open Font License 1.1; full text is in `OFL-<family>.txt`.
 | instrument-serif-latin-400-italic.woff2 | Instrument Serif Italic | Editorial accent |
 | dm-sans-latin-400/500/600-normal.woff2 | DM Sans | Functional: UI text, eyebrow labels |
 | dm-mono-latin-500-normal.woff2 | DM Mono | Tag |
-| silkscreen-latin-400-normal.woff2 | Silkscreen | Act 2 old-OS dialogs only (on-screen prop, not brand type) |

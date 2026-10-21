@@ -59,7 +59,9 @@ export const PixelWindow: React.FC<Props> = ({
           justifyContent: "space-between",
           background: C.blue,
           color: C.ivory,
-          fontFamily: F.pixel,
+          fontFamily: F.mono,
+          fontWeight: 500,
+          textTransform: "uppercase",
           fontSize: u * 1.9,
           padding: `${u * 0.5}px ${u * 0.9}px`,
         }}
@@ -82,7 +84,9 @@ export const PixelWindow: React.FC<Props> = ({
       </div>
       <div
         style={{
-          fontFamily: F.pixel,
+          fontFamily: F.mono,
+          fontWeight: 500,
+          textTransform: "uppercase",
           fontSize: u * 2.4,
           lineHeight: 1.25,
           color: C.ink,
@@ -94,7 +98,9 @@ export const PixelWindow: React.FC<Props> = ({
       <div style={{ display: "flex", justifyContent: "flex-end", padding: `0 ${u * 1.8}px ${u * 1.5}px` }}>
         <div
           style={{
-            fontFamily: F.pixel,
+            fontFamily: F.mono,
+          fontWeight: 500,
+          textTransform: "uppercase",
             fontSize: u * 1.9,
             color: C.ink,
             background: C.skyLight,

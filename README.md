@@ -33,7 +33,8 @@ src/AlertPromo.tsx the five acts in sequence
 src/acts/          one component per act
 src/ui/            shared pieces and theme.tsx (brand tokens, fonts)
 data/specs/        spec files (data-quality-article.json is the sample)
-public/fonts/      self-hosted fonts + licences
+public/fonts/      self-hosted brand fonts + licences
+public/brand/      logo (alert-global-tech-lockup-ivory.svg, required)
 public/audio/      royalty-free audio + LICENSES.md
 reference/         reference video (gitignored, never rendered)
 ```

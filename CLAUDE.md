@@ -51,13 +51,14 @@ How the guide applies to video:
   UI text and eyebrow labels DM Sans; tags DM Mono caps. Headlines end in the
   coloured full stop (`<Dot>`). Accent rule: colour the last phrase or switch it to
   Instrument Serif Italic, not both.
-- Pixel font (Silkscreen) is allowed only inside the act 2 old-OS dialogs, as an
-  on-screen prop. It is not brand type.
+- Always use our fonts, and only our fonts: Archivo, Archivo Narrow, Instrument Serif,
+  DM Sans, DM Mono (self-hosted in `public/fonts/`). No pixel or other fonts, even for
+  props: the act 2 old-OS dialogs use DM Mono caps.
 - Graphic elements: two or three per video. This template uses blocks (act 1),
   a fine blue grid (act 2) and one arrow (end card).
-- Logo: one per video, on the end card only, Ivory on Deep Ink. Use the approved
-  file in `public/brand/` (set `LOGO_FILE` in `src/ui/EndCard.tsx`); never recolour,
-  stretch or redraw it. The typeset stand-in must not ship.
+- Logo: every video ends on our logo. One per video, on the end card only: the
+  approved Ivory lockup `public/brand/alert-global-tech-lockup-ivory.svg` on Deep Ink.
+  Never recolour, stretch, redraw or typeset it. Renders fail if the file is missing.
 - Calls to action: one per video, title-style capitals: Talk to an Expert,
   Request a Quote, Learn More.
 - Stories (9x16): keep the top and bottom 250px clear (`safeY` in `useLayout`).
