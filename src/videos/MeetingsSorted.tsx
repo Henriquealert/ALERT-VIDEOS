@@ -9,7 +9,8 @@ import { F } from "../ui/theme";
 // The three dashed bars drawn in card 2 are the same bars that fill in card 3.
 // Grid: 120 BPM, 1 beat = 12 frames, 1 bar = 48 frames; animations start on 6-frame (0.25 s) steps.
 // Music: scripts/make-meetings-music.py (drop on 0:08, resolve on 0:18).
-// Voiceover lines are placed by scripts/mix-meetings-voiceover.py at the same times used below.
+// Voiceover (a short commentary on each card, not a read of it) is placed on the grid by
+// scripts/mix-meetings-voiceover.py.
 
 export const MEETINGS_SORTED = { fps: 24, durationInFrames: 480, width: 1080, height: 1920 } as const;
 
@@ -331,7 +332,7 @@ const Card3: React.FC<CardProps> = ({ f }) => {
         <Headline color={IVORY} size={136} p={step(f, STEP)}>
           Ask Copilot Chat<span style={{ color: LIME }}>.</span>
         </Headline>
-        <Caption color={IVORY} p={step(f, 3 * BEAT + STEP)}>
+        <Caption color={IVORY} p={step(f, 2 * BEAT)}>
           Your data, presentation-ready.
         </Caption>
       </TextColumn>

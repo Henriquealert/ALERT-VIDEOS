@@ -5,9 +5,9 @@ Input:  the ElevenLabs take (voice: Everett - Confident American Ads, model elev
         and the instrumental from make-meetings-music.py.
 Output: a voiceover stem (on the grid) and the final mix the video plays.
 
-The take is split at its pauses. Each line's first syllable lands on a 0.25 s step, at the
-moment its words appear on screen (same times as the video code). The card-4 caption is
-sped up slightly so it finishes as the end card lands.
+The voice comments on each card rather than reading it: the lines react just after each
+headline lands. The take is split at its pauses and each line's first syllable lands on a
+0.25 s step. The first card-4 line is sped up slightly so both card-4 lines fit before the end card.
 The music sits well under the voice: about 12 LU below it, ducking a further 6 dB while
 the voice speaks. The final mix is set to about -16 LUFS, peak -1.5 dBFS.
 
@@ -30,14 +30,12 @@ MUSIC_UNDER = 12  # LU between the voice and the music bed, before ducking
 
 # (cut start, cut end) in the take, where the first syllable lands (s), and playback speed.
 PHRASES = [
-    ((0.00, 2.08), 0.50, 1.0),  # The meeting just moved to tomorrow.      card 1
-    ((2.08, 3.72), 4.25, 1.0),  # You still need the charts.               card 2
-    ((3.72, 5.25), 8.25, 1.0),  # Ask Copilot Chat.                        card 3, the drop
-    ((5.25, 7.29), 9.75, 1.0),  # Your data, presentation-ready.
-    ((7.29, 8.68), 14.25, 1.0),  # Meetings, sorted.                       card 4
-    ((8.68, 10.82), 15.50, 1.08),  # Microsoft 365 and Copilot,
-    ((10.82, 12.01), 17.50, 1.08),  # set up by Alert.
-    ((12.01, 13.12), 18.50, 1.0),  # Request a quote.                      card 5, under the pill
+    ((0.00, 2.55), 0.50, 1.0),  # An extra day. Lovely.                                  card 1
+    ((2.55, 4.65), 4.75, 1.0),  # The charts didn't get the memo.                        card 2, as the bars draw
+    ((4.65, 8.19), 8.25, 1.0),  # So let Copilot Chat turn your numbers into charts.     card 3, on the drop
+    ((8.19, 11.25), 14.25, 1.08),  # We set up Microsoft 365 and Copilot.               card 4
+    ((11.25, 13.19), 17.00, 1.0),  # Tomorrow, you just show up.
+    ((13.19, 14.24), 18.75, 1.0),  # Request a quote.                                    card 5, under the pill
 ]
 
 
