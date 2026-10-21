@@ -1,0 +1,33 @@
+{
+  "name": "alert-videos",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render HelloWorld out/hello-world.mp4",
+    "upgrade": "remotion upgrade",
+    "typecheck": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Henriquealert/ALERT-VIDEOS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Henriquealert/ALERT-VIDEOS/issues"
+  },
+  "homepage": "https://github.com/Henriquealert/ALERT-VIDEOS#readme",
+  "dependencies": {
+    "@remotion/cli": "^4.0.537",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.537"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
