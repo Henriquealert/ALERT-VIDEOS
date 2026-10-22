@@ -106,7 +106,8 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   Post copy, alt text and captions (.srt) are in `docs/social/`.
 - `SecuritySorted-4x5` / `SecuritySorted-16x9` — "Security, sorted." Windows 11 Pro laptops. 22 s, 30 fps,
   1080×1350 and 1920×1080, seven hard-cut shots on a 120 BPM grid (1 beat = 15 frames), editorial kinetic
-  type with halftone cut-outs, no voiceover. Built on partner_content row 97022741 (chip-to-cloud security,
+  type with halftone cut-outs. Voiceover (ElevenLabs, "Everett - Confident American Ads"), one line per shot,
+  silent over the monogram; placed and mixed by `python3 scripts/mix-security-sorted-voiceover.py`. Built on partner_content row 97022741 (chip-to-cloud security,
   balanced innovation and protection); closing lines are the guide's platform and support lines. CTA Request a Quote.
   Halftone art (tokens, laptop) and the a! monogram crop: `python3 scripts/make-halftone-cutouts.py` (writes `public/art/`).
   Music and ticks: `python3 scripts/make-security-sorted-audio.py "public/audio/Alert Global Tech - Security Sorted Music.wav"`;

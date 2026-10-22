@@ -10,7 +10,8 @@ import { C, Dot, F, tag } from "../ui/theme";
 // TPM 2.0, BitLocker, Secure Boot and Windows Hello are Windows 11 Pro features named in the brief, not
 // in the row. The fleet table is illustrative (no client data). No numbers on screen.
 // Halftone art: scripts/make-halftone-cutouts.py. Music and ticks: scripts/make-security-sorted-audio.py
-// (TOKEN_LAND and TOKEN_CLICK below must match the frames in that script).
+// (TOKEN_LAND and TOKEN_CLICK below must match the frames in that script). Voiceover: ElevenLabs "Everett",
+// placed by scripts/mix-security-sorted-voiceover.py; nothing is said over the monogram.
 // Brand fonts only: Archivo ExtraBold is replaced by DM Sans Bold, DM Mono by the DM Sans `tag` style.
 
 export const SECURITY_SORTED_4X5 = { fps: 30, durationInFrames: 660, width: 1080, height: 1350 } as const;
@@ -21,7 +22,8 @@ const SHOTS = [0, 105, 210, 300, 405, 525, 570, 660];
 const TOKEN_LAND = [81, 92, 102]; // shot 1, last token lands at 3.4 s
 const TOKEN_CLICK = [339, 357, 375]; // shot 4, one each 0.6 s
 
-const MUSIC = "audio/Alert Global Tech - Security Sorted Music.wav";
+// Music + voiceover, mixed by scripts/mix-security-sorted-voiceover.py (lines land at the shot starts).
+const MIX = "audio/Alert Global Tech - Security Sorted Mix.wav";
 const ART = (n: string) => staticFile(`art/security-sorted-${n}.png`);
 const TOKENS = ["token-tpm", "token-bitlocker", "token-secureboot"];
 const LAPTOP_RATIO = 1200 / 900;
@@ -61,7 +63,7 @@ export const SecuritySorted: React.FC = () => {
   const shots = [Shot1, Shot2, Shot3, Shot4, Shot5, Shot6, Shot7];
   return (
     <AbsoluteFill style={{ background: C.ink }}>
-      <Audio src={staticFile(MUSIC)} />
+      <Audio src={staticFile(MIX)} />
       {shots.map((Shot, i) =>
         frame >= SHOTS[i] && frame < SHOTS[i + 1] ? <Shot key={i} f={frame - SHOTS[i]} /> : null,
       )}

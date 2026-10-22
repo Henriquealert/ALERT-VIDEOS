@@ -20,3 +20,6 @@ Royalty-free music and SFX only. Record every file here before using it.
 | Alert Global Tech - Data Sorted Voiceover.wav | The take above, cut into 18 lines and placed by `scripts/mix-data-sorted-voiceover.py` | As above | Voice stem, 60 s |
 | Alert Global Tech - Data Sorted Mix.wav | Music + voiceover, music ducked 6 dB under the voice | As above | What the video plays; about -18.8 LUFS, -1.5 dBFS peak |
 >>>>>>> origin/main
+| Alert Global Tech - Security Sorted Voiceover Take.mp3 | ElevenLabs text-to-speech, voice "Everett - Confident American Ads" (TdGSaGM0xJze6GHo3qqb), model eleven_v4, generated 22 Oct 2026 | ElevenLabs terms for the account's plan (commercial use needs a paid plan; confirm before publishing) | Raw take, 19.0 s |
+| Alert Global Tech - Security Sorted Voiceover.wav | The take above, cut into 7 lines and placed at the shot starts by `scripts/mix-security-sorted-voiceover.py` | As above | Voice stem, 22 s |
+| Alert Global Tech - Security Sorted Mix.wav | Music + voiceover, music about 9 LU under the voice and ducked 6 dB while it speaks | As above | What the video plays; about -17.5 LUFS, -1.5 dBFS peak |
