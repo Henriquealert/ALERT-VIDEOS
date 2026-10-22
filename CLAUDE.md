@@ -109,6 +109,8 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   type with halftone cut-outs. Voiceover (ElevenLabs, "Everett - Confident American Ads"), one line per shot,
   silent over the monogram; placed and mixed by `python3 scripts/mix-security-sorted-voiceover.py`. Built on partner_content row 97022741 (chip-to-cloud security,
   balanced innovation and protection); closing lines are the guide's platform and support lines. CTA Request a Quote.
+  Thumbnails: `npx remotion still SecuritySorted-Cover-4x5 out/"Alert Global Tech - Security Sorted Thumbnail 4x5.png"` (and `-16x9`).
+  Post copy, description and alt text: `docs/social/Alert Global Tech - Security Sorted LinkedIn Post.md`.
   Halftone art (tokens, laptop) and the a! monogram crop: `python3 scripts/make-halftone-cutouts.py` (writes `public/art/`).
   Music and ticks: `python3 scripts/make-security-sorted-audio.py "public/audio/Alert Global Tech - Security Sorted Music.wav"`;
   token frames at the top of that script match `TOKEN_LAND` / `TOKEN_CLICK` in the video code.

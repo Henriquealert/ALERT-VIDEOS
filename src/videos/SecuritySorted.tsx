@@ -689,3 +689,60 @@ const Shot7: React.FC<ShotProps> = ({ f }) => {
     </Ground>
   );
 };
+
+// ---------- Cover / thumbnail (still) ----------
+// Same art and type as the video: statement title in lime on Deep Ink, the laptop with its three
+// tokens on the deck, no other text. Render with `npx remotion still`.
+
+export const SECURITY_SORTED_COVER_4X5 = { fps: 30, durationInFrames: 1, width: 1080, height: 1350 } as const;
+export const SECURITY_SORTED_COVER_16X9 = { ...SECURITY_SORTED_COVER_4X5, width: 1920, height: 1080 } as const;
+
+export const SecuritySortedCover: React.FC = () => {
+  const { W, H, u, side, wide } = useL();
+  const fs = wide ? 18 * u : 19 * u;
+  const lw = wide ? W * 0.5 : W * 0.84;
+  const lh = lw / LAPTOP_RATIO;
+  const lx = wide ? W - side - lw + 2 * u : (W - lw) / 2 + 3 * u;
+  const ly = wide ? H * 0.52 - lh / 2 + 4 * u : H - lh - 9 * u;
+  const deckSize = lw * SPOT_SIZE;
+  return (
+    <Ground color={C.ink}>
+      <Wordmark on="ink" />
+      <div
+        style={{
+          position: "absolute",
+          left: side,
+          top: wide ? H * 0.3 : 20 * u,
+          fontFamily: F.statement,
+          fontWeight: 700,
+          fontStyle: "italic",
+          fontSize: fs,
+          lineHeight: 0.86,
+          color: C.lime,
+        }}
+      >
+        SECURITY,
+        <br />
+        SORTED
+        <Dot fontSize={fs} color={C.lime} />
+      </div>
+      <Img src={ART("laptop")} style={{ position: "absolute", left: lx, top: ly, width: lw, height: lh }} />
+      {TOKENS.map((t, i) => (
+        <Img
+          key={t}
+          src={ART(t)}
+          style={{
+            position: "absolute",
+            left: lx + LAPTOP_SPOTS[i].x * lw - deckSize / 2,
+            top: ly + LAPTOP_SPOTS[i].y * lh - deckSize / 2,
+            width: deckSize,
+            height: deckSize,
+            transform: `matrix(${DECK.join(",")})`,
+          }}
+        />
+      ))}
+      <div style={{ position: "absolute", left: side, bottom: 6 * u, ...tag(2.4 * u, C.ivory) }}>Windows 11 Pro laptops</div>
+      <Grain frame={0} />
+    </Ground>
+  );
+};
