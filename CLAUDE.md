@@ -114,6 +114,26 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `npx remotion render SecuritySorted-4x5 out/"Alert Global Tech - Security Sorted Video LinkedIn 4x5.mp4" --crf=18`
   `npx remotion render SecuritySorted-16x9 out/"Alert Global Tech - Security Sorted Video 16x9.mp4" --crf=18`
 
+- `MeetingsSorted-9x16` — "Meetings, sorted." corporate-humour story (Microsoft 365 and Copilot). 20 s,
+  1080×1920, 24 fps, five flat story cards, fixed copy from Henrique's brief (21 Oct 2026). Voiceover (ElevenLabs, "Everett -
+  Confident American Ads") is a short commentary on each card, not a read of the copy; placed and mixed by
+  `python3 scripts/mix-meetings-voiceover.py` (line times at the top match the video code). 120 BPM grid, card changes at 0:00, 0:04, 0:08 (drop), 0:14, 0:18 (resolve).
+  Music: `python3 scripts/make-meetings-music.py "public/audio/Alert Global Tech - Meetings Sorted Music.wav"`.
+  `npx remotion render MeetingsSorted-9x16 out/"Alert Global Tech - Meetings Sorted Video 9x16.mp4" --crf=18`
+- `DataSorted-9x16` — "Data, sorted." explainer: why data quality decides AI results. 60 s, 1080×1920,
+  30 fps, fixed copy from Henrique's brief (21 Oct 2026), no people, offscreen narrator only. Engraving-style
+  line drawings that draw themselves on, on Soft Ivory, in the brand palette; Deep Ink end card with the
+  lockup, a blue → sky beam and a lime "Book a Sprint" pill. Scene cuts follow the voiceover: 0, 4.5, 13,
+  21.5, 37.3, 47, 60 s. Stats on screen carry their sources (Forrester via IBM Think; IBM Institute for
+  Business Value).
+  Music: `python3 scripts/make-data-sorted-music.py "public/audio/Alert Global Tech - Data Sorted Music.wav"`.
+  Voiceover (ElevenLabs, "Killian - Clear, Warm, Upbeat & Friendly") is placed and mixed by
+  `python3 scripts/mix-data-sorted-voiceover.py`; line times match `src/videos/DataSorted.tsx`.
+  `npx remotion render DataSorted-9x16 out/"Alert Global Tech - Data Sorted Video 9x16.mp4" --crf=18`
+  LinkedIn feed cut (4:5, 1080×1350, same story and audio; the scenes scale into the feed frame via `FEED_K`):
+  `npx remotion render DataSorted-4x5 out/"Alert Global Tech - Data Sorted Video LinkedIn 4x5.mp4" --crf=18`
+  Post copy, alt text and captions (.srt) are in `docs/social/`.
+
 ## Formats
 
 Register one composition per format, all driven by the same spec:
