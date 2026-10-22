@@ -121,6 +121,9 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   Voiceover (ElevenLabs, "Killian - Clear, Warm, Upbeat & Friendly") is placed and mixed by
   `python3 scripts/mix-data-sorted-voiceover.py`; line times match `src/videos/DataSorted.tsx`.
   `npx remotion render DataSorted-9x16 out/"Alert Global Tech - Data Sorted Video 9x16.mp4" --crf=18`
+  LinkedIn feed cut (4:5, 1080×1350, same story and audio; the scenes scale into the feed frame via `FEED_K`):
+  `npx remotion render DataSorted-4x5 out/"Alert Global Tech - Data Sorted Video LinkedIn 4x5.mp4" --crf=18`
+  Post copy, alt text and captions (.srt) are in `docs/social/`.
 
 ## Formats
 

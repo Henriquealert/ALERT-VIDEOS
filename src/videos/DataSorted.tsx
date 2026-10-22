@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { AbsoluteFill, Audio, Easing, Img, interpolate, spring, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { LOGO_FILE, LOGO_RATIO } from "../ui/EndCard";
 import { WORDMARK_RATIO } from "../ui/Story";
 import { C, Dot, F } from "../ui/theme";
@@ -16,6 +16,8 @@ import { C, Dot, F } from "../ui/theme";
 // Voice lines are placed by scripts/mix-data-sorted-voiceover.py at the times used below.
 
 export const DATA_SORTED = { fps: 30, durationInFrames: 1800, width: 1080, height: 1920 } as const;
+// LinkedIn feed cut: 4:5, the brand guide's feed-post size. Same story, timing and audio.
+export const DATA_SORTED_4X5 = { ...DATA_SORTED, height: 1350 } as const;
 
 // Brand tokens (src/ui/theme.tsx). Blue-family tints appear only as the blue gradient stops.
 const IVORY = C.ivory;
@@ -27,6 +29,10 @@ const SKY_LIGHT = C.skyLight;
 const WORDMARK_INK = "brand/alert-global-tech-wordmark-ink.png";
 const SIDE = 80;
 const SAFE = 250; // Story safe zone, top and bottom
+// Feed (4:5): no app chrome over the frame, so the frame tightens to an 80px margin and the
+// scenes, laid out on the 1920 canvas, scale so their content band (y 360–1480) fills y 190–1250.
+const FEED_TOP = 80;
+const FEED_K = (1250 - 190) / (1480 - 360);
 
 const W = 1080;
 const H = 1920;
@@ -46,29 +52,49 @@ const slide = (fr: number, t: number) => spring({ frame: fr - s(t), fps: FPS, co
 
 export const DataSorted: React.FC = () => {
   const fr = useCurrentFrame();
+  const { height } = useVideoConfig();
+  const feed = height < 1600;
+  const top = feed ? FEED_TOP : SAFE;
   const scenes = [Hook, Questions, Compounds, Cost, Fix, Close];
+  const closeIn = interpolate(fr, [SCENES[5], SCENES[5] + 10], [0, 1], clamp);
   return (
     <AbsoluteFill style={{ background: IVORY }}>
       <Audio src={staticFile(MIX)} />
-      {scenes.map((Scene, i) => {
-        const start = SCENES[i];
-        const end = SCENES[i + 1];
-        if (fr < start || fr >= end) return null;
-        // Each beat cleanly replaces the last: slide left and fade over the final 8 frames.
-        const out = i === scenes.length - 1 ? 0 : interpolate(fr, [end - 8, end], [0, 1], { ...clamp, easing: io });
-        return (
-          <AbsoluteFill key={i} style={{ opacity: 1 - out, transform: `translateX(${-160 * out}px)` }}>
-            <Scene fr={fr} />
-          </AbsoluteFill>
-        );
-      })}
-      {/* Story frame on the ivory scenes; the end card carries the lockup instead */}
-      {fr < SCENES[5] + 10 ? (
-        <AbsoluteFill style={{ opacity: 1 - interpolate(fr, [SCENES[5], SCENES[5] + 10], [0, 1], clamp) }}>
-          <Img src={staticFile(WORDMARK_INK)} style={{ position: "absolute", left: SIDE, top: SAFE, width: 150, height: 150 / WORDMARK_RATIO }} />
-          <LineArrow x={SIDE} y={H - SAFE - 40} />
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: W,
+          height: H,
+          transformOrigin: "top center",
+          transform: feed ? `translateY(${190 - 360 * FEED_K}px) scale(${FEED_K})` : undefined,
+        }}
+      >
+        {scenes.map((Scene, i) => {
+          const start = SCENES[i];
+          const end = SCENES[i + 1];
+          if (fr < start || fr >= end) return null;
+          // Each beat cleanly replaces the last: slide left and fade over the final 8 frames.
+          const out = i === scenes.length - 1 ? 0 : interpolate(fr, [end - 8, end], [0, 1], { ...clamp, easing: io });
+          return (
+            <AbsoluteFill key={i} style={{ opacity: 1 - out, transform: `translateX(${-160 * out}px)` }}>
+              <Scene fr={fr} />
+            </AbsoluteFill>
+          );
+        })}
+      </div>
+      {/* Story frame: wordmark on the ivory scenes (the end card carries the lockup instead),
+          line arrow throughout, ink on ivory and ivory on the end card */}
+      {closeIn < 1 ? (
+        <AbsoluteFill style={{ opacity: 1 - closeIn }}>
+          <Img src={staticFile(WORDMARK_INK)} style={{ position: "absolute", left: SIDE, top, width: 150, height: 150 / WORDMARK_RATIO }} />
+          <LineArrow x={SIDE} y={height - top - 40} />
         </AbsoluteFill>
       ) : null}
+      <AbsoluteFill style={{ opacity: ease(fr, 47.6, 14) }}>
+        <LineArrow x={SIDE} y={height - top - 40} color={IVORY} />
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };
@@ -704,7 +730,8 @@ const Close: React.FC<SceneProps> = ({ fr }) => {
   const logoW = 360;
   return (
     <>
-      <AbsoluteFill style={{ background: INK, opacity: night }} />
+      {/* Oversized so it still fills the frame when the feed cut scales the scene down */}
+      <div style={{ position: "absolute", left: -300, right: -300, top: -600, bottom: -600, background: INK, opacity: night }} />
       {/* The beam rises from the bottom edge through the centre: blue → sky gradient (brand beam) */}
       <div
         style={{
@@ -804,9 +831,6 @@ const Close: React.FC<SceneProps> = ({ fr }) => {
         }}
       >
         alertglobaltech.com
-      </div>
-      <div style={{ opacity: ease(fr, 47.6, 14) }}>
-        <LineArrow x={SIDE} y={H - SAFE - 40} color={IVORY} />
       </div>
     </>
   );
