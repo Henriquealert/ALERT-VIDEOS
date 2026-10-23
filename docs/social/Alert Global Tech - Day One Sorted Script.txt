@@ -1,0 +1,106 @@
+ALERT GLOBAL TECH - DAY ONE, SORTED.
+Brand film for startup founders. Script and shot list as built.
+
+Main cut: 60 s, 24 fps. 16x9 (1920x1080) and 9x16 (1080x1920, 250 px kept clear top and bottom).
+Feed cut: 30 s, 24 fps, 4x5 (1080x1350), beats 1, 3, 7 and 8.
+Voiceover: ElevenLabs, voice "Everett - Confident American Ads", model eleven_v4.
+Music and sound design: original, synthesised for this film (scripts/make-day-one-audio.py).
+Call to action: Request a Quote. URL: alertglobaltech.com
+
+
+MAIN CUT (60 s)
+
+1. HOOK  0:00-0:04  Deep Ink
+   Pixel cursors and pointing hands swarm in, each dragging in one letter, with a click on
+   every landing. The headline holds, then crumbles into falling lime, blue and ivory blocks.
+   On screen: NEW HIRE STARTS MONDAY (lime dot)
+   VO: none
+   Sound: lo-fi synth intro, a cursor click per letter.
+
+2. PICTURE THIS  0:04-0:07  Deep Ink
+   Ink frame, then a slow push-in on a flat desk in ivory and blue: empty chair pushed out,
+   sealed laptop box, lime sticky note reading "laptop?".
+   On screen: PICTURE THIS (lime dot), Archivo Narrow Bold Italic
+   VO 0:04.25: "Your first hire starts Monday."
+
+3. CHAOS  0:07-0:14  Retro desktop, Electric Blue to deep blue
+   Old-style dialog windows (ivory with blue title bars, flickering lime edges) pop up faster
+   and faster until they fill the screen. The last one lands centre, with a small screen shake.
+   Dialogs: Who ordered the laptops? / Mac or Windows? / How many Microsoft 365 licences? /
+   Is the Wi-Fi password still password? / Copilot or not? / Which vendor was that? /
+   Are we cooked?
+   VO 0:07.5: "Then the questions start."
+   Sound: rising dialog chimes, faster blips as the windows multiply, an error bonk on the last.
+
+4. EVERY TAB OPEN  0:14-0:17  Deep Ink
+   Near-empty frame. A cursor clicks and drags a solid Electric Blue highlight across the
+   second line.
+   On screen: ONE FOUNDER. EVERY TAB OPEN (lime dot)
+   Sound: the music pulls back under a low-pass; mouse-down and mouse-up clicks.
+
+5. THE TANGLE  0:17-0:26  Deep Ink
+   Thin blue rails and ivory crosshairs knot five floating blocks together: LAPTOPS, LICENCES,
+   WI-FI, SECURITY, TRAINING. Tiny cursors wander along the rails, stop and turn back. The camera
+   starts close on LICENCES and pulls back to show the whole knot.
+   VO 0:18: "Laptops from one place. Licences from another. Wi-Fi from whoever picks up."
+   Sound: full lo-fi build with glitch stutters and a riser, then a hard cut to silence at 0:26.
+
+6. THE FIX  0:26-0:46  Soft Ivory
+   Calm, spacious. Hairline cards with rounded corners slide in, slowly:
+   - Message card, typed out: "We're hiring six people this quarter."
+   - Quote card (ONE SUPPLIER): Dell or Apple laptops, Microsoft 365, Copilot, Ubiquiti Wi-Fi,
+     Fortinet firewall. Every quantity, price and the total shown as [00].
+   - Setup checklist, one lime tick at a time: Sourced through TD SYNNEX / Configured /
+     Licences assigned / Certiport training booked
+   - Small Deep Ink card: READY FOR MONDAY (lime dot)
+   VO 0:27: "Alert sorts it in one go."
+   VO 0:30: "One quote, one supplier."
+   VO 0:35: "Set up, not just shipped. In English, Spanish or Portuguese."
+   Sound: silence, then a warm, minimal pulse from 0:28; a soft tick on each checkbox.
+
+7. RESOLUTION  0:46-0:52  Deep Ink
+   The tangled lines snap straight into three ascending stepped blocks (lime, blue, outline).
+   A chunky up-right arrow, blue to sky gradient, rises past them and exits top right.
+   VO 0:47: "So you can get back to building."
+   Sound: a snap on the lines, a soft swish under the arrow.
+
+8. END CARD  0:52-1:00  Acid Lime
+   A lime wipe sweeps left to right. Ink a!ert wordmark top-left (the only logo in the film).
+   Headline: DAY ONE, sorted (ink dot). "DAY ONE," in caps, "sorted" in Instrument Serif Italic.
+   CTA: ink pill, Request a Quote
+   Below: alertglobaltech.com
+   Small stepped blocks (ink, blue, outline) bottom-right.
+   VO 0:54: "Hardware, software and AI, sorted."
+   Sound: soft whoosh on the wipe; the pulse resolves, bell, fade to 1:00.
+
+
+FEED CUT (30 s, 4x5)
+
+0:00-0:04  Beat 1, hook. VO 0:01: "Your first hire starts Monday."
+0:04-0:13  Beat 3, chaos (same pops, spread over 9 s). VO 0:04.5: "Then the questions start."
+0:13-0:20  Beat 7, resolution. VO 0:14: "So you can get back to building."
+0:20-0:30  Beat 8, end card. VO 0:22: "Hardware, software and AI, sorted."
+The beat 2 line ("Your first hire starts Monday.") moves under the hook because beat 2 is not
+in this cut.
+
+
+FULL VOICEOVER
+Your first hire starts Monday.
+Then the questions start.
+Laptops from one place. Licences from another. Wi-Fi from whoever picks up.
+Alert sorts it in one go. One quote, one supplier. Set up, not just shipped.
+In English, Spanish or Portuguese.
+So you can get back to building.
+Hardware, software and AI, sorted.
+
+
+NOTES ON THE BUILD
+- No numbers, prices, clients or dates are invented. All quantities and prices are [00].
+- Fonts: only the supplied brand fonts are used (Archivo Narrow, DM Sans, Instrument Serif).
+  Headlines that the brief set in Archivo ExtraBold use Archivo Narrow Bold caps; tags that the
+  brief set in DM Mono use DM Sans caps.
+- Colours: the four brand colours plus the blue gradient stops only. The "teal" desktop and
+  "grey" dialogs in the brief are an Electric Blue to deep blue desktop with ivory dialogs.
+- The Ink wordmark is made from the approved Ivory file's shape (see public/brand/README.md).
+  Replace it with an official Ink file if one exists.
+- The voice licence follows the ElevenLabs account plan. Confirm commercial use before publishing.

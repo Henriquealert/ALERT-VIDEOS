@@ -104,6 +104,13 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   LinkedIn feed cut (4:5, 1080×1350, same story and audio; layout tightens via the `FEED` layout):
   `npx remotion render TechUpdates-Windows11-4x5 out/"Alert Global Tech - Tech Updates Windows 11 Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
+- `DayOneSorted-16x9`, `DayOneSorted-9x16`, `DayOneSorted-Feed-4x5`: "Day One, Sorted." brand film for
+  startup founders, fixed copy from Henrique's brief (23 Oct 2026). 60 s at 24 fps (feed cut 30 s, beats
+  1, 3, 7, 8). Ends on a lime end card with the Ink wordmark, the only logo in the film; CTA Request a Quote.
+  Script and shot list: `docs/social/Alert Global Tech - Day One Sorted Script.txt`.
+  Audio (music, SFX, voiceover placement, both mixes): `python3 scripts/make-day-one-audio.py`.
+  `npx remotion render DayOneSorted-16x9 out/"Alert Global Tech - Day One Sorted 16x9.mp4" --crf=18`
+  (also `DayOneSorted-9x16` → `... 9x16.mp4`, `DayOneSorted-Feed-4x5` → `... Feed 4x5.mp4`).
 
 ## Formats
 
