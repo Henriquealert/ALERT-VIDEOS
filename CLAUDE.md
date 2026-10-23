@@ -146,6 +146,17 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `npx remotion render DataSorted-4x5 out/"Alert Global Tech - Data Sorted Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
 
+- `SeriesASorted-4x5` — "Series A, sorted." explainer for the Series A Compliance bundle, sent in LinkedIn
+  messages to VC fund platform leads. 86 s, 1080×1350, 30 fps, fixed copy from Henrique's brief (23 Oct 2026).
+  Deep Ink throughout with the blue → sky beam down the centre (the "Data, sorted." end card look); graphic
+  elements are the beam, one line arrow and "01/04" numerals only. Lockup on the opening and close, wordmark
+  in between. Captions burned in (works with sound off). No Apple or Lenovo (not yet authorised); CTA Book a Call.
+  Voiceover (ElevenLabs, "Jim F - Warm, Confident, Conversational"), music, mix, caption timeline
+  (`src/videos/series-a-timeline.json`) and the .srt: `python3 scripts/make-series-a-audio.py`.
+  `npx remotion render SeriesASorted-4x5 out/"Alert Global Tech - Series A Sorted Explainer 4x5.mp4" --crf=18`
+  Thumbnail (title card): `npx remotion still SeriesASorted-4x5 out/"Alert Global Tech - Series A Sorted Explainer Thumbnail.png" --frame=1020`
+  Timed script: `docs/social/Alert Global Tech - Series A Sorted Script.txt`.
+
 ## Formats
 
 Register one composition per format, all driven by the same spec:
