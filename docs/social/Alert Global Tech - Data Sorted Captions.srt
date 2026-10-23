@@ -1,0 +1,110 @@
+1
+00:00:00,300 --> 00:00:03,260
+Your AI is only as good
+as the data you feed it.
+
+2
+00:00:04,700 --> 00:00:07,740
+Before you roll out Copilot,
+ask three quick questions.
+
+3
+00:00:08,000 --> 00:00:09,500
+Is your data in one place?
+
+4
+00:00:09,750 --> 00:00:10,600
+Is it current?
+
+5
+00:00:10,750 --> 00:00:12,200
+Does someone own it?
+
+6
+00:00:13,200 --> 00:00:14,300
+Here's the sneaky part:
+
+7
+00:00:14,500 --> 00:00:17,050
+one wrong record gets copied
+into the CRM,
+
+8
+00:00:17,250 --> 00:00:18,300
+then the sales report,
+
+9
+00:00:18,450 --> 00:00:20,550
+then the answer your team
+gets from AI.
+
+10
+00:00:21,700 --> 00:00:23,200
+And it adds up fast.
+
+11
+00:00:23,400 --> 00:00:25,700
+Forrester found more than a quarter
+of organizations estimate
+
+12
+00:00:25,700 --> 00:00:29,650
+they lose over five million dollars
+a year to poor data.
+
+13
+00:00:29,900 --> 00:00:32,400
+IBM reports nearly half
+of business leaders
+
+14
+00:00:32,400 --> 00:00:34,900
+say accuracy concerns
+hold back their AI.
+
+15
+00:00:35,200 --> 00:00:35,950
+The good news?
+
+16
+00:00:36,050 --> 00:00:37,200
+It's fixable.
+
+17
+00:00:37,500 --> 00:00:38,450
+Start early.
+
+18
+00:00:38,600 --> 00:00:40,000
+Check data where it's entered.
+
+19
+00:00:40,300 --> 00:00:41,400
+Remove duplicates.
+
+20
+00:00:41,600 --> 00:00:43,300
+Give every dataset an owner.
+
+21
+00:00:43,550 --> 00:00:46,150
+Then let AI work on
+something you can trust.
+
+22
+00:00:47,600 --> 00:00:50,450
+Alert Global Tech helps you get
+Microsoft 365,
+
+23
+00:00:50,600 --> 00:00:53,300
+SharePoint and Copilot
+ready for real work.
+
+24
+00:00:53,600 --> 00:00:56,300
+Hardware, software and AI, sorted.
+
+25
+00:00:56,500 --> 00:00:58,000
+Book a Sprint.
