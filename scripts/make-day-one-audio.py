@@ -1,23 +1,26 @@
 """Music, sound design and voiceover mix for "Day One, Sorted." (DayOneSorted-* compositions).
 
-Everything here is original and synthesised (no samples) except the voiceover, an ElevenLabs take
-(voice: Everett - Confident American Ads, model eleven_v4), cut at its pauses and placed on the grid.
+Everything here is original and synthesised (no samples) except the voiceover: one ElevenLabs take per
+cut (voice: Ray D - Adult Male Energetic and Engaging American, model eleven_v4), each played whole
+from its offset in src/videos/day-one-timeline.json.
 
 Music, 120 BPM (1 beat = 0.5 s = 12 frames at 24 fps):
-  hook, desk, chaos, tabs, tangle   lo-fi glitchy synth that builds scene by scene
-  cut to the ivory "fix" scene      hard cut to silence
-  fix, resolve, end                 clean, warm minimal pulse to the end
+  hook, desk, chaos, tabs, tangle   lo-fi glitchy synth with drums from the first frame, building
+  cut to the ivory "fix" scene      hard cut, a breath of silence
+  fix, resolve, end                 clean, warm, driving pulse (four-on-the-floor felt kick) to the end
 Sound design: cursor clicks on the hook letters and the tab drag, rising dialog-box chimes in the
 chaos scene, soft ticks on the checklist, a snap and an arrow swish in the resolve, a whoosh on the
 lime wipe.
 
-Scene lengths and event times are copied from src/videos/DayOneSorted.tsx; change both together.
+Scene lengths and event frames are read from src/videos/day-one-timeline.json (built by
+scripts/make-day-one-timeline.py), the same file the video code reads.
 
 Run (numpy + scipy, ffmpeg on PATH):
   python3 scripts/make-day-one-audio.py
 Writes the 60 s mix (16x9 and 9x16) and the 30 s feed mix (4x5) to public/audio/.
 """
 
+import json
 import subprocess
 
 import numpy as np
@@ -28,43 +31,18 @@ SR = 48000
 FPS = 24
 BEAT = 0.5
 DIR = "public/audio/"
-TAKE = DIR + "Alert Global Tech - Day One Sorted Voiceover Take.mp3"
+TAKES = {
+    "full": DIR + "Alert Global Tech - Day One Sorted Voiceover Take.mp3",
+    "feed": DIR + "Alert Global Tech - Day One Sorted Feed Voiceover Take.mp3",
+}
 OUT = {
     "full": DIR + "Alert Global Tech - Day One Sorted Mix.wav",
     "feed": DIR + "Alert Global Tech - Day One Sorted Feed Mix.wav",
 }
-
-# Scene lengths in frames, as in DayOneSorted.tsx.
-PLANS = {
-    "full": [("hook", 96), ("desk", 72), ("chaos", 168), ("tabs", 72), ("tangle", 216), ("fix", 480), ("resolve", 144), ("end", 192)],
-    "feed": [("hook", 96), ("chaos", 216), ("resolve", 168), ("end", 240)],
-}
-
-# Voiceover lines: (cut start, cut end) in the take, as split at its pauses.
-LINES = {
-    "hire": (0.00, 2.27),  # Your first hire starts Monday.
-    "questions": (2.27, 4.13),  # Then the questions start.
-    "laptops": (4.13, 9.80),  # Laptops from one place. Licences from another. Wi-Fi from whoever picks up.
-    "sorts": (9.80, 11.88),  # Alert sorts it in one go.
-    "quote": (11.88, 13.92),  # One quote, one supplier.
-    "setup": (13.92, 18.55),  # Set up, not just shipped. In English, Spanish or Portuguese.
-    "building": (18.55, 20.30),  # So you can get back to building.
-    "sorted": (20.30, 23.44),  # Hardware, software and AI, sorted.
-}
-# Where each line's first syllable lands (s).
-VO = {
-    "full": [("hire", 4.25), ("questions", 7.5), ("laptops", 18.0), ("sorts", 27.0), ("quote", 30.0), ("setup", 35.0), ("building", 47.0), ("sorted", 54.0)],
-    "feed": [("hire", 1.0), ("questions", 4.5), ("building", 14.0), ("sorted", 22.0)],
-}
-
-# Event times from the video code (frames, local to the scene).
-HOOK_ARRIVE = [8 + i * 2 for i in range(19)]  # NEW HIRE STARTS MONDAY: 19 letters
-CHAOS_MAIN = [6, 30, 50, 66, 78, 88]
-CHAOS_FLOOD = [96 + 44 * (k / 36) ** 0.75 for k in range(36)]
-CHAOS_COOKED = 146
-TABS_DRAG = [20, 56]
-FIX_TICKS = [252, 288, 324, 360]
-RESOLVE = {"snap": 24, "arrow": 76}
+with open("src/videos/day-one-timeline.json") as fh:
+    TL = json.load(fh)
+HOOK_ARRIVE = [8 + i * 2 for i in range(19)]  # NEW HIRE STARTS MONDAY: 19 letters, as in the video code
+FLOOD_N = 36
 
 rng = np.random.default_rng(160)
 
@@ -194,6 +172,19 @@ def soft_pulse(f, length=0.35):
     return filt(tone * env(n, 0.006, 0.11), "lowpass", 1600)
 
 
+def sub_note(f, length):
+    n = int(length * SR)
+    t = np.arange(n) / SR
+    e = np.minimum(1, t / 0.02) * np.minimum(1, (length - t) / 0.08)
+    return np.tanh(1.5 * np.sin(2 * np.pi * f * t)) * e
+
+
+def soft_clap():
+    n = int(0.18 * SR)
+    t = np.arange(n) / SR
+    return filt(rng.standard_normal(n), "bandpass", [900, 4000]) * np.exp(-t / 0.05) * np.minimum(1, t / 0.003)
+
+
 def felt_kick():
     n = int(0.35 * SR)
     t = np.arange(n) / SR
@@ -255,11 +246,12 @@ CHAOS_CHORDS = [["D3", "F3", "A3"], ["Bb2", "D3", "F3"], ["F3", "A3", "C4"], ["C
 CHAOS_ROOTS = ["D2", "Bb1", "F2", "C2"]
 WARM_CHORDS = [["F3", "A3", "C4", "E4"], ["A2", "E3", "G3", "C4"], ["D3", "F3", "A3", "C4"], ["Bb2", "D3", "F3", "A3"]]
 WARM_PULSE = ["C5", "A4", "F4", "A4", "C5", "A4", "G4", "A4"]
-LEVEL = {"hook": 1, "desk": 1, "chaos": 3, "tabs": 2, "tangle": 4}
+LEVEL = {"hook": 2, "desk": 3, "chaos": 4, "tabs": 2, "tangle": 4}
 
 
 def build(cut):
-    plan = PLANS[cut]
+    tl = TL[cut]
+    plan = tl["scenes"]
     starts, t0 = {}, 0.0
     for name, n in plan:
         starts[name] = (t0, n / FPS)
@@ -283,10 +275,12 @@ def build(cut):
         if lvl >= 2 and beat in (0, 2):
             loud.add(lofi_kick(), t, 0.5)
         if lvl >= 3:
+            if lvl >= 4 and beat in (1, 3):
+                loud.add(lofi_kick(), t + BEAT / 2, 0.3)
             if beat in (1, 3):
                 loud.add(lofi_snare(), t, 0.32)
-            for e in range(2):
-                loud.add(hat(), t + e * BEAT / 2, 0.10 if e else 0.06, pan=0.3)
+            for e in range(4 if lvl >= 4 else 2):
+                loud.add(hat(), t + e * BEAT / (4 if lvl >= 4 else 2), 0.10 if e % 2 else 0.06, pan=0.3)
             chord = CHAOS_CHORDS[bar % 4]
             for e in range(4):
                 f = note(chord[(b * 4 + e) % 3]) * 4
@@ -323,7 +317,7 @@ def build(cut):
         ch[cut_i - fade : cut_i] *= np.linspace(1, 0, fade)
 
     # Warm minimal pulse: after a beat or two of silence, to the end.
-    warm_start = calm_from + (2.0 if "fix" in starts else 0.5)
+    warm_start = np.ceil((calm_from + 0.35) / (BEAT / 2)) * (BEAT / 2)
     k = 0
     while warm_start + k * BEAT < total - 1e-6:
         t = warm_start + k * BEAT
@@ -332,9 +326,11 @@ def build(cut):
         chord = ["F3", "A3", "C4", "F4"] if in_end else WARM_CHORDS[bar % 4]
         if beat == 0:
             calm.add(warm_pad([note(x) for x in chord], 4 * BEAT + 0.6), t, 0.3)
-            calm.add(felt_kick(), t, 0.4)
-        if beat == 2 and t >= starts["resolve"][0]:
-            calm.add(felt_kick(), t, 0.3)
+            calm.add(sub_note(note(chord[0]) / 2, 4 * BEAT), t, 0.22)
+        calm.add(felt_kick(), t, 0.42)
+        calm.add(hat(), t + BEAT / 2, 0.05, pan=0.25)
+        if beat in (1, 3):
+            calm.add(soft_clap(), t, 0.10)
         for e in range(2):
             p = WARM_PULSE[(beat * 2 + e) % 8]
             calm.add(soft_pulse(note(p)), t + e * BEAT / 2, 0.10 if e == 0 else 0.06, pan=-0.2 if e else 0.2)
@@ -343,44 +339,46 @@ def build(cut):
     calm.add(bell(note("F5"), 4.0), a_end, 0.12, pan=-0.15)
     calm.add(bell(note("C6"), 4.0), a_end + 2 * BEAT, 0.06, pan=0.15)
 
-    # Sound design.
+    # Sound design, at the timeline's event frames.
     s = lambda scene, frames: starts[scene][0] + frames / FPS
-    for i, fr in enumerate(HOOK_ARRIVE):
+    for fr in HOOK_ARRIVE:
         sfx.add(click(), s("hook", fr), 0.35, pan=rng.uniform(-0.6, 0.6))
-    r = starts["chaos"][1] * FPS / 168
+    if "desk" in starts:
+        for fr, _ in tl["desk"]:
+            sfx.add(lofi_kick(), s("desk", fr), 0.5)
+    ch = tl["chaos"]
     scale = ["D5", "F5", "G5", "A5", "C6", "D6"]
-    for i, fr in enumerate(CHAOS_MAIN):
-        sfx.add(chime(note(scale[i])), s("chaos", fr * r), 0.22, pan=rng.uniform(-0.4, 0.4))
-    for kk, fr in enumerate(CHAOS_FLOOD):
-        sfx.add(blip(800 * 2 ** (kk / 18)), s("chaos", fr * r), 0.05, pan=rng.uniform(-0.8, 0.8))
-    sfx.add(chime(note("F6")), s("chaos", CHAOS_COOKED * r), 0.25)
-    sfx.add(bonk(), s("chaos", CHAOS_COOKED * r), 0.3)
-    if "tabs" in starts:
-        sfx.add(click(), s("tabs", TABS_DRAG[0]), 0.4)
-        sfx.add(click(), s("tabs", TABS_DRAG[1]), 0.25)
-    if "fix" in starts:
-        for fr in FIX_TICKS:
-            sfx.add(click(), s("fix", fr), 0.18)
-            sfx.add(soft_pulse(note("C6"), 0.3), s("fix", fr), 0.06)
-    sfx.add(click(), s("resolve", RESOLVE["snap"]), 0.25)
-    sfx.add(whoosh(1.6, 200, 3000), s("resolve", RESOLVE["arrow"]), 0.08, pan=0.3)
-    sfx.add(whoosh(0.7), a_end - 0.15, 0.16, pan=0.0)
+    for i, fr in enumerate(sorted(ch["main"])):
+        sfx.add(chime(note(scale[i])), s("chaos", fr), 0.22, pan=rng.uniform(-0.4, 0.4))
+    a_, b_ = ch["flood"]
+    for k in range(FLOOD_N):
+        fr = a_ + (b_ - a_) * (k / FLOOD_N) ** 0.75
+        sfx.add(blip(800 * 2 ** (k / 18)), s("chaos", fr), 0.05, pan=rng.uniform(-0.8, 0.8))
+    sfx.add(chime(note("F6")), s("chaos", ch["cooked"]), 0.25)
+    sfx.add(bonk(), s("chaos", ch["cooked"]), 0.3)
+    sfx.add(click(), s("tabs", tl["tabs"]["drag"][0]), 0.4)
+    sfx.add(click(), s("tabs", tl["tabs"]["drag"][1]), 0.25)
+    if "tangle" in starts:
+        for fr, _ in tl["tangle"]:
+            sfx.add(click(), s("tangle", fr), 0.2)
+    fx = tl["fix"]
+    for fr in fx["rows"]:
+        sfx.add(click(), s("fix", fr), 0.12)
+    for fr in fx["ticks"]:
+        sfx.add(click(), s("fix", fr), 0.18)
+        sfx.add(soft_pulse(note("C6"), 0.3), s("fix", fr), 0.06)
+    sfx.add(chime(note("A5")), s("fix", fx["ready"]), 0.12)
+    sfx.add(click(), s("resolve", tl["resolve"]["snap"]), 0.25)
+    sfx.add(whoosh(1.4, 200, 3000), s("resolve", tl["resolve"]["arrow"]), 0.08, pan=0.3)
+    sfx.add(whoosh(0.6), a_end - 0.12, 0.16, pan=0.0)
 
-    # Voiceover.
+    # Voiceover: the cut's take, whole, from its offset.
     vo = np.zeros(N)
-    take = decode(TAKE)
-    thresh = 10 ** (-30 / 20) * np.max(np.abs(take))
-    for key, target in VO[cut]:
-        a, bnd = LINES[key]
-        seg = take[int(a * SR) : int(bnd * SR)].copy()
-        onset = int(np.argmax(np.abs(seg) > thresh))
-        f8 = int(0.008 * SR)
-        seg[:f8] *= np.linspace(0, 1, f8)
-        seg[-f8:] *= np.linspace(1, 0, f8)
-        i = int(round(target * SR)) - onset
-        end = min(N, i + len(seg))
-        vo[i:end] += seg[: end - i]
-        print(f"  {cut}: {target:5.2f}s  {key}")
+    take = decode(TAKES[cut])
+    i = int(round(tl["voOffset"] * SR))
+    end = min(N, i + len(take))
+    vo[i:end] = take[: end - i]
+    print(f"  {cut}: voiceover {len(take) / SR:.2f} s from {tl['voOffset']:.2f} s")
     return total, loud.st(), calm.st(), sfx.st(), vo
 
 

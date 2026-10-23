@@ -1,37 +1,36 @@
 import { AbsoluteFill, Audio, Easing, Img, interpolate, random, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { WORDMARK_RATIO } from "../ui/Story";
 import { C, Dot, F, tag } from "../ui/theme";
+import TIMELINE from "./day-one-timeline.json";
 
-// "Day One, Sorted." Brand film for startup founders. 60 s, 24 fps, fixed copy from the brief
-// (Henrique, 23 Oct 2026). Loud, comic chaos -> calm clarity -> lime end card.
-// Cuts: 16x9 and 9x16 run all eight beats; the 30 s 4x5 feed cut runs beats 1, 3, 7 and 8.
+// "Day One, Sorted." Brand film for startup founders. 60 s, 24 fps (Henrique's brief, 23 Oct 2026;
+// re-cut the same day: faster, denser voiceover, on-screen lines on every beat).
+// Cuts: 16x9 and 9x16 run all eight beats; the 30 s 4x5 feed cut runs a compressed version
+// (hook, chaos, tabs, fix, resolve, end) with its own voiceover take.
+// Every scene length and event frame comes from day-one-timeline.json, which
+// scripts/make-day-one-timeline.py builds from word times in the voiceover takes.
 // Fonts: the brief's Archivo ExtraBold and DM Mono aren't in the supplied brand set, so headlines
 // use Archivo Narrow Bold caps and tags use DM Sans caps (CLAUDE.md: only the supplied fonts).
 // Logo: one in the whole film, the Ink wordmark on the lime end card.
-// Audio (music, SFX, voiceover) is built by scripts/make-day-one-audio.py from the same times as below.
+// Audio (music, SFX, voiceover) is built by scripts/make-day-one-audio.py from the same timeline.
 
 export const DAY_ONE_16X9 = { fps: 24, durationInFrames: 1440, width: 1920, height: 1080 } as const;
 export const DAY_ONE_9X16 = { fps: 24, durationInFrames: 1440, width: 1080, height: 1920 } as const;
 export const DAY_ONE_FEED = { fps: 24, durationInFrames: 720, width: 1080, height: 1350 } as const;
 
 type SceneId = "hook" | "desk" | "chaos" | "tabs" | "tangle" | "fix" | "resolve" | "end";
-// Scene lengths in frames (1 beat at 120 BPM = 12 frames). Mirrored in make-day-one-audio.py.
-const FULL: [SceneId, number][] = [
-  ["hook", 96], // 0-4 s
-  ["desk", 72], // 4-7 s
-  ["chaos", 168], // 7-14 s
-  ["tabs", 72], // 14-17 s
-  ["tangle", 216], // 17-26 s
-  ["fix", 480], // 26-46 s
-  ["resolve", 144], // 46-52 s
-  ["end", 192], // 52-60 s
-];
-const FEED: [SceneId, number][] = [
-  ["hook", 96], // 0-4 s
-  ["chaos", 216], // 4-13 s
-  ["resolve", 168], // 13-20 s
-  ["end", 240], // 20-30 s
-];
+type Line = [number, string]; // [local frame, text]
+type Timeline = {
+  scenes: [SceneId, number][];
+  hook: { crumble: number };
+  desk: Line[];
+  chaos: { main: number[]; flood: number[]; cooked: number };
+  tabs: { drag: number[] };
+  tangle: Line[];
+  fix: { headlines: Line[]; message: number; quote: number; rows: number[]; checklist: number; ticks: number[]; ready: number };
+  resolve: { snap: number; blocks: number; arrow: number; lines: Line[] };
+  end: { head: number; sorted: number; cta: number; url: number };
+};
 
 const MIX_FULL = "audio/Alert Global Tech - Day One Sorted Mix.wav";
 const MIX_FEED = "audio/Alert Global Tech - Day One Sorted Feed Mix.wav";
@@ -78,13 +77,13 @@ const statement = (size: number, color: string): React.CSSProperties => ({
 
 export const DayOneSorted: React.FC<{ cut: "full" | "feed" }> = ({ cut }) => {
   const frame = useCurrentFrame();
-  const plan = cut === "feed" ? FEED : FULL;
+  const tl = TIMELINE[cut] as unknown as Timeline;
   let start = 0;
   let scene: React.ReactNode = null;
-  for (const [id, len] of plan) {
+  for (const [id, len] of tl.scenes) {
     if (frame >= start && frame < start + len) {
       const Scene = SCENES[id];
-      scene = <Scene f={frame - start} d={len} />;
+      scene = <Scene f={frame - start} d={len} tl={tl} />;
     }
     start += len;
   }
@@ -96,7 +95,47 @@ export const DayOneSorted: React.FC<{ cut: "full" | "feed" }> = ({ cut }) => {
   );
 };
 
-type SceneProps = { f: number; d: number };
+type SceneProps = { f: number; d: number; tl: Timeline };
+
+// On-screen line synced to the voiceover: the latest line whose frame has passed pops in
+// (or, with `stack`, every line so far stays). Lines end in the coloured dot.
+const Kinetic: React.FC<{
+  f: number;
+  lines: Line[];
+  size: number;
+  color: string;
+  dot: string;
+  stack?: boolean;
+  font?: (size: number, color: string) => React.CSSProperties;
+  plate?: string;
+  style?: React.CSSProperties;
+}> = ({ f, lines, size, color, dot, stack = false, font, plate, style }) => {
+  const shown = lines.filter(([at]) => f >= at);
+  const visible = stack ? shown : shown.slice(-1);
+  return (
+    <div style={{ position: "absolute", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: size * 0.12, ...style }}>
+      {visible.map(([at, text]) => {
+        const p = interpolate(f, [at, at + 5], [0, 1], { ...clamp, easing: Easing.out(Easing.back(1.8)) });
+        return (
+          <div
+            key={`${at}-${text}`}
+            style={{
+              ...(font ?? statement)(size, color),
+              background: plate,
+              padding: plate ? `${size * 0.12}px ${size * 0.2}px` : undefined,
+              opacity: Math.min(1, p * 2),
+              transform: `translateY(${(1 - p) * size * 0.3}px) scale(${0.9 + 0.1 * p})`,
+              transformOrigin: "left bottom",
+            }}
+          >
+            {text}
+            <Dot fontSize={size} color={dot} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 // ---------- Shared pieces ----------
 
@@ -178,16 +217,16 @@ const Crosshair: React.FC<{ x: number; y: number; size: number; color: string; o
 
 // Letter i (spaces skipped) lands on frame HOOK_ARRIVE(i). The audio clicks use the same formula.
 export const HOOK_ARRIVE = (i: number) => 8 + i * 2;
-const HOOK_TRAVEL = 14;
-const HOOK_CRUMBLE = 70;
+const HOOK_TRAVEL = 10;
 
-const Hook: React.FC<SceneProps> = ({ f }) => {
+const Hook: React.FC<SceneProps> = ({ f, tl }) => {
   const L = useL();
   const lines = L.portrait ? ["NEW HIRE", "STARTS", "MONDAY"] : ["NEW HIRE", "STARTS MONDAY"];
   const fs = L.portrait ? L.W * 0.21 : L.W * 0.118;
   const total = lines.join("").replace(/ /g, "").length;
   const dotAt = HOOK_ARRIVE(total - 1) + 4;
-  const dotFall = Math.max(0, f - (HOOK_CRUMBLE + total * 0.8)) / 24;
+  const crumble = tl.hook.crumble;
+  const dotFall = Math.max(0, f - (crumble + total * 0.8)) / 24;
   let idx = 0;
   return (
     <AbsoluteFill style={{ background: C.ink, overflow: "hidden" }}>
@@ -197,7 +236,7 @@ const Hook: React.FC<SceneProps> = ({ f }) => {
             {line.split("").map((ch, ci) => {
               if (ch === " ") return <span key={ci}> </span>;
               const i = idx++;
-              return <HookLetter key={ci} ch={ch} i={i} f={f} fs={fs} />;
+              return <HookLetter key={ci} ch={ch} i={i} f={f} fs={fs} crumble={crumble} />;
             })}
             {li === lines.length - 1 ? (
               <span
@@ -215,7 +254,7 @@ const Hook: React.FC<SceneProps> = ({ f }) => {
       {/* The rest of the swarm: cursors crossing without a letter */}
       {Array.from({ length: 10 }, (_, k) => {
         const s = `hook-swarm-${k}`;
-        const t = prog(f, k * 3, 40 + random(`${s}-len`) * 20, inOut);
+        const t = prog(f, k * 2, 26 + random(`${s}-len`) * 14, inOut);
         const x0 = random(`${s}-x0`) * L.W;
         const x1 = random(`${s}-x1`) * L.W;
         const fromTop = random(`${s}-side`) > 0.5;
@@ -234,7 +273,7 @@ const Hook: React.FC<SceneProps> = ({ f }) => {
   );
 };
 
-const HookLetter: React.FC<{ ch: string; i: number; f: number; fs: number }> = ({ ch, i, f, fs }) => {
+const HookLetter: React.FC<{ ch: string; i: number; f: number; fs: number; crumble: number }> = ({ ch, i, f, fs, crumble }) => {
   const L = useL();
   const a = HOOK_ARRIVE(i);
   const ang = random(`hook-ang-${i}`) * Math.PI * 2;
@@ -243,7 +282,7 @@ const HookLetter: React.FC<{ ch: string; i: number; f: number; fs: number }> = (
   const dy = Math.sin(ang) * dist;
   const t = prog(f, a - HOOK_TRAVEL, HOOK_TRAVEL, Easing.out(Easing.cubic));
   const leave = prog(f, a + 3, 14, Easing.in(Easing.cubic));
-  const crumbleAt = HOOK_CRUMBLE + i * 0.8 + random(`hook-cr-${i}`) * 3;
+  const crumbleAt = crumble + i * 0.8 + random(`hook-cr-${i}`) * 3;
   const crumbled = f >= crumbleAt;
   const visible = f >= a - HOOK_TRAVEL;
   const lx = dx * (1 - t);
@@ -302,14 +341,13 @@ const HookLetter: React.FC<{ ch: string; i: number; f: number; fs: number }> = (
   );
 };
 
-// ---------- 2 · Picture this (4-7 s): ink frame, then a slow push-in on the empty desk ----------
+// ---------- 2 · The empty desk: push-in, the missing things stamp on screen ----------
 
-const Desk: React.FC<SceneProps> = ({ f, d }) => {
+const Desk: React.FC<SceneProps> = ({ f, d, tl }) => {
   const L = useL();
-  const reveal = prog(f, 12, 18);
-  const push = interpolate(f, [12, d], [1, 1.16], { ...clamp, easing: Easing.out(Easing.quad) });
-  const ts = L.portrait ? L.W * 0.13 : L.W * 0.072;
-  const text = prog(f, 2, 10);
+  const reveal = prog(f, 0, 6);
+  const push = interpolate(f, [0, d], [1, 1.2], { ...clamp, easing: Easing.out(Easing.quad) });
+  const ts = L.portrait ? L.W * 0.1 : L.W * 0.058;
   const artW = L.portrait ? L.W * 1.02 : L.W * 0.86;
   return (
     <AbsoluteFill style={{ background: C.ink, overflow: "hidden" }}>
@@ -361,19 +399,15 @@ const Desk: React.FC<SceneProps> = ({ f, d }) => {
           <circle cx={1525} cy={768} r={11} fill={C.ivory} />
         </svg>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          left: L.side,
-          top: L.safe + (L.portrait ? 12 * L.u : 9 * L.u),
-          ...statement(ts, C.ivory),
-          opacity: text,
-          transform: `translateY(${(1 - text) * 20}px)`,
-        }}
-      >
-        Picture this
-        <Dot fontSize={ts} color={C.lime} />
-      </div>
+      <Kinetic
+        f={f}
+        lines={tl.desk}
+        stack
+        size={ts}
+        color={C.ivory}
+        dot={C.lime}
+        style={{ left: L.side, top: L.safe + (L.portrait ? 8 * L.u : 6 * L.u) }}
+      />
     </AbsoluteFill>
   );
 };
@@ -389,15 +423,13 @@ export const QUESTIONS = [
   "Which vendor was that?",
 ];
 const COOKED = "Are we cooked?";
-// Pop times on the 168-frame (7 s) scene; a longer cut scales them. Mirrored in the audio script.
-export const CHAOS_MAIN = [6, 30, 50, 66, 78, 88];
-export const CHAOS_FLOOD_N = 36;
-export const CHAOS_FLOOD = (k: number) => 96 + 44 * Math.pow(k / CHAOS_FLOOD_N, 0.75);
-export const CHAOS_COOKED = 146;
+// Pop times come from the timeline; the flood fills tl.chaos.flood[0..1]. Mirrored in the audio script.
+const CHAOS_FLOOD_N = 36;
+const floodAt = (k: number, [a, b]: number[]) => a + (b - a) * Math.pow(k / CHAOS_FLOOD_N, 0.75);
 
 const Dialog: React.FC<{ x: number; y: number; w: number; text: string; f: number; at: number; seed: string }> = ({ x, y, w, text, f, at, seed }) => {
   if (f < at) return null;
-  const p = interpolate(f, [at, at + 5], [0, 1], { ...clamp, easing: Easing.out(Easing.back(1.6)) });
+  const p = interpolate(f, [at, at + 4], [0, 1], { ...clamp, easing: Easing.out(Easing.back(1.6)) });
   const flick = random(`${seed}-fl-${Math.floor(f / 2)}`) > 0.45 ? 1 : 0.2;
   const b = Math.max(2, w * 0.008);
   return (
@@ -472,16 +504,15 @@ const Dialog: React.FC<{ x: number; y: number; w: number; text: string; f: numbe
   );
 };
 
-const Chaos: React.FC<SceneProps> = ({ f, d }) => {
+const Chaos: React.FC<SceneProps> = ({ f, tl }) => {
   const L = useL();
-  const r = d / 168;
   const w = L.portrait ? L.W * 0.74 : L.W * 0.33;
   const band = L.H - 2 * L.safe;
   const at = (fx: number, fy: number) => ({ x: fx * L.W, y: L.safe + fy * band });
   const MAIN_POS = L.portrait
     ? [at(0.42, 0.14), at(0.58, 0.3), at(0.44, 0.46), at(0.56, 0.62), at(0.42, 0.78), at(0.6, 0.9)]
     : [at(0.26, 0.24), at(0.7, 0.2), at(0.46, 0.5), at(0.76, 0.64), at(0.25, 0.74), at(0.56, 0.84)];
-  const cooked = CHAOS_COOKED * r;
+  const cooked = tl.chaos.cooked;
   const shake = f >= cooked && f < cooked + 6 ? (random(`shake-${f}`) - 0.5) * L.u * 1.6 : 0;
   return (
     <AbsoluteFill
@@ -498,7 +529,7 @@ const Chaos: React.FC<SceneProps> = ({ f, d }) => {
         </div>
       </div>
       {QUESTIONS.map((q, k) => (
-        <Dialog key={k} {...MAIN_POS[k]} w={w} text={q} f={f} at={CHAOS_MAIN[k] * r} seed={`main-${k}`} />
+        <Dialog key={k} {...MAIN_POS[k]} w={w} text={q} f={f} at={tl.chaos.main[k]} seed={`main-${k}`} />
       ))}
       {Array.from({ length: CHAOS_FLOOD_N }, (_, k) => {
         const s = `flood-${k}`;
@@ -510,7 +541,7 @@ const Chaos: React.FC<SceneProps> = ({ f, d }) => {
             w={w * (0.75 + 0.35 * random(`${s}-w`))}
             text={QUESTIONS[k % QUESTIONS.length]}
             f={f}
-            at={CHAOS_FLOOD(k) * r}
+            at={floodAt(k, tl.chaos.flood)}
             seed={s}
           />
         );
@@ -522,16 +553,14 @@ const Chaos: React.FC<SceneProps> = ({ f, d }) => {
 
 // ---------- 4 · Every tab open (14-17 s): a cursor drags a blue highlight across the headline ----------
 
-export const TABS_DRAG = [20, 56]; // drag start and end (frames). Click on the start.
-
-const Tabs: React.FC<SceneProps> = ({ f }) => {
+const Tabs: React.FC<SceneProps> = ({ f, tl }) => {
   const L = useL();
   const fs = L.portrait ? L.W * 0.17 : L.W * 0.098;
   const first = L.portrait ? ["ONE", "FOUNDER."] : ["ONE FOUNDER."];
   const marked = L.portrait ? ["EVERY TAB", "OPEN"] : ["EVERY TAB OPEN"];
-  const drag = interpolate(f, TABS_DRAG, [0, marked.length], { ...clamp, easing: Easing.inOut(Easing.quad) });
-  const inText = prog(f, 0, 10);
-  const cursorIn = prog(f, 8, 12);
+  const drag = interpolate(f, tl.tabs.drag, [0, marked.length], { ...clamp, easing: Easing.inOut(Easing.quad) });
+  const inText = prog(f, 0, 6);
+  const cursorIn = prog(f, tl.tabs.drag[0] - 10, 10);
   const active = Math.min(marked.length - 1, Math.floor(drag));
   return (
     <AbsoluteFill style={{ background: C.ink }}>
@@ -606,7 +635,7 @@ const TANGLE_WORLD = {
   port: { w: 900, h: 1300, pos: [[240, 200], [670, 320], [250, 640], [660, 860], [330, 1110]] as Pt[] },
 };
 
-const Tangle: React.FC<SceneProps> = ({ f }) => {
+const Tangle: React.FC<SceneProps> = ({ f, tl }) => {
   const L = useL();
   const world = L.portrait ? TANGLE_WORLD.port : TANGLE_WORLD.land;
   const size = 150;
@@ -627,7 +656,7 @@ const Tangle: React.FC<SceneProps> = ({ f }) => {
     ];
   });
   // Camera: starts close on LICENCES, pulls back to the whole knot.
-  const pull = prog(f, 0, 168, inOut);
+  const pull = prog(f, 0, 120, inOut);
   const zoom = lerp(2.1, 1, pull);
   const focus: Pt = [lerp(world.pos[1][0], world.w / 2, pull), lerp(world.pos[1][1], world.h / 2, pull)];
   const fills = [C.lime, C.blue, "none", "url(#tangle-grad)", C.ivory];
@@ -677,12 +706,12 @@ const Tangle: React.FC<SceneProps> = ({ f }) => {
               strokeWidth={k % 3 === 0 ? 2 : 4}
               pathLength={1}
               strokeDasharray="1 1"
-              strokeDashoffset={1 - prog(f, 4 + k * 5, 40)}
+              strokeDashoffset={1 - prog(f, 2 + k * 3, 24)}
             />
           ))}
           {rails.slice(0, 8).map((p, k) => {
             const [x, y] = bez(p, 0.3 + 0.4 * random(`cross-${k}`));
-            const o = prog(f, 30 + k * 6, 10);
+            const o = prog(f, 16 + k * 4, 6);
             return (
               <g key={k} stroke={C.ivory} strokeWidth={2} opacity={o}>
                 <line x1={x - 16} y1={y} x2={x + 16} y2={y} />
@@ -694,10 +723,19 @@ const Tangle: React.FC<SceneProps> = ({ f }) => {
           {[0, 3, 6, 9, 11, 13].map((k, n) => {
             const t = 0.5 + 0.42 * Math.sin(f * (0.025 + 0.012 * random(`lost-${n}-s`)) + random(`lost-${n}-p`) * 6.28);
             const [x, y] = bez(rails[k], t);
-            return <SpriteG key={n} rows={n % 2 ? HAND : ARROW} h={34} x={x} y={y} opacity={prog(f, 20 + n * 8, 8)} />;
+            return <SpriteG key={n} rows={n % 2 ? HAND : ARROW} h={34} x={x} y={y} opacity={prog(f, 10 + n * 5, 6)} />;
           })}
         </g>
       </svg>
+      <Kinetic
+        f={f}
+        lines={tl.tangle}
+        size={L.portrait ? L.W * 0.075 : L.W * 0.044}
+        color={C.ivory}
+        dot={C.lime}
+        plate={C.ink}
+        style={{ left: L.side, bottom: L.safe + L.side * 0.7, maxWidth: L.W - 2 * L.side }}
+      />
     </AbsoluteFill>
   );
 };
@@ -706,9 +744,6 @@ const Tangle: React.FC<SceneProps> = ({ f }) => {
 
 const QUOTE_ITEMS = ["Dell or Apple laptops", "Microsoft 365", "Copilot", "Ubiquiti Wi-Fi", "Fortinet firewall"];
 const CHECKS = ["Sourced through TD SYNNEX", "Configured", "Licences assigned", "Certiport training booked"];
-// Local frames. Ticks are mirrored in the audio script.
-export const FIX_AT = { message: 12, quote: 96, checklist: 216, ready: 396 };
-export const FIX_TICKS = [252, 288, 324, 360];
 const MESSAGE = "We're hiring six people this quarter.";
 const hairline = `2px solid ${C.ink}22`;
 
@@ -727,14 +762,17 @@ const Card: React.FC<{ p: number; children: React.ReactNode; style?: React.CSSPr
   </div>
 );
 
-const Fix: React.FC<SceneProps> = ({ f }) => {
+const Fix: React.FC<SceneProps> = ({ f, tl }) => {
   const L = useL();
-  const u = L.u * (L.portrait ? 1.22 : 1.3); // larger cards, centred in the frame
-  const pMsg = prog(f, FIX_AT.message, 24);
-  const pQuote = prog(f, FIX_AT.quote, 24);
-  const pCheck = prog(f, FIX_AT.checklist, 24);
-  const pReady = prog(f, FIX_AT.ready, 24);
-  const typed = Math.round(interpolate(f, [FIX_AT.message + 14, FIX_AT.message + 62], [0, MESSAGE.length], clamp));
+  const T = tl.fix;
+  const feed = L.portrait && L.safe === 0;
+  const u = L.u * (feed ? 0.9 : L.portrait ? 1.1 : 1.3);
+  const pMsg = prog(f, T.message, 10);
+  const pQuote = prog(f, T.quote, 10);
+  const pCheck = prog(f, T.checklist, 10);
+  const pReady = prog(f, T.ready, 8, Easing.out(Easing.back(1.6)));
+  const typed = Math.round(interpolate(f, [T.message + 4, T.message + 24], [0, MESSAGE.length], clamp));
+  const hs = (L.portrait ? 5.4 : 6.2) * L.u;
   const body = (size: number, weight = 400): React.CSSProperties => ({ fontFamily: F.sans, fontWeight: weight, fontSize: size * u, color: C.ink });
   const pad = 2.6 * u;
   const cell: React.CSSProperties = { padding: `${1.1 * u}px 0`, borderTop: hairline };
@@ -757,7 +795,7 @@ const Fix: React.FC<SceneProps> = ({ f }) => {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", columnGap: 4 * u, ...body(2.4) }}>
         {[["Item", "Qty", "Price"], ...QUOTE_ITEMS.map((it) => [it, "[00]", "[00]"]), ["Total", "", "[00]"]].map((row, ri) => {
-          const p = ri === 0 ? 1 : prog(f, FIX_AT.quote + 24 + ri * 12, 14);
+          const p = ri === 0 ? 1 : prog(f, T.rows[ri - 1], 6);
           const strong = ri === 0 || ri === QUOTE_ITEMS.length + 1;
           return row.map((c, ci) => (
             <div
@@ -783,7 +821,7 @@ const Fix: React.FC<SceneProps> = ({ f }) => {
     <Card p={pCheck} style={{ padding: pad }}>
       <div style={{ ...tag(1.6 * u, C.ink), opacity: 0.6, marginBottom: 1.6 * u }}>Setup</div>
       {CHECKS.map((t, i) => {
-        const done = prog(f, FIX_TICKS[i], 8, Easing.out(Easing.back(2)));
+        const done = prog(f, T.ticks[i], 6, Easing.out(Easing.back(2)));
         const box = 3.2 * u;
         return (
           <div key={t} style={{ display: "flex", alignItems: "center", gap: 1.8 * u, padding: `${1.1 * u}px 0`, borderTop: i ? hairline : "none" }}>
@@ -820,7 +858,10 @@ const Fix: React.FC<SceneProps> = ({ f }) => {
     </Card>
   );
 
-  const corner = prog(f, 30, 40);
+  const corner = prog(f, 4, 16);
+  const head = (
+    <Kinetic f={f} lines={T.headlines} size={hs} color={C.ink} dot={C.blue} font={headline} style={{ position: "relative" }} />
+  );
   return (
     <AbsoluteFill style={{ background: C.ivory, overflow: "hidden" }}>
       {/* Quarter-round in blue, bottom-right, and a hairline crosshair: the calm scene's two elements */}
@@ -842,13 +883,13 @@ const Fix: React.FC<SceneProps> = ({ f }) => {
             position: "absolute",
             left: L.side * 0.75,
             right: L.side * 0.75,
-            top: L.H / 2,
-            transform: "translateY(-50%)",
+            top: L.safe + (feed ? 4 : 5) * L.u,
             display: "flex",
             flexDirection: "column",
-            gap: 2.4 * u,
+            gap: 2 * u,
           }}
         >
+          <div style={{ height: hs * 1.1 }}>{head}</div>
           {message}
           {quote}
           {checklist}
@@ -858,20 +899,20 @@ const Fix: React.FC<SceneProps> = ({ f }) => {
         <div
           style={{
             position: "absolute",
-            left: L.side + L.u * 2,
-            right: L.side + L.u * 12,
-            top: "50%",
-            transform: "translateY(-50%)",
+            left: L.side,
+            right: L.side + L.u * 6,
+            top: 5 * L.u,
             display: "flex",
             alignItems: "flex-start",
             gap: 4 * u,
           }}
         >
-          <div style={{ flex: 1.15, display: "flex", flexDirection: "column", gap: 3 * u }}>
+          <div style={{ position: "absolute", left: 0, top: 0, height: hs }}>{head}</div>
+          <div style={{ flex: 1.15, display: "flex", flexDirection: "column", gap: 2.4 * u, marginTop: hs * 1.5 }}>
             {message}
             {quote}
           </div>
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 3 * u }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2.4 * u, marginTop: hs * 1.5 }}>
             {checklist}
             {ready}
           </div>
@@ -883,9 +924,8 @@ const Fix: React.FC<SceneProps> = ({ f }) => {
 
 // ---------- 7 · Resolution (46-52 s): lines snap into stepped blocks, the arrow rises ----------
 
-export const RESOLVE_AT = { snap: 24, blocks: 48, arrow: 76 };
-
-const Resolve: React.FC<SceneProps> = ({ f }) => {
+const Resolve: React.FC<SceneProps> = ({ f, d, tl }) => {
+  const R = tl.resolve;
   const L = useL();
   const band = L.H - 2 * L.safe;
   const stepW = L.portrait ? L.W * 0.22 : L.W * 0.1;
@@ -900,8 +940,8 @@ const Resolve: React.FC<SceneProps> = ({ f }) => {
     [[x0, base], [x0 + 1.5 * stepW, base]],
     [[x0 + 1.5 * stepW, base], [x0 + 3 * stepW, base]],
   ];
-  const snap = prog(f, RESOLVE_AT.snap, 12, Easing.out(Easing.back(1.3)));
-  const fade = 1 - prog(f, RESOLVE_AT.blocks + 18, 12);
+  const snap = prog(f, R.snap, 8, Easing.out(Easing.back(1.3)));
+  const fade = 1 - prog(f, R.blocks + 10, 8);
   const curves = targets.map(([a, b], k): Pt[] => {
     const s = `resolve-${k}`;
     const rnd = (n: string, span: number, c: number) => c + (random(`${s}-${n}`) - 0.5) * span;
@@ -917,7 +957,7 @@ const Resolve: React.FC<SceneProps> = ({ f }) => {
   const fills = [C.lime, C.blue, "none"];
   // Arrow: bottom-left, past the blocks, out top-right.
   const A = L.portrait ? L.W * 0.36 : L.H * 0.42;
-  const fly = prog(f, RESOLVE_AT.arrow, 56, Easing.inOut(Easing.quad));
+  const fly = prog(f, R.arrow, Math.min(40, d - R.arrow - 1), Easing.inOut(Easing.quad));
   const ax = lerp(x0 - A * 0.9, L.W + A, fly);
   const ay = lerp(L.H + A * 0.6, -A, fly);
   return (
@@ -934,7 +974,7 @@ const Resolve: React.FC<SceneProps> = ({ f }) => {
           <path key={k} d={pathD(p)} fill="none" stroke={C.blue} strokeWidth={4} opacity={fade} />
         ))}
         {heights.map((h, i) => {
-          const g = prog(f, RESOLVE_AT.blocks + i * 6, 14);
+          const g = prog(f, R.blocks + i * 3, 8, Easing.out(Easing.back(1.4)));
           const x = x0 + i * stepW;
           return g > 0 ? (
             <rect
@@ -955,24 +995,31 @@ const Resolve: React.FC<SceneProps> = ({ f }) => {
           </g>
         ) : null}
       </svg>
+      <Kinetic
+        f={f}
+        lines={R.lines}
+        size={L.portrait ? L.W * 0.095 : L.W * 0.06}
+        color={C.ivory}
+        dot={C.lime}
+        style={{ left: L.side, top: L.safe + L.side }}
+      />
     </AbsoluteFill>
   );
 };
 
 // ---------- 8 · End card (52-60 s): lime wipe, Ink wordmark, DAY ONE, sorted, Request a Quote ----------
 
-export const END_WIPE = 12; // whoosh under the wipe, frames 0-12
-
-const End: React.FC<SceneProps> = ({ f }) => {
+const End: React.FC<SceneProps> = ({ f, tl }) => {
+  const E = tl.end;
   const L = useL();
   const u = L.u;
-  const wipe = prog(f, 0, END_WIPE, inOut);
+  const wipe = prog(f, 0, 8, inOut);
   const fs = L.portrait ? L.W * 0.2 : L.W * 0.098;
-  const pHead = prog(f, 16, 14);
-  const pSorted = prog(f, 28, 16);
-  const pCta = prog(f, 46, 14);
-  const pUrl = prog(f, 54, 14);
-  const pMark = prog(f, 12, 14);
+  const pHead = prog(f, E.head + 4, 8);
+  const pSorted = prog(f, E.sorted, 8);
+  const pCta = prog(f, E.cta, 8, Easing.out(Easing.back(1.6)));
+  const pUrl = prog(f, E.url, 8);
+  const pMark = prog(f, 6, 8);
   const wmW = (L.portrait ? 20 : 15) * u;
   const blk = (L.portrait ? 7 : 6) * u;
   const rise = (p: number): React.CSSProperties => ({ opacity: p, transform: `translateY(${(1 - p) * 24}px)` });
@@ -1022,7 +1069,7 @@ const End: React.FC<SceneProps> = ({ f }) => {
       </div>
       {/* Stepped blocks, small, bottom-right: ink, blue, outline */}
       {[C.ink, C.blue, "none"].map((fill, i) => {
-        const p = prog(f, 22 + i * 5, 12);
+        const p = prog(f, 12 + i * 3, 8);
         const h = blk * (i + 1);
         return (
           <div

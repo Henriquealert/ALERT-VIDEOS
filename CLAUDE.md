@@ -105,10 +105,12 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `npx remotion render TechUpdates-Windows11-4x5 out/"Alert Global Tech - Tech Updates Windows 11 Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
 - `DayOneSorted-16x9`, `DayOneSorted-9x16`, `DayOneSorted-Feed-4x5`: "Day One, Sorted." brand film for
-  startup founders, fixed copy from Henrique's brief (23 Oct 2026). 60 s at 24 fps (feed cut 30 s, beats
-  1, 3, 7, 8). Ends on a lime end card with the Ink wordmark, the only logo in the film; CTA Request a Quote.
-  Script and shot list: `docs/social/Alert Global Tech - Day One Sorted Script.txt`.
-  Audio (music, SFX, voiceover placement, both mixes): `python3 scripts/make-day-one-audio.py`.
+  startup founders (Henrique's brief, 23 Oct 2026; re-cut faster with a denser voiceover). 60 s at 24 fps;
+  the 30 s feed cut has its own script and take. Ends on a lime end card with the Ink wordmark, the only
+  logo in the film; CTA Request a Quote. Script: `docs/social/Alert Global Tech - Day One Sorted Script.txt`.
+  Timing: `src/videos/day-one-timeline.json`, built from the takes' word times by
+  `python3 scripts/make-day-one-timeline.py`; the video and the audio script both read it.
+  Audio (music, SFX, voiceover, both mixes): `python3 scripts/make-day-one-audio.py`.
   `npx remotion render DayOneSorted-16x9 out/"Alert Global Tech - Day One Sorted 16x9.mp4" --crf=18`
   (also `DayOneSorted-9x16` → `... 9x16.mp4`, `DayOneSorted-Feed-4x5` → `... Feed 4x5.mp4`).
 - `SecuritySorted-4x5` / `SecuritySorted-16x9` — "Security, sorted." Windows 11 Pro laptops. 22 s, 30 fps,
