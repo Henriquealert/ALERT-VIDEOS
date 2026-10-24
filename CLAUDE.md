@@ -157,6 +157,18 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   Thumbnail (title card): `npx remotion still SeriesASorted-4x5 out/"Alert Global Tech - Series A Sorted Explainer Thumbnail.png" --frame=1020`
   Timed script: `docs/social/Alert Global Tech - Series A Sorted Script.txt`.
 
+- `SeriesAPromo-16x9` / `SeriesAPromo-4x5` — "Series A, sorted." short brand video for the Series A Compliance
+  bundle (separate from the explainer above). 30 s, 30 fps, 1920×1080 and 1080×1350 (same scenes, re-laid out).
+  Fixed copy from Henrique's brief (24 Oct 2026), no voiceover (works muted). Ink and lime grounds alternate,
+  kinetic uppercase type (DM Sans Bold in place of Archivo ExtraBold), halftone cut-outs, lime "SOC 2" discs,
+  ivory device cards (illustrative), "Data, sorted." style title card and end card. One logo (the lockup, end card).
+  No Apple or Lenovo; CTA Book a Call.
+  Cut-outs: `python3 scripts/make-series-a-cutouts.py` (after `make-halftone-cutouts.py`).
+  Music (120 BPM, hit frames match the constants in `src/videos/SeriesAPromo.tsx`):
+  `python3 scripts/make-series-a-promo-audio.py "public/audio/Alert Global Tech - Series A Sorted Promo Music.wav"`
+  `npx remotion render SeriesAPromo-16x9 out/"Alert Global Tech - Series A Sorted 16x9.mp4" --crf=18` (and `-4x5` → `... 4x5.mp4`)
+  Thumbnail: `npx remotion still SeriesAPromo-16x9 out/"Alert Global Tech - Series A Sorted Thumbnail.png" --frame=745`
+
 ## Formats
 
 Register one composition per format, all driven by the same spec:
