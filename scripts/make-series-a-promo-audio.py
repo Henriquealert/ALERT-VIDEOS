@@ -1,6 +1,6 @@
 """Original soundtrack for the "Series A, sorted." promo (src/videos/SeriesAPromo.tsx). No samples, no vocals, no voiceover.
 
-Minimal, confident electronic beat: exactly 120 BPM, 4/4, 30 s, 48 kHz stereo. Every cut lands on a beat.
+Minimal, confident electronic beat (the voiceover is added by mix-series-a-promo-voiceover.py): exactly 120 BPM, 4/4, 30 s, 48 kHz stereo. Every cut lands on a beat.
 
   0-4    statement: kick on the beat, a stab as each word lands, a low hit as the collage tumbles in
   4-19   four-on-the-floor kick, off-beat hats, tight bass, clap on 2 and 4; a stab on every cut;
@@ -37,7 +37,7 @@ BOX = 180  # S2_BOX
 STAMP = 225  # S2_STAMP
 CARDS = [285, 300, 315, 330]  # S3_CARDS
 FLIP = 510  # S4_FLIP
-ITEMS = [570 + b * 15 for b in range(3, 9)]  # S5_ITEMS
+ITEMS = [570 + b * 15 for b in (3, 4, 5, 8, 9, 10)]  # S5_ITEMS
 END = 750 / FPS
 
 L = np.zeros(N)

@@ -159,7 +159,10 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
 
 - `SeriesAPromo-16x9` / `SeriesAPromo-4x5` — "Series A, sorted." short brand video for the Series A Compliance
   bundle (separate from the explainer above). 30 s, 30 fps, 1920×1080 and 1080×1350 (same scenes, re-laid out).
-  Fixed copy from Henrique's brief (24 Oct 2026), no voiceover (works muted). Ink and lime grounds alternate,
+  Fixed copy from Henrique's brief (24 Oct 2026); works muted. Voiceover added on request (ElevenLabs, "Everett -
+  Confident American Ads"), reading only the on-screen copy; placed and mixed by
+  `python3 scripts/mix-series-a-promo-voiceover.py` (line times at the top; product names match `S5_ITEMS`).
+  Ink and lime grounds alternate,
   kinetic uppercase type (DM Sans Bold in place of Archivo ExtraBold), halftone cut-outs, lime "SOC 2" discs,
   ivory device cards (illustrative), "Data, sorted." style title card and end card. One logo (the lockup, end card).
   No Apple or Lenovo; CTA Book a Call.

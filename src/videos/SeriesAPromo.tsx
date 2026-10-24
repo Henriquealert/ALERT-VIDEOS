@@ -3,7 +3,8 @@ import { LOGO_FILE, LOGO_RATIO } from "../ui/EndCard";
 import { C, Dot, F } from "../ui/theme";
 
 // "Series A, sorted." promo — the Series A Compliance bundle (the short brand cut; the 86 s explainer is SeriesASorted.tsx). 30 s, 30 fps, 16:9 and 4:5 (same scenes, re-laid out).
-// Fixed copy from Henrique's brief (24 Oct 2026); no other words on screen, no voiceover, so it works muted.
+// Fixed copy from Henrique's brief (24 Oct 2026); no other words on screen, so it works muted. The voiceover
+// (ElevenLabs "Everett", added on request) reads only the on-screen copy.
 // Pacing, kinetic type and collage follow the LinkedIn reference; the look is the brand's: Deep Ink and Acid
 // Lime grounds alternate, Soft Ivory UI cards, Electric Blue only in the beam. The device table is illustrative.
 // One logo in the whole video: the lockup on the end card.
@@ -25,9 +26,10 @@ const S2_STAMP = 7 * B; // stamp hits the cabinet
 const S3_CARDS = [B, 2 * B, 3 * B, 4 * B];
 const S4_WORDS = [0, B, 2 * B, 4 * B, 5 * B, 6 * B]; // DAY / ONE: / READY / LAST / DAY: / WIPED
 const S4_FLIP = 6 * B;
-const S5_ITEMS = [3, 4, 5, 6, 7, 8].map((b) => b * B);
+const S5_ITEMS = [3, 4, 5, 8, 9, 10].map((b) => b * B); // on the beats the voiceover names them
 
-const MUSIC = "audio/Alert Global Tech - Series A Sorted Promo Music.wav";
+// Music + voiceover, mixed by scripts/mix-series-a-promo-voiceover.py (lines land on the scene beats).
+const MUSIC = "audio/Alert Global Tech - Series A Sorted Promo Mix.wav";
 const ART = (n: string) => staticFile(`art/series-a-${n}.png`);
 const RATIO = { "laptop-open": 1200 / 900, "laptop-closed": 1066 / 535, cabinet: 672 / 1186, stamp: 506 / 794 } as const;
 type Art = keyof typeof RATIO;
