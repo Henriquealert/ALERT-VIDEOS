@@ -145,6 +145,19 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   LinkedIn feed cut (4:5, 1080×1350, same story and audio; the scenes scale into the feed frame via `FEED_K`):
   `npx remotion render DataSorted-4x5 out/"Alert Global Tech - Data Sorted Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
+- `SeriesASorted-16x9` / `SeriesASorted-9x16` — "Series A, sorted." cinematic hype film for the Series A Compliance
+  bundle (Henrique's brief, 24 Oct 2026). 38 s, 30 fps, 1920×1080 master and a 1080×1920 re-frame. No people:
+  CG footage only (`src/videos/SeriesAFootage.tsx`), drawn in greyscale and graded into the blue duotone by one
+  SVG filter. 125 BPM; every cut on a beat. Scene, pass, slam and typing frames live in
+  `src/videos/series-a-timeline.json`, written by `python3 scripts/make-series-a-audio.py` together with the mix
+  (music, SFX, voiceover) and the captions; change timing there, not in the video code. Voiceover: ElevenLabs
+  "Isaac - Energetic, Warm, Confident". Builders are DM Sans Bold sized from `series-a-metrics.json`
+  (`python3 scripts/make-series-a-metrics.py`); the end-card supergraphic is the a! traced by
+  `python3 scripts/make-series-a-monogram.py`. One logo (end card); CTA Book a Call.
+  `npx remotion render SeriesASorted-16x9 out/"Alert Global Tech - Series A Sorted Cinematic 16x9.mp4" --crf=18`
+  (also `SeriesASorted-9x16` → `... 9x16.mp4`). Thumbnail (scene 5 frame):
+  `npx remotion still SeriesASorted-Thumbnail out/"Alert Global Tech - Series A Sorted Cinematic Thumbnail.png"`.
+  Captions: `docs/social/Alert Global Tech - Series A Sorted Captions.srt`.
 
 ## Formats
 
