@@ -1,4 +1,4 @@
-"""Timeline, music, sound design, voiceover mix and captions for "Series A, sorted." (SeriesASorted-16x9 / -9x16).
+"""Timeline, music, sound design, voiceover mix and captions for "Series A, sorted." (SeriesACinematic-16x9 / -9x16).
 
 Everything is original and synthesised (no samples) except the voiceover: one ElevenLabs take
 (voice: Isaac - Energetic, Warm, Confident, model eleven_v4), split at its pauses into 16 phrases,
@@ -18,12 +18,12 @@ Sound design: whooshes and risers into transitions, impacts on the big cuts, typ
 while labels type, ticks on the word slams and language cards.
 
 Writes:
-  src/videos/series-a-timeline.json          beats, scene frames, voiceover placements, typing (the video reads it)
-  public/audio/Alert Global Tech - Series A Sorted Mix.wav
-  docs/social/Alert Global Tech - Series A Sorted Captions.srt
+  src/videos/series-a-cinematic-timeline.json          beats, scene frames, voiceover placements, typing (the video reads it)
+  public/audio/Alert Global Tech - Series A Sorted Cinematic Mix.wav
+  docs/social/Alert Global Tech - Series A Sorted Cinematic Captions.srt
 
 Run (numpy + scipy, ffmpeg on PATH):
-  python3 scripts/make-series-a-audio.py
+  python3 scripts/make-series-a-cinematic-audio.py
 """
 
 import json
@@ -39,10 +39,10 @@ BPM = 125
 BEAT = 60 / BPM
 TOTAL = 38.0
 DIR = "public/audio/"
-TAKE = DIR + "Alert Global Tech - Series A Sorted Voiceover Take.mp3"
-MIX_OUT = DIR + "Alert Global Tech - Series A Sorted Mix.wav"
-SRT_OUT = "docs/social/Alert Global Tech - Series A Sorted Captions.srt"
-TIMELINE_OUT = "src/videos/series-a-timeline.json"
+TAKE = DIR + "Alert Global Tech - Series A Sorted Cinematic Voiceover Take.mp3"
+MIX_OUT = DIR + "Alert Global Tech - Series A Sorted Cinematic Mix.wav"
+SRT_OUT = "docs/social/Alert Global Tech - Series A Sorted Cinematic Captions.srt"
+TIMELINE_OUT = "src/videos/series-a-cinematic-timeline.json"
 
 b2s = lambda b: b * BEAT
 b2f = lambda b: int(round(b * BEAT * FPS))

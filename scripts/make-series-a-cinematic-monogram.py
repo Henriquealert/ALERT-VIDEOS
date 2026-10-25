@@ -2,8 +2,8 @@
 into an SVG outline for the "Series A, sorted." end card supergraphic: the brand guide's outlined
 monogram pattern (thin line, cropped by the frame edge). The shape is traced, not redrawn.
 
-Run (numpy, Pillow, scikit-image): python3 scripts/make-series-a-monogram.py
-Writes src/videos/series-a-monogram.json ({ width, height, d }).
+Run (numpy, Pillow, scikit-image): python3 scripts/make-series-a-cinematic-monogram.py
+Writes src/videos/series-a-cinematic-monogram.json ({ width, height, d }).
 """
 
 import json
@@ -13,7 +13,7 @@ from PIL import Image
 from skimage import measure
 
 SRC = "public/art/security-sorted-monogram-ink.png"
-OUT = "src/videos/series-a-monogram.json"
+OUT = "src/videos/series-a-cinematic-monogram.json"
 PAD = 4
 
 alpha = np.array(Image.open(SRC))[:, :, 3].astype(float) / 255

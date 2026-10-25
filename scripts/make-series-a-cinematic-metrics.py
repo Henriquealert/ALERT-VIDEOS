@@ -2,8 +2,8 @@
 to fill the frame width exactly. Read from the supplied brand font files; kerning is not applied
 (the video sets font-kerning: none to match).
 
-Run (fonttools): python3 scripts/make-series-a-metrics.py
-Writes src/videos/series-a-metrics.json.
+Run (fonttools): python3 scripts/make-series-a-cinematic-metrics.py
+Writes src/videos/series-a-cinematic-metrics.json.
 """
 
 import json
@@ -29,6 +29,6 @@ for name, path in FACES.items():
         "cap": round(os2.sCapHeight / upm, 4),
         "adv": {ch: round(hmtx[cmap[ord(ch)]][0] / upm, 4) for ch in CHARS if ord(ch) in cmap},
     }
-with open("src/videos/series-a-metrics.json", "w") as f:
+with open("src/videos/series-a-cinematic-metrics.json", "w") as f:
     json.dump(out, f, ensure_ascii=False)
 print({k: (v["cap"], len(v["adv"])) for k, v in out.items()})

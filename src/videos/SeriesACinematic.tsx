@@ -16,24 +16,24 @@ import {
   ServerLeds,
   docRest,
   docWidth,
-} from "./SeriesAFootage";
-import METRICS from "./series-a-metrics.json";
-import MONOGRAM from "./series-a-monogram.json";
-import TL from "./series-a-timeline.json";
+} from "./SeriesACinematicFootage";
+import METRICS from "./series-a-cinematic-metrics.json";
+import MONOGRAM from "./series-a-cinematic-monogram.json";
+import TL from "./series-a-cinematic-timeline.json";
 
 // "Series A, sorted." — cinematic hype film for the Series A Compliance bundle (Henrique's brief, 24 Oct 2026).
 // 38 s, 30 fps, 1920x1080 master and a 1080x1920 re-frame (text 250px clear of the top and bottom).
-// 125 BPM; every cut on a beat. Scene, pass, slam and typing frames come from src/videos/series-a-timeline.json,
-// written by scripts/make-series-a-audio.py, which also builds the mix and the captions from the same numbers.
-// Footage is CG (src/videos/SeriesAFootage.tsx), graded into the blue duotone. No people anywhere.
+// 125 BPM; every cut on a beat. Scene, pass, slam and typing frames come from src/videos/series-a-cinematic-timeline.json,
+// written by scripts/make-series-a-cinematic-audio.py, which also builds the mix and the captions from the same numbers.
+// Footage is CG (src/videos/SeriesACinematicFootage.tsx), graded into the blue duotone. No people anywhere.
 // Brand fonts only (CLAUDE.md): the brief's Archivo ExtraBold builders use DM Sans Bold, its DM Mono typewriter
 // uses DM Sans Medium; statement, numerals and serif are as briefed. One logo, on the end card. CTA Book a Call.
 
-export const SERIES_A_16X9 = { fps: 30, durationInFrames: TL.total, width: 1920, height: 1080 } as const;
-export const SERIES_A_9X16 = { ...SERIES_A_16X9, width: 1080, height: 1920 } as const;
-export const SERIES_A_THUMB_FRAME = TL.scenes.sorted + 82;
+export const SERIES_A_CINEMATIC_16X9 = { fps: 30, durationInFrames: TL.total, width: 1920, height: 1080 } as const;
+export const SERIES_A_CINEMATIC_9X16 = { ...SERIES_A_CINEMATIC_16X9, width: 1080, height: 1920 } as const;
+export const SERIES_A_CINEMATIC_THUMB_FRAME = TL.scenes.sorted + 82;
 
-const MIX = "audio/Alert Global Tech - Series A Sorted Mix.wav";
+const MIX = "audio/Alert Global Tech - Series A Sorted Cinematic Mix.wav";
 const S = TL.scenes;
 const BEAT = TL.beatFrames;
 const bf = (b: number) => Math.round(b * BEAT);
@@ -350,7 +350,7 @@ const LimeFlash: React.FC = () => <AbsoluteFill style={{ background: C.lime }} /
 
 // ---------- Composition ----------
 
-export const SeriesASorted: React.FC = () => {
+export const SeriesACinematic: React.FC = () => {
   const frame = useCurrentFrame();
   const order = [
     [S.open, Open],
@@ -955,12 +955,12 @@ const EndCard: React.FC<SceneProps> = ({ f }) => {
 };
 
 // ---------- Thumbnail (scene 5 frame, as a still) ----------
-// `npx remotion still SeriesASorted-16x9 --frame=<SERIES_A_THUMB_FRAME>` renders the same frame; this
+// `npx remotion still SeriesACinematic-16x9 --frame=<SERIES_A_CINEMATIC_THUMB_FRAME>` renders the same frame; this
 // composition exists so the thumbnail can be rendered by name.
 
-export const SERIES_A_THUMB = { fps: 30, durationInFrames: 1, width: 1920, height: 1080 } as const;
-export const SeriesASortedThumb: React.FC = () => {
-  const f = SERIES_A_THUMB_FRAME - S.sorted;
+export const SERIES_A_CINEMATIC_THUMB = { fps: 30, durationInFrames: 1, width: 1920, height: 1080 } as const;
+export const SeriesACinematicThumb: React.FC = () => {
+  const f = SERIES_A_CINEMATIC_THUMB_FRAME - S.sorted;
   return (
     <AbsoluteFill style={{ background: C.ink }}>
       <DuotoneFilter />

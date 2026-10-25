@@ -1,6 +1,6 @@
 import { AbsoluteFill, Easing, interpolate, random, useVideoConfig } from "remotion";
 
-// CG "footage" for "Series A, sorted." (src/videos/SeriesASorted.tsx).
+// CG "footage" for "Series A, sorted." (src/videos/SeriesACinematic.tsx).
 // Every shot is drawn in greyscale light (0 = black, 1 = white) and graded into the brand's blue
 // duotone by the <DuotoneFilter> (Deep Ink shadows, Electric Blue mid-tones, light sky highlights).
 // No people, no logos, no legible text, no landmarks: objects, places and light only.
