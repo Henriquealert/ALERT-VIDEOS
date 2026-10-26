@@ -145,6 +145,15 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   LinkedIn feed cut (4:5, 1080×1350, same story and audio; the scenes scale into the feed frame via `FEED_K`):
   `npx remotion render DataSorted-4x5 out/"Alert Global Tech - Data Sorted Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
+- `AiRollout-4x5` — "Who set up your AI?" Microsoft 365 Copilot rollout, LinkedIn feed. 1080×1350, 25 fps,
+  29 bars at 132 BPM (52.7 s), fixed copy and edit from Henrique's brief (26 Oct 2026). Supplied footage only
+  (`public/footage/`, three clips, audio muted), Acid Lime and Soft Ivory only, flat 3px line diagrams, hard cuts on the beat;
+  DM Sans Bold stands in for the brief's Helvetica Neue Bold (brand fonts only). End card: solid lime with type and
+  lockup knocked out to the phone clip; CTA Talk to an Expert. The Copilot answer in scene 4 is a placeholder
+  (`COPILOT_ANSWER`) until real output is supplied.
+  Music (original 2-step, -14 LUFS): `python3 scripts/make-ai-rollout-music.py "public/audio/Alert Global Tech - AI Rollout Music.wav"`;
+  `SCENE_BARS` / `FLASH_STEPS` in `src/videos/AiRollout.tsx` match the script.
+  `npx remotion render AiRollout-4x5 out/"Alert Global Tech - AI Rollout Video LinkedIn 4x5.mp4" --crf=18`
 
 ## Formats
 

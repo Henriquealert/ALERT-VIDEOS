@@ -24,3 +24,4 @@ Royalty-free music and SFX only. Record every file here before using it.
 | Alert Global Tech - Day One Sorted Feed Voiceover Take.mp3 | As above, 30 s script | As above | 26.5 s, played whole from 0.4 s |
 | Alert Global Tech - Day One Sorted Mix.wav | Original music and SFX synthesised by `scripts/make-day-one-audio.py` (no samples), plus the 60 s take | Music and SFX owned by Alert Global Tech; voice as above | 60 s mix for 16x9 and 9x16, -16 LUFS |
 | Alert Global Tech - Day One Sorted Feed Mix.wav | As above, with the feed take | As above | 30 s mix for the 4x5 feed cut, -16 LUFS |
+| Alert Global Tech - AI Rollout Music.wav | Original, synthesised by `scripts/make-ai-rollout-music.py` (no samples, no vocals) | Owned by Alert Global Tech; no third-party rights | 132 BPM 2-step garage, 29 bars, 52.7 s; -14 LUFS, -1.5 dBTP |
