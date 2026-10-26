@@ -20,7 +20,8 @@ const FLASH_STEPS = [0, 4, 10, 12];
 
 export const AI_ROLLOUT_4X5 = { fps: FPS, durationInFrames: at(29 * 4), width: 1080, height: 1350 } as const;
 
-const MUSIC = "audio/Alert Global Tech - AI Rollout Music.wav";
+// Music + voiceover (ElevenLabs "Jerry B."), placed and mixed by scripts/mix-ai-rollout-voiceover.py.
+const MIX = "audio/Alert Global Tech - AI Rollout Mix.wav";
 const CLIP = (id: number) => staticFile(`footage/Alert Global Tech - AI Rollout Clip ID${id}.mp4`);
 const W = 1080;
 const H = 1350;
@@ -63,7 +64,7 @@ export const AiRollout: React.FC = () => {
   const scenes = [Scene1, Scene2, Scene3, Scene4, Scene5, Scene6, EndCard];
   return (
     <AbsoluteFill>
-      <Audio src={staticFile(MUSIC)} />
+      <Audio src={staticFile(MIX)} />
       {scenes.map((Scene, i) => {
         const from = at(SCENE_BARS[i] * 4);
         const to = at(SCENE_BARS[i + 1] * 4);
