@@ -15,7 +15,7 @@ import {
 } from "./videos/SecuritySorted";
 import { MEETINGS_SORTED, MeetingsSorted } from "./videos/MeetingsSorted";
 import { DATA_SORTED, DATA_SORTED_4X5, DataSorted } from "./videos/DataSorted";
-import { SPREADSHEETS_SORTED, SpreadsheetsSorted } from "./videos/SpreadsheetsSorted";
+import { SPREADSHEETS_SORTED, SPREADSHEETS_SORTED_COVER, SpreadsheetsSorted, SpreadsheetsSortedCover } from "./videos/SpreadsheetsSorted";
 import { SERIES_A_SORTED, SeriesASorted } from "./videos/SeriesASorted";
 import { SERIES_A_PROMO_16X9, SERIES_A_PROMO_4X5, SeriesAPromo } from "./videos/SeriesAPromo";
 import { SERIES_A_CINEMATIC_16X9, SERIES_A_CINEMATIC_9X16, SERIES_A_CINEMATIC_THUMB, SeriesACinematic, SeriesACinematicThumb } from "./videos/SeriesACinematic";
@@ -59,6 +59,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="SeriesASorted-4x5" component={SeriesASorted} {...SERIES_A_SORTED} />
     <Composition id="SecuritySorted-Cover-16x9" component={SecuritySortedCover} {...SECURITY_SORTED_COVER_16X9} />
     <Composition id="SpreadsheetsSorted-9x16" component={SpreadsheetsSorted} {...SPREADSHEETS_SORTED} />
+    <Composition id="SpreadsheetsSorted-Cover-9x16" component={SpreadsheetsSortedCover} {...SPREADSHEETS_SORTED_COVER} />
     <Composition id="SeriesAPromo-16x9" component={SeriesAPromo} {...SERIES_A_PROMO_16X9} />
     <Composition id="SeriesAPromo-4x5" component={SeriesAPromo} {...SERIES_A_PROMO_4X5} />
     <Composition id="SeriesACinematic-16x9" component={SeriesACinematic} {...SERIES_A_CINEMATIC_16X9} />

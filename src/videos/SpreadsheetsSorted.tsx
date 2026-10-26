@@ -453,3 +453,34 @@ const Scene5: React.FC<{ f: number }> = ({ f }) => (
     ) : null}
   </AbsoluteFill>
 );
+
+// ---------- Cover / thumbnail (still) ----------
+// The end-card headline over the four parts closed into one unit (scene 3's "one system").
+// The triangle is Ivory here, since Ink would vanish on the Ink ground.
+
+export const SPREADSHEETS_SORTED_COVER = { fps: 30, durationInFrames: 1, width: 1080, height: 1920 } as const;
+
+export const SpreadsheetsSortedCover: React.FC = () => {
+  const unit = { x: SIDE, y: 880 };
+  const colors = [C.blue, C.lime, C.ivory, C.blue];
+  return (
+    <AbsoluteFill style={{ background: C.ink, overflow: "hidden" }}>
+      <Text x={SIDE} y={480} size={132} color={C.ivory}>
+        Spreadsheets,
+      </Text>
+      <Text x={SIDE} y={480 + 140} size={132} color={C.lime}>
+        sorted
+        <DropDot f={1} at={0} size={132} color={C.lime} />
+      </Text>
+      {PARTS.map((p, i) => (
+        <div key={p.name} style={{ position: "absolute", left: unit.x + (i % 2) * CELL, top: unit.y + Math.floor(i / 2) * CELL }}>
+          <Shape shape={p.shape} color={colors[i]} />
+        </div>
+      ))}
+      <Img
+        src={staticFile(LOGO_IVORY)}
+        style={{ position: "absolute", left: LOGO.x, top: LOGO.y, width: LOGO.w, height: LOGO.w / LOGO_RATIO }}
+      />
+    </AbsoluteFill>
+  );
+};
