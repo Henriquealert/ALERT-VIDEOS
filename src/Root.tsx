@@ -15,6 +15,7 @@ import {
 } from "./videos/SecuritySorted";
 import { MEETINGS_SORTED, MeetingsSorted } from "./videos/MeetingsSorted";
 import { DATA_SORTED, DATA_SORTED_4X5, DataSorted } from "./videos/DataSorted";
+import { SPREADSHEETS_SORTED, SpreadsheetsSorted } from "./videos/SpreadsheetsSorted";
 import { TECH_UPDATES_WIN11, TECH_UPDATES_WIN11_4X5, TechUpdatesWindows11 } from "./videos/TechUpdatesWindows11";
 
 const FORMATS = [
@@ -53,5 +54,6 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="SecuritySorted-16x9" component={SecuritySorted} {...SECURITY_SORTED_16X9} />
     <Composition id="SecuritySorted-Cover-4x5" component={SecuritySortedCover} {...SECURITY_SORTED_COVER_4X5} />
     <Composition id="SecuritySorted-Cover-16x9" component={SecuritySortedCover} {...SECURITY_SORTED_COVER_16X9} />
+    <Composition id="SpreadsheetsSorted-9x16" component={SpreadsheetsSorted} {...SPREADSHEETS_SORTED} />
   </>
 );

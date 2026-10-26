@@ -146,6 +146,17 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `npx remotion render DataSorted-4x5 out/"Alert Global Tech - Data Sorted Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
 
+- `SpreadsheetsSorted-9x16` — "Spreadsheets, sorted." Bauhaus, flat, graphic brand story (Dynamics 365 Business
+  Central, Copilot). 20 s, 1080×1920, 30 fps, fixed copy from Henrique's brief (26 Oct 2026), no voiceover. Five scenes
+  (blue hook, ink tabs, ivory 2×2 shapes, lime supplier, ink end card) on a 120 BPM grid (1 beat = 15 frames); shapes,
+  tabs and dots land on their cues. Core four colours only, flat, DM Sans Bold/Regular (the brief named Helvetica Neue,
+  which is not a brand font). Lockup top-left in every scene, never moving: Ivory on dark, Ink
+  (`alert-global-tech-lockup-ink.png`, from `python3 scripts/make-ink-lockup.py`) on light. CTA Request a Quote.
+  Track (percussion, a "tok" on every landing, one chord on "sorted"):
+  `python3 scripts/make-spreadsheets-sorted-audio.py "public/audio/Alert Global Tech - Spreadsheets Sorted Music.wav"`;
+  its TOKS list matches the landing cues in the video code.
+  `npx remotion render SpreadsheetsSorted-9x16 out/"Alert Global Tech - Spreadsheets Sorted 9x16.mp4" --crf=18`
+
 ## Formats
 
 Register one composition per format, all driven by the same spec:
