@@ -1,17 +1,17 @@
 """Original instrumental for the "AI rollout" LinkedIn video. No samples, no vocals.
 
-Light UK garage, 2-step: exactly 132 BPM, 4/4, 29 bars (52.73 s), 48 kHz stereo, mastered to -14 LUFS.
-Swung 16th hats, skippy kick (16ths 0 and 10, plus 7 on the in-between bars), crisp snare on 2 and 4,
-rolling sub bass, airy pad and swung organ stabs on Ebmaj9 - Dm7 - Gm9 - Fadd9.
+Restrained deep 2-step: exactly 132 BPM, 4/4, 29 bars (52.73 s), 48 kHz stereo, mastered to -14 LUFS.
+Minor key and unhurried: soft electric-piano chords and a filtered string pad on Cm9 - Abmaj9 - Ebmaj7 - Fm9,
+a calm sub bass (two notes a bar), light swing on quiet hats, a soft clap on 2 and 4, kick on 16ths 0 and 10.
+A shared room reverb keeps it from sounding dry.
 
-  Bars 1-4    scene 1: drums, pad, stabs (no bass)
-  Bars 5-26   scenes 2-6: full groove, the bass rolls in on bar 5
-  Bar 26      last two beats break (no kick, no bass) into the end card
-  Bars 27-29  end card: full groove, last hit on the last beat, then the track stops dead
+  Bars 1-4    scene 1: pad, keys, kick, clap and hats (no bass, no shaker)
+  Bars 5-26   scenes 2-6: full groove, the bass comes in on bar 5
+  Bar 26      last two beats break (pad only) into the end card
+  Bars 27-29  end card: full groove, last chord on the last beat, then the track stops dead
 
-The first bar of every scene uses the plain kick pattern, so the video's "flash" can jump on the kicks
-and snares at 16ths 0, 4, 10 and 12 (FLASH_STEPS in src/videos/AiRollout.tsx). Scene starts (bars)
-match SCENE_BARS there.
+The first bar of every scene keeps the kick on 16ths 0 and 10 and the clap on 4 and 12, so the video's
+"flash" jumps on them (FLASH_STEPS in src/videos/AiRollout.tsx). Scene starts (bars) match SCENE_BARS there.
 
 Run: python3 scripts/make-ai-rollout-music.py "public/audio/Alert Global Tech - AI Rollout Music.wav"
 Needs numpy, scipy and ffmpeg (loudness measurement).
@@ -24,7 +24,7 @@ import sys
 import numpy as np
 from scipy.io import wavfile
 from scipy.ndimage import minimum_filter1d
-from scipy.signal import butter, sosfilt
+from scipy.signal import butter, fftconvolve, sosfilt
 
 SR = 48000
 BPM = 132
@@ -32,40 +32,34 @@ BEAT = 60 / BPM
 S16 = BEAT / 4
 BARS = 29
 N = int(round(BARS * 4 * BEAT * SR))
-SWING = 0.2  # odd 16ths land 20% of a 16th late
+SWING = 0.1  # odd 16ths land 10% of a 16th late: a lean, not a skip
 SCENE_BARS = [0, 4, 8, 13, 18, 23, 26]
 TARGET_LUFS = -14.0
-rng = np.random.default_rng(132)
+rng = np.random.default_rng(1324)
 
-L = np.zeros(N)
-R = np.zeros(N)
+# Dry bus and reverb send, both stereo.
+DRY = np.zeros((N, 2))
+SEND = np.zeros((N, 2))
 
 
 def step_time(bar, step):
     return bar * 4 * BEAT + step * S16 + (SWING * S16 if step % 2 else 0.0)
 
 
-def add(sig, t, gain=1.0, pan=0.0):
+def add(sig, t, gain=1.0, pan=0.0, verb=0.0):
     i = int(round(t * SR))
     if i >= N:
         return
     sig = sig[: N - i] * gain
     a = (pan + 1) * np.pi / 4
-    L[i : i + len(sig)] += sig * np.cos(a)
-    R[i : i + len(sig)] += sig * np.sin(a)
+    st = np.stack([sig * np.cos(a), sig * np.sin(a)], axis=1)
+    DRY[i : i + len(sig)] += st
+    if verb:
+        SEND[i : i + len(sig)] += st * verb
 
 
 def filt(x, kind, freq, order=2):
     return sosfilt(butter(order, freq, btype=kind, fs=SR, output="sos"), x)
-
-
-def env(n, attack, decay):
-    t = np.arange(n) / SR
-    e = np.exp(-t / decay)
-    ia = int(attack * SR)
-    if ia:
-        e[:ia] *= np.linspace(0, 1, ia)
-    return e
 
 
 def hz(name):
@@ -78,157 +72,170 @@ def hz(name):
 
 
 def kick():
-    n = int(0.28 * SR)
+    n = int(0.36 * SR)
     t = np.arange(n) / SR
-    f = 52 + 120 * np.exp(-t / 0.03)
-    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.13)
-    click = filt(rng.standard_normal(n), "bandpass", [2500, 6000]) * np.exp(-t / 0.002) * 0.3
-    return np.tanh(1.5 * (body + click))
+    f = 46 + 70 * np.exp(-t / 0.04)
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.2)
+    click = filt(rng.standard_normal(n), "bandpass", [1200, 3000]) * np.exp(-t / 0.002) * 0.12
+    return np.tanh(1.2 * (body + click))
 
 
-def snare():
-    n = int(0.3 * SR)
+def clap():
+    n = int(0.35 * SR)
     t = np.arange(n) / SR
-    noise = filt(rng.standard_normal(n), "bandpass", [1800, 9000]) * np.exp(-t / 0.07)
-    tone = np.sin(2 * np.pi * 195 * t) * np.exp(-t / 0.035) * 0.6
-    crack = filt(rng.standard_normal(n), "highpass", 5000) * np.exp(-t / 0.008) * 0.6
-    return np.tanh(1.3 * (noise + tone + crack)) * 0.8
+    x = np.zeros(n)
+    for k, d in enumerate([0.0, 0.009, 0.019]):  # three soft hand hits, then the tail
+        i = int(d * SR)
+        x[i:] += np.exp(-(t[: n - i]) / (0.012 if k < 2 else 0.11)) * (0.6 if k < 2 else 1.0)
+    noise = filt(rng.standard_normal(n), "bandpass", [900, 5000])
+    return noise * x * 0.55
 
 
-def rim():
-    n = int(0.08 * SR)
+def hat():
+    n = int(0.04 * SR)
     t = np.arange(n) / SR
-    return filt(rng.standard_normal(n), "bandpass", [1500, 3500]) * np.exp(-t / 0.012) * 0.5
+    return filt(rng.standard_normal(n), "highpass", 8000, order=4) * np.exp(-t / 0.009)
 
 
-def hat(open_=False):
-    n = int((0.22 if open_ else 0.05) * SR)
+def shaker():
+    n = int(0.09 * SR)
     t = np.arange(n) / SR
-    x = filt(rng.standard_normal(n), "highpass", 7500, order=4)
-    return x * np.exp(-t / (0.07 if open_ else 0.012))
+    e = np.minimum(1, t / 0.02) * np.exp(-t / 0.03)
+    return filt(rng.standard_normal(n), "bandpass", [4000, 10000]) * e
 
 
-def sub(freq, dur, glide_to=None):
+def sub(freq, dur):
     n = int(dur * SR)
     t = np.arange(n) / SR
-    f = np.full(n, freq) if glide_to is None else freq * (glide_to / freq) ** np.clip((t - dur * 0.6) / (dur * 0.4), 0, 1)
-    ph = 2 * np.pi * np.cumsum(f) / SR
-    x = np.sin(ph) + 0.18 * np.sin(2 * ph)
-    e = np.minimum(1, t / 0.006) * np.minimum(1, (dur - t) / 0.03)
-    return np.tanh(1.6 * x) * e * 0.9
+    ph = 2 * np.pi * freq * t
+    x = np.sin(ph) + 0.08 * np.sin(2 * ph)
+    e = np.minimum(1, t / 0.01) * np.minimum(1, (dur - t) / 0.05)
+    return np.tanh(1.2 * x) * e
 
 
-def organ(notes, dur):
+def epiano(notes, dur):
+    """Soft electric piano: a sine with a gentle FM tine, slow decay, rounded top."""
     n = int(dur * SR)
     t = np.arange(n) / SR
     x = np.zeros(n)
     for name in notes:
         f = hz(name)
-        for mult, amp in [(1, 1.0), (2, 0.55), (3, 0.3), (4, 0.18), (6, 0.08)]:
-            x += amp * np.sin(2 * np.pi * f * mult * t + rng.uniform(0, 6.28))
-    x = x / len(notes) * env(n, 0.004, 0.11) * np.minimum(1, (dur - t) / 0.02)
-    return filt(x, "lowpass", 4200)
+        mod = np.sin(2 * np.pi * f * 14 * t) * 0.9 * np.exp(-t / 0.05)  # tine attack
+        x += np.sin(2 * np.pi * f * t + mod) * np.exp(-t / 1.1)
+        x += 0.25 * np.sin(2 * np.pi * 2 * f * t) * np.exp(-t / 0.4)
+    x *= np.minimum(1, t / 0.003) * np.minimum(1, (dur - t) / 0.08)
+    return filt(x / len(notes), "lowpass", 2600)
 
 
-def pad(notes, dur):
+def strings(notes, dur):
+    """String-section pad: detuned saws per note with slow vibrato, filtered dark, slow attack."""
     n = int(dur * SR)
     t = np.arange(n) / SR
     x = np.zeros(n)
     for name in notes:
-        for det in (-0.12, 0.0, 0.12):
-            f = hz(name) * 2 ** (det / 12)
-            ph = (f * t + rng.uniform()) % 1.0
-            x += 2 * ph - 1
-    x = filt(x / (3 * len(notes)), "lowpass", 2400)
-    fade = int(0.25 * SR)
+        for det, rate in ((-0.09, 4.8), (0.0, 5.3), (0.08, 5.9)):
+            f = hz(name) * 2 ** (det / 12) * (1 + 0.003 * np.sin(2 * np.pi * rate * t + rng.uniform(0, 6.28)))
+            ph = np.cumsum(f) / SR + rng.uniform()
+            x += 2 * (ph % 1.0) - 1
+    x = filt(filt(x / (3 * len(notes)), "lowpass", 1500), "highpass", 180)
+    att, rel = int(0.5 * SR), int(0.4 * SR)
     e = np.ones(n)
-    e[:fade] = np.linspace(0, 1, fade)
-    e[-fade:] = np.linspace(1, 0, fade)
+    e[:att] = np.linspace(0, 1, att) ** 1.5
+    e[-rel:] *= np.linspace(1, 0, rel)
     return x * e
 
 
-def riser(dur):
+def swell(dur):
     n = int(dur * SR)
     t = np.arange(n) / SR
-    x = filt(rng.standard_normal(n), "highpass", 3000)
-    return x * (t / dur) ** 2.5 * 0.35
+    x = filt(rng.standard_normal(n), "bandpass", [600, 6000])
+    return x * (t / dur) ** 3 * 0.25
+
+
+def room_ir(seconds=1.8):
+    n = int(seconds * SR)
+    t = np.arange(n) / SR
+    ir = np.stack([rng.standard_normal(n), rng.standard_normal(n)], axis=1)
+    ir *= np.exp(-t / (seconds / 6.9))[:, None]
+    ir = np.stack([filt(ir[:, c], "lowpass", 5000) for c in (0, 1)], axis=1)
+    ir[: int(0.012 * SR)] = 0  # pre-delay
+    return ir / np.sqrt(np.sum(ir**2))
 
 
 # ---------- Arrangement ----------
 
+# (bass root, bass on the "and" of 3, e-piano voicing, string voicing)
 CHORDS = [
-    ("Eb2", ["Eb4", "G4", "Bb4", "D5", "F5"]),
-    ("D2", ["D4", "F4", "A4", "C5", "E5"]),
-    ("G1", ["Bb3", "D4", "F4", "A4", "D5"]),
-    ("F2", ["F4", "A4", "C5", "G5"]),
+    ("C2", "G1", ["Eb4", "G4", "Bb4", "D5"], ["C4", "G4", "Eb5"]),  # Cm9
+    ("Ab1", "Eb2", ["C4", "Eb4", "G4", "Bb4"], ["Ab3", "Eb4", "C5"]),  # Abmaj9
+    ("Eb2", "Bb1", ["D4", "G4", "Bb4", "Eb5"], ["Eb4", "Bb4", "G5"]),  # Ebmaj7
+    ("F1", "C2", ["Ab3", "C4", "Eb4", "G4"], ["F3", "C4", "Ab4"]),  # Fm9
 ]
-STAB_STEPS = [3, 6, 11]
-HAT_VEL = [0.55, 0.35, 0.8, 0.4, 0.5, 0.35, 0.8, 0.45, 0.55, 0.35, 0.8, 0.4, 0.5, 0.35, 0.8, 0.5]
+KEY_STEPS = [(0, 1.0), (7, 0.55), (10, 0.7)]  # e-piano: downbeat, a pushed 8th, the kick on 10
+HAT_VEL = [0.0, 0.25, 0.6, 0.25, 0.0, 0.25, 0.6, 0.3, 0.0, 0.25, 0.6, 0.25, 0.0, 0.25, 0.6, 0.35]
 
-KICK, SNARE, RIM = kick(), snare(), rim()
+KICK, CLAP = kick(), clap()
 LAST = BARS - 1
 
 for bar in range(BARS):
-    root, chord = CHORDS[bar % 4]
-    first = bar in SCENE_BARS
-    brk = bar == 25  # last two beats of bar 26 break into the end card
+    bass, bass2, keys, pad = CHORDS[bar % 4]
+    brk = bar == 25  # last two beats of bar 26 drop to the pad into the end card
     end_bar = bar == LAST
+    intro = bar < 4
 
-    # Kick: 0 and 10; 7 as well on bars that don't start a scene.
-    for s in [0, 10] if first else [0, 7, 10]:
+    # Kick on 16ths 0 and 10 (the 2-step), soft.
+    for s in (0, 10):
+        if (brk and s >= 8) or (end_bar and s > 12):
+            continue
+        add(KICK, step_time(bar, s), 0.85 if s == 0 else 0.7)
+    # Clap on 2 and 4 (from bar 1 so the first flash has its hits), into the room.
+    for s in (4, 12):
         if brk and s >= 8:
             continue
-        if end_bar and s > 12:
-            continue
-        add(KICK, step_time(bar, s), 0.95 if s == 0 else 0.8)
-    # Snare on 2 and 4, rim ghost on the swung 15th now and then.
-    for s in (4, 12):
-        add(SNARE, step_time(bar, s), 0.62, pan=0.05)
-    if not first and not brk and bar % 2:
-        add(RIM, step_time(bar, 15), 0.35, pan=-0.3)
-    # Hats: swung 16ths, open hat on the "and" of each beat.
+        add(CLAP, step_time(bar, s), 0.5, pan=0.03, verb=0.45)
+    # Quiet hats on the off-16ths, shaker on the 8ths after the intro.
     for s in range(16):
-        if end_bar and s > 12:
+        if (end_bar and s > 12) or (brk and s >= 8) or HAT_VEL[s] == 0:
             continue
-        add(hat(), step_time(bar, s), 0.22 * HAT_VEL[s], pan=0.25)
-        if s % 4 == 2:
-            add(hat(True), step_time(bar, s), 0.13, pan=-0.2)
+        add(hat(), step_time(bar, s), 0.14 * HAT_VEL[s], pan=0.3)
+    if not intro and not end_bar:
+        for s in range(2, 16, 4):
+            add(shaker(), step_time(bar, s), 0.07, pan=-0.35, verb=0.2)
 
-    # Pad under everything (airy, quiet).
+    # Strings: one long chord per bar, overlapping into the next.
     if not end_bar:
-        add(pad(chord[:4], 4 * BEAT + 0.25), step_time(bar, 0), 0.11, pan=0)
-    # Organ stabs.
-    for s in STAB_STEPS:
-        if end_bar and s > 12:
+        add(strings(pad, 4 * BEAT + 0.4), step_time(bar, 0), 0.16, verb=0.6)
+    # Electric piano.
+    for s, v in KEY_STEPS:
+        if (brk and s >= 8) or (end_bar and s > 12):
             continue
-        add(organ(chord, 1.5 * S16), step_time(bar, s), 0.34, pan=-0.15 if s == 6 else 0.15)
+        add(epiano(keys, 3 * S16 if s else 5 * S16), step_time(bar, s), 0.26 * v, pan=-0.1, verb=0.35)
 
-    # Sub bass from bar 5, rolling: long root, two pushes, glide up into the next bar.
+    # Sub bass from bar 5: root on the one, fifth on the 16th before the kick on 10.
     if bar >= 4 and not end_bar:
-        f = hz(root)
-        nxt = hz(CHORDS[(bar + 1) % 4][0])
         if brk:
-            add(sub(f, 6 * S16), step_time(bar, 0), 0.75)
+            add(sub(hz(bass), 7 * S16), step_time(bar, 0), 0.7)
         else:
-            add(sub(f, 5.5 * S16), step_time(bar, 0), 0.75)
-            add(sub(f, 2.6 * S16), step_time(bar, 6), 0.6)
-            add(sub(f * 2, 1.6 * S16), step_time(bar, 9), 0.4)
-            add(sub(f, 4 * S16, glide_to=nxt), step_time(bar, 12), 0.6)
+            add(sub(hz(bass), 6.5 * S16), step_time(bar, 0), 0.7)
+            add(sub(hz(bass2), 5 * S16), step_time(bar, 9), 0.55)
 
-    # Short riser into each scene change.
+    # Soft swell into each scene change.
     if bar + 1 in SCENE_BARS:
-        add(riser(4 * BEAT), step_time(bar, 0), 0.6 if bar == 25 else 0.35)
+        add(swell(2 * BEAT), step_time(bar, 8), 0.5 if bar == 25 else 0.3, verb=0.5)
 
-# End card downbeat: a bigger hit. Last beat: kick, snare, full stab and bass, then silence.
-add(KICK, step_time(26, 0), 0.4)
+# End card downbeat lands a little fuller; last beat: kick, chord and root, then silence.
+add(KICK, step_time(26, 0), 0.3)
+add(strings(CHORDS[0][3], 4 * BEAT), step_time(26, 0), 0.08, verb=0.6)
 end_t = step_time(LAST, 12)
-add(organ(CHORDS[0][1], 3 * S16), end_t, 0.5)
-add(sub(hz("Eb2"), 4 * S16), end_t, 0.85)
+add(epiano(CHORDS[0][2], 4 * S16), end_t, 0.32, verb=0.4)
+add(sub(hz("C2"), 4 * S16), end_t, 0.8)
 
-# ---------- Master: loudness and peak limiter ----------
+# ---------- Master: room reverb, loudness and peak limiter ----------
 
-mix = np.stack([L, R], axis=1)
-mix = np.stack([filt(mix[:, c], "highpass", 28) for c in (0, 1)], axis=1)
+ir = room_ir()
+wet = np.stack([fftconvolve(SEND[:, c], ir[:, c])[:N] for c in (0, 1)], axis=1)
+mix = DRY + 0.35 * wet
+mix = np.stack([filt(mix[:, c], "highpass", 30) for c in (0, 1)], axis=1)
 edge = int(0.004 * SR)
 mix[-edge:] *= np.linspace(1, 0, edge)[:, None]  # click-free stop, not a fade
 

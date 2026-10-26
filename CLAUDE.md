@@ -151,14 +151,11 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   DM Sans Bold stands in for the brief's Helvetica Neue Bold (brand fonts only). End card: solid lime with type and
   lockup knocked out to the phone clip; CTA Talk to an Expert. The Copilot answer in scene 4 is a placeholder
   (`COPILOT_ANSWER`) until real output is supplied.
-  Music (original 2-step, -14 LUFS): `python3 scripts/make-ai-rollout-music.py "public/audio/Alert Global Tech - AI Rollout Music.wav"`;
+  Music (original, restrained deep 2-step in C minor: e-piano, string pad, room reverb; -14 LUFS): `python3 scripts/make-ai-rollout-music.py "public/audio/Alert Global Tech - AI Rollout Music.wav"`;
   `SCENE_BARS` / `FLASH_STEPS` in `src/videos/AiRollout.tsx` match the script.
   Voiceover (ElevenLabs, "Jerry B. - Premium Luxury Commercial", relaxed and conversational, script not yet approved)
   is placed and mixed by `python3 scripts/mix-ai-rollout-voiceover.py`; line times there are in bars of the music.
-  PENDING (Henrique, 26 Oct 2026): replace the 2-step track with an original classic house track in the style of
-  Octave One's "Blackwater" (lush strings, four-on-the-floor, ~124 BPM), generated with the full ElevenLabs connector.
-  Keep 29 bars (about 56 s): set BPM in AiRollout.tsx and BAR in the mix script to the new track's measured tempo,
-  then re-run the mix script and re-render.
+  Music remade on request (26 Oct 2026): less jolly, more professional than the first garage track.
   `npx remotion render AiRollout-4x5 out/"Alert Global Tech - AI Rollout Video LinkedIn 4x5.mp4" --crf=18`
 - `SeriesACinematic-16x9` / `SeriesACinematic-9x16` — "Series A, sorted." cinematic hype film for the Series A Compliance
   bundle (Henrique's brief, 24 Oct 2026). 38 s, 30 fps, 1920×1080 master and a 1080×1920 re-frame. No people:
