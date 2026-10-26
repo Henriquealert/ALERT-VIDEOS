@@ -195,7 +195,10 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `python3 scripts/make-spreadsheets-sorted-audio.py "public/audio/Alert Global Tech - Spreadsheets Sorted Music.wav"`;
   its TOKS list matches the landing cues in the video code.
   `npx remotion render SpreadsheetsSorted-9x16 out/"Alert Global Tech - Spreadsheets Sorted 9x16.mp4" --crf=18`
-  Thumbnail: `npx remotion still SpreadsheetsSorted-Cover-9x16 out/"Alert Global Tech - Spreadsheets Sorted Thumbnail 9x16.png"`.
+  LinkedIn feed cut (4:5, 1080×1350, same timing, copy and audio; positions come from the `FEED` layout):
+  `npx remotion render SpreadsheetsSorted-4x5 out/"Alert Global Tech - Spreadsheets Sorted Video LinkedIn 4x5.mp4" --crf=18`
+  Thumbnails: `npx remotion still SpreadsheetsSorted-Cover-9x16 out/"Alert Global Tech - Spreadsheets Sorted Thumbnail 9x16.png"`
+  and `npx remotion still SpreadsheetsSorted-Cover-4x5 out/"Alert Global Tech - Spreadsheets Sorted Thumbnail LinkedIn 4x5.png"`.
   Post copy, description and alt text: `docs/social/Alert Global Tech - Spreadsheets Sorted LinkedIn Post.md`.
 
 ## Formats

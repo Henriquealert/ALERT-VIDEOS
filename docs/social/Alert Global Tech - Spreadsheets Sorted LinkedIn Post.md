@@ -2,9 +2,10 @@
 
 **Post — Spreadsheets, sorted: Dynamics 365 Business Central** (sales post)
 
-Video (Stories, Reels, Shorts, LinkedIn mobile, 9:16): `out/Alert Global Tech - Spreadsheets Sorted 9x16.mp4` (render `SpreadsheetsSorted-9x16`)
-Thumbnail: `out/Alert Global Tech - Spreadsheets Sorted Thumbnail 9x16.png`
-(render `npx remotion still SpreadsheetsSorted-Cover-9x16 out/"Alert Global Tech - Spreadsheets Sorted Thumbnail 9x16.png"`)
+Video (LinkedIn feed, 4:5): `out/Alert Global Tech - Spreadsheets Sorted Video LinkedIn 4x5.mp4` (render `SpreadsheetsSorted-4x5`)
+Thumbnail (LinkedIn feed, 4:5): `out/Alert Global Tech - Spreadsheets Sorted Thumbnail LinkedIn 4x5.png` (render `SpreadsheetsSorted-Cover-4x5`)
+Video (Stories, Reels, Shorts, 9:16): `out/Alert Global Tech - Spreadsheets Sorted 9x16.mp4` (render `SpreadsheetsSorted-9x16`)
+Thumbnail (9:16): `out/Alert Global Tech - Spreadsheets Sorted Thumbnail 9x16.png` (render `SpreadsheetsSorted-Cover-9x16`)
 Source: Henrique's brief, 26 Oct 2026 (fixed copy)
 
 ## Caption (LinkedIn)
@@ -44,7 +45,7 @@ Request a Quote: sales@alertglobaltech.com
 
 Video: Flat Bauhaus-style animation in Electric Blue, Deep Ink, Acid Lime and Soft Ivory. A giant lime "v7" rises behind the question "Which forecast is the real one? — Every month-end". Five file tabs drop into a staircase: Invoices.xlsx, Sales.xlsx, Stock.xlsx, Payroll.xlsx, FINAL_v7.xlsx, over "Too many spreadsheets." A blue square, lime circle, ink triangle and blue half-disc, labelled Finance, Sales, Service and Operations, slide together into one unit: "One system." with the caption "Dynamics 365 Business Central connects finance, sales, service and operations in one app, with Copilot built in." On lime: "ONE SUPPLIER", "From quote to setup.", "Licences, setup and rollout." and an ink disc reading EN, ES, PT. Ends on Deep Ink: "Spreadsheets, sorted." with a lime "Request a Quote" button and alertglobal.tech. Alert Global Tech logo top-left throughout.
 
-Thumbnail: On Deep Ink, the headline "Spreadsheets, sorted." in ivory and lime, above four flat shapes fitted together as one unit: a blue square, a lime circle, an ivory triangle and a blue half-disc. Alert Global Tech logo top-left.
+Thumbnail (both formats): On Deep Ink, the headline "Spreadsheets, sorted." in ivory and lime, above four flat shapes fitted together as one unit: a blue square, a lime circle, an ivory triangle and a blue half-disc. Alert Global Tech logo top-left.
 
 ## Notes to confirm before publishing
 
