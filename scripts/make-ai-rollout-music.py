@@ -1,14 +1,14 @@
 """Original instrumental for the "AI rollout" LinkedIn video. No samples, no vocals.
 
-Restrained deep 2-step: exactly 132 BPM, 4/4, 29 bars (52.73 s), 48 kHz stereo, mastered to -14 LUFS.
+Restrained deep 2-step: exactly 132 BPM, 4/4, 23 bars (41.82 s), 48 kHz stereo, mastered to -14 LUFS.
 Minor key and unhurried: soft electric-piano chords and a filtered string pad on Cm9 - Abmaj9 - Ebmaj7 - Fm9,
 a calm sub bass (two notes a bar), light swing on quiet hats, a soft clap on 2 and 4, kick on 16ths 0 and 10.
 A shared room reverb keeps it from sounding dry.
 
-  Bars 1-4    scene 1: pad, keys, kick, clap and hats (no bass, no shaker)
-  Bars 5-26   scenes 2-6: full groove, the bass comes in on bar 5
-  Bar 26      last two beats break (pad only) into the end card
-  Bars 27-29  end card: full groove, last chord on the last beat, then the track stops dead
+  Bars 1-2    scene 1: pad, keys, kick, clap and hats (no bass, no shaker)
+  Bars 3-20   scenes 2-6: full groove, the bass comes in on bar 3
+  Bar 20      last two beats break (pad only) into the end card
+  Bars 21-23  end card: full groove, last chord on the last beat, then the track stops dead
 
 The first bar of every scene keeps the kick on 16ths 0 and 10 and the clap on 4 and 12, so the video's
 "flash" jumps on them (FLASH_STEPS in src/videos/AiRollout.tsx). Scene starts (bars) match SCENE_BARS there.
@@ -30,10 +30,10 @@ SR = 48000
 BPM = 132
 BEAT = 60 / BPM
 S16 = BEAT / 4
-BARS = 29
+BARS = 23
 N = int(round(BARS * 4 * BEAT * SR))
 SWING = 0.1  # odd 16ths land 10% of a 16th late: a lean, not a skip
-SCENE_BARS = [0, 4, 8, 13, 18, 23, 26]
+SCENE_BARS = [0, 2, 5, 9, 13, 17, 20]
 TARGET_LUFS = -14.0
 rng = np.random.default_rng(1324)
 
@@ -179,9 +179,9 @@ LAST = BARS - 1
 
 for bar in range(BARS):
     bass, bass2, keys, pad = CHORDS[bar % 4]
-    brk = bar == 25  # last two beats of bar 26 drop to the pad into the end card
+    brk = bar == 19  # last two beats of bar 20 drop to the pad into the end card
     end_bar = bar == LAST
-    intro = bar < 4
+    intro = bar < 2
 
     # Kick on 16ths 0 and 10 (the 2-step), soft.
     for s in (0, 10):
@@ -211,8 +211,8 @@ for bar in range(BARS):
             continue
         add(epiano(keys, 3 * S16 if s else 5 * S16), step_time(bar, s), 0.26 * v, pan=-0.1, verb=0.35)
 
-    # Sub bass from bar 5: root on the one, fifth on the 16th before the kick on 10.
-    if bar >= 4 and not end_bar:
+    # Sub bass from bar 3: root on the one, fifth on the 16th before the kick on 10.
+    if bar >= 2 and not end_bar:
         if brk:
             add(sub(hz(bass), 7 * S16), step_time(bar, 0), 0.7)
         else:
@@ -221,11 +221,11 @@ for bar in range(BARS):
 
     # Soft swell into each scene change.
     if bar + 1 in SCENE_BARS:
-        add(swell(2 * BEAT), step_time(bar, 8), 0.5 if bar == 25 else 0.3, verb=0.5)
+        add(swell(2 * BEAT), step_time(bar, 8), 0.5 if bar == 19 else 0.3, verb=0.5)
 
 # End card downbeat lands a little fuller; last beat: kick, chord and root, then silence.
-add(KICK, step_time(26, 0), 0.3)
-add(strings(CHORDS[0][3], 4 * BEAT), step_time(26, 0), 0.08, verb=0.6)
+add(KICK, step_time(20, 0), 0.3)
+add(strings(CHORDS[0][3], 4 * BEAT), step_time(20, 0), 0.08, verb=0.6)
 end_t = step_time(LAST, 12)
 add(epiano(CHORDS[0][2], 4 * S16), end_t, 0.32, verb=0.4)
 add(sub(hz("C2"), 4 * S16), end_t, 0.8)

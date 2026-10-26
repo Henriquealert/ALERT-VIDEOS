@@ -2,7 +2,7 @@ import { AbsoluteFill, Audio, Easing, interpolate, OffthreadVideo, Sequence, sta
 import { LOGO_FILE, LOGO_RATIO } from "../ui/EndCard";
 import { C, F } from "../ui/theme";
 
-// "Who set up your AI?" — rolling out Microsoft 365 Copilot. LinkedIn feed, 4:5, 25 fps, 29 bars at 132 BPM (52.7 s).
+// "Who set up your AI?" — rolling out Microsoft 365 Copilot. LinkedIn feed, 4:5, 25 fps, 23 bars at 132 BPM (41.8 s).
 // Fixed copy and edit from Henrique's brief (26 Oct 2026). Footage: the three supplied clips only, original audio muted.
 // Brief style, not the Story frame: Acid Lime and Soft Ivory only, flat 3px line diagrams, hard cuts on the beat,
 // no wordmark before the end card. The brief asks for Helvetica Neue Bold; the brand-fonts rule wins, so it is
@@ -14,11 +14,12 @@ const FPS = 25;
 const BPM = 132;
 const BEAT = (FPS * 60) / BPM; // 11.36 frames
 const at = (beats: number) => Math.round(beats * BEAT);
-const SCENE_BARS = [0, 4, 8, 13, 18, 23, 26, 29];
+// Tightened on request: short holds, builds every two beats. Scenes: 2, 3, 4, 4, 4, 3, 3 bars.
+const SCENE_BARS = [0, 2, 5, 9, 13, 17, 20, 23];
 // The flash jumps on the kick and snare hits of a scene's first bar (16ths 0, 4, 10, 12): top, bottom, top, bottom.
 const FLASH_STEPS = [0, 4, 10, 12];
 
-export const AI_ROLLOUT_4X5 = { fps: FPS, durationInFrames: at(29 * 4), width: 1080, height: 1350 } as const;
+export const AI_ROLLOUT_4X5 = { fps: FPS, durationInFrames: at(23 * 4), width: 1080, height: 1350 } as const;
 
 // Music + voiceover (ElevenLabs "Jerry B."), placed and mixed by scripts/mix-ai-rollout-voiceover.py.
 const MIX = "audio/Alert Global Tech - AI Rollout Mix.wav";
@@ -146,11 +147,11 @@ const Slot: React.FC<{ show: boolean; children: React.ReactNode }> = ({ show, ch
   <div style={{ visibility: show ? "visible" : "hidden" }}>{children}</div>
 );
 
-// ---------- 1 · Bars 1–4 · the hanging phone ----------
+// ---------- 1 · Bars 1–2 · the hanging phone ----------
 
 const Scene1: React.FC<SceneProps> = () => <Footage id={689} from={0} grade={GRADE_TYPE} />;
 
-// ---------- 2 · Bars 5–8 · NEW TOOLS. OLD HABITS. NO PLAN. ----------
+// ---------- 2 · Bars 3–5 · NEW TOOLS. OLD HABITS. NO PLAN. ----------
 
 const Scene2: React.FC<SceneProps> = ({ on }) => {
   const lines: [string, string][] = [
@@ -164,7 +165,7 @@ const Scene2: React.FC<SceneProps> = ({ on }) => {
       {on(4) ? (
         <div style={{ position: "absolute", left: SIDE, right: SIDE, bottom: H - BOTTOM }}>
           {lines.map(([t, c], i) => (
-            <p key={t} style={{ ...big(110, c), visibility: on(4 + 4 * i) ? "visible" : "hidden" }}>
+            <p key={t} style={{ ...big(110, c), visibility: on(4 + 2 * i) ? "visible" : "hidden" }}>
               {t}
             </p>
           ))}
@@ -174,7 +175,7 @@ const Scene2: React.FC<SceneProps> = ({ on }) => {
   );
 };
 
-// ---------- 3 · Bars 9–13 · the rollout, in four moves ----------
+// ---------- 3 · Bars 6–9 · the rollout, in four moves ----------
 
 const MOVES = [
   ["01", "ASSESS", "Licences, data and security, checked first."],
@@ -195,7 +196,7 @@ const Scene3: React.FC<SceneProps> = ({ on }) => (
         </p>
         <div style={{ height: 48 }} />
         {MOVES.map(([n, name, text], i) => (
-          <Slot key={n} show={on(4 + 4 * i)}>
+          <Slot key={n} show={on(4 + 2 * i)}>
             {i > 0 ? <Arrow /> : null}
             <div style={{ border: `3px solid ${C.lime}`, padding: "22px 28px 24px" }}>
               <div style={{ ...big(44, C.lime), display: "flex", gap: 22 }}>
@@ -211,16 +212,17 @@ const Scene3: React.FC<SceneProps> = ({ on }) => (
   </>
 );
 
-// ---------- 4 · Bars 14–18 · show it working (Copilot in Word demo) ----------
+// ---------- 4 · Bars 10–13 · show it working (Copilot in Word demo) ----------
 
 const PROMPT = "Summarize this proposal in three points.";
-const TYPE_FROM = 8; // beats: bar 3 of the scene
+const TYPE_FROM = 6; // beats: half a bar after the title
+const ANSWER_FROM = 10; // one answer line per beat from here
 const CHARS_PER_16TH = 3;
 
 const Scene4: React.FC<SceneProps> = ({ on, beat }) => {
   const steps = Math.floor((beat - TYPE_FROM) * 4 + 1e-6) + 1;
   const typed = on(TYPE_FROM) ? PROMPT.slice(0, Math.max(0, steps) * CHARS_PER_16TH) : "";
-  const answering = on(12);
+  const answering = on(ANSWER_FROM);
   return (
     <>
       <Footage id={698} from={9} grade={GRADE_DIAGRAM} pan={[[9, 0], [11, 100], [13, 200], [15.5, 300], [18.1, 280]]} />
@@ -228,7 +230,7 @@ const Scene4: React.FC<SceneProps> = ({ on, beat }) => {
         <div style={{ position: "absolute", left: SIDE, right: SIDE, top: TOP }}>
           <p style={big(100, C.lime)}>SHOW IT WORKING.</p>
           <div style={{ height: 44 }} />
-          <Slot show={on(6)}>
+          <Slot show={on(5)}>
             <div style={{ border: `3px solid ${C.ivory}`, padding: "30px 32px 36px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                 <div style={{ width: 14, height: 14, borderRadius: "50%", background: C.lime }} />
@@ -247,7 +249,7 @@ const Scene4: React.FC<SceneProps> = ({ on, beat }) => {
               </Slot>
               <div style={{ display: "flex", flexDirection: "column", gap: 18, marginTop: 34 }}>
                 {COPILOT_ANSWER.map((a, i) => (
-                  <Slot key={a} show={on(12 + i)}>
+                  <Slot key={a} show={on(ANSWER_FROM + i)}>
                     <div style={{ display: "flex", gap: 20 }}>
                       <span style={body(28, C.lime)}>{i + 1}</span>
                       <span style={body(28, C.ivory)}>{a}</span>
@@ -263,7 +265,7 @@ const Scene4: React.FC<SceneProps> = ({ on, beat }) => {
   );
 };
 
-// ---------- 5 · Bars 19–23 · where it all connects ----------
+// ---------- 5 · Bars 14–17 · where it all connects ----------
 
 const NodeBox: React.FC<{ color: string; title: string; text: string }> = ({ color, title, text }) => (
   <div style={{ border: `3px solid ${color}`, padding: "18px 24px 20px" }}>
@@ -280,18 +282,18 @@ const Scene5: React.FC<SceneProps> = ({ on }) => (
         <p style={big(78, C.lime)}>WHERE IT ALL CONNECTS.</p>
         <div style={{ height: 52 }} />
         <NodeBox color={C.ivory} title="YOUR FILES, EMAIL AND CHATS" text="SharePoint · OneDrive · Outlook · Teams" />
-        <Slot show={on(8)}>
+        <Slot show={on(6)}>
           <Arrow />
           <div style={{ border: `3px dashed ${C.lime}`, padding: "16px 22px 22px" }}>
             <div style={{ ...body(20, C.lime), letterSpacing: "0.1em", marginBottom: 14 }}>INSIDE YOUR TENANT</div>
             <NodeBox color={C.lime} title="MICROSOFT 365" text="The permissions you already set still apply." />
-            <Slot show={on(12)}>
+            <Slot show={on(8)}>
               <Arrow />
               <NodeBox color={C.lime} title="COPILOT" text="Works with what each person can already open." />
             </Slot>
           </div>
         </Slot>
-        <Slot show={on(16)}>
+        <Slot show={on(10)}>
           <Arrow />
           <NodeBox color={C.ivory} title="YOUR TEAM" text="Answers, drafts and summaries, in the apps they use." />
         </Slot>
@@ -300,7 +302,7 @@ const Scene5: React.FC<SceneProps> = ({ on }) => (
   </>
 );
 
-// ---------- 6 · Bars 24–26 · then we train your team ----------
+// ---------- 6 · Bars 18–20 · then we train your team ----------
 
 const Scene6: React.FC<SceneProps> = ({ on }) => (
   <>
@@ -322,7 +324,7 @@ const Scene6: React.FC<SceneProps> = ({ on }) => (
   </>
 );
 
-// ---------- 7 · Bars 27–29 · end card: solid lime, type and logo knocked out to the phone ----------
+// ---------- 7 · Bars 21–23 · end card: solid lime, type and logo knocked out to the phone ----------
 
 const END_SIZE = 166; // largest that keeps PRACTICAL. inside the side margins
 const LOGO_W = 300;

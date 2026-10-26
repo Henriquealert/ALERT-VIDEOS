@@ -4,9 +4,9 @@ Input:  the ElevenLabs take (voice: Jerry B. - Premium Luxury Commercial, model 
         and the instrumental from make-ai-rollout-music.py.
 Output: a voiceover stem and the final mix the video plays.
 
-The take is cut at its pauses into 7 lines, one per scene. Each line's first syllable lands at the
-time below (scene starts are bars 0, 4, 8, 13, 18, 23, 26 at 132 BPM; lines 2 and 4 wait for the flash
-bar to pass, the long ones ride it; the scene 6 line plays 6% faster to clear the end card). The music sits about 8 LU under the voice and ducks a further
+The take is cut at its pauses into 7 lines, one per scene, packed close so the voice barely stops
+(scene starts are bars 0, 2, 5, 9, 13, 17, 20 at 132 BPM; three long lines play 5-8% faster to fit).
+The music sits about 8 LU under the voice and ducks a further
 5 dB while it speaks. Mix -14 LUFS, peak -1.5 dBFS.
 
 Run (numpy + scipy, ffmpeg on PATH):
@@ -30,13 +30,13 @@ BAR = 4 * 60 / 132
 
 # Where each line's first syllable lands (s) and its tempo, in take order.
 LINES = [
-    (0.0 * BAR + 0.45, 1.0),  # Quick question. Who actually set up your AI?                 scene 1, over the flash
-    (5.0 * BAR, 1.0),  # New tools. Same old habits. And no real plan.                         scene 2, bar 2
-    (8.0 * BAR + 0.1, 1.0),  # Here's how it should go. Check licences ... team by team.      scene 3 (9 s line)
-    (14.0 * BAR, 1.0),  # Show people it working. Ask Copilot in Word ... and there it is.     scene 4, bar 2
-    (18.0 * BAR + 0.45, 1.0),  # It all stays inside your tenant. ... can already open.        scene 5
-    (41.5, 1.06),  # Then we train your team. In English, Spanish or Portuguese ...           scene 6, nudged 6% faster
-    (26.0 * BAR + 0.15, 1.0),  # AI, made practical. Talk to an Expert.                        end card
+    (0.45, 1.0),  # Quick question. Who actually set up your AI?                     scene 1, over the flash
+    (2.0 * BAR + 0.25, 1.0),  # New tools. Same old habits. And no real plan.         scene 2
+    (5.0 * BAR - 0.65, 1.08),  # Here's how it should go. Check licences ... team by team.  into scene 3, 8% faster
+    (9.0 * BAR + 0.75, 1.0),  # Show people it working. Ask Copilot in Word ... and there it is.  scene 4
+    (13.0 * BAR + 0.15, 1.05),  # It all stays inside your tenant. ... can already open.  scene 5, 5% faster
+    (17.0 * BAR + 0.55, 1.08),  # Then we train your team. In English, Spanish or Portuguese ...  scene 6, 8% faster
+    (20.0 * BAR + 0.9, 1.0),  # AI, made practical. Talk to an Expert.                  end card
 ]
 MIN_GAP = 0.6  # a pause this long (s) separates two lines in the take
 

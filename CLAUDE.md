@@ -146,7 +146,8 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `npx remotion render DataSorted-4x5 out/"Alert Global Tech - Data Sorted Video LinkedIn 4x5.mp4" --crf=18`
   Post copy, alt text and captions (.srt) are in `docs/social/`.
 - `AiRollout-4x5` — "Who set up your AI?" Microsoft 365 Copilot rollout, LinkedIn feed. 1080×1350, 25 fps,
-  29 bars at 132 BPM (52.7 s), fixed copy and edit from Henrique's brief (26 Oct 2026). Supplied footage only
+  23 bars at 132 BPM (41.8 s), fixed copy and edit from Henrique's brief (26 Oct 2026); tightened on request
+  (scenes 2, 3, 4, 4, 4, 3, 3 bars, builds every two beats, voice lines packed close). Supplied footage only
   (`public/footage/`, three clips, audio muted), Acid Lime and Soft Ivory only, flat 3px line diagrams, hard cuts on the beat;
   DM Sans Bold stands in for the brief's Helvetica Neue Bold (brand fonts only). End card: solid lime with type and
   lockup knocked out to the phone clip; CTA Talk to an Expert. The Copilot answer in scene 4 is a placeholder
@@ -156,6 +157,7 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   Voiceover (ElevenLabs, "Jerry B. - Premium Luxury Commercial", relaxed and conversational, script not yet approved)
   is placed and mixed by `python3 scripts/mix-ai-rollout-voiceover.py`; line times there are in bars of the music.
   Music remade on request (26 Oct 2026): less jolly, more professional than the first garage track.
+  Scene bars live in SCENE_BARS in the video, the music script and (as line times) the voiceover script; change all three together.
   `npx remotion render AiRollout-4x5 out/"Alert Global Tech - AI Rollout Video LinkedIn 4x5.mp4" --crf=18`
 - `SeriesACinematic-16x9` / `SeriesACinematic-9x16` — "Series A, sorted." cinematic hype film for the Series A Compliance
   bundle (Henrique's brief, 24 Oct 2026). 38 s, 30 fps, 1920×1080 master and a 1080×1920 re-frame. No people:
