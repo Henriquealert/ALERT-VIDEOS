@@ -38,7 +38,8 @@ act is quiet and spacious. That contrast is the whole idea.
 ## Brand
 
 The only brand reference is `docs/Alert Global Tech - Brand Guidelines 2026.md`.
-Read it before writing scene code; if anything here disagrees with it, the guide wins.
+Read it before writing scene code; if anything here disagrees with it, the guide wins, with one
+exception: the font rule below, because the guide's Archivo ExtraBold and DM Mono were never supplied.
 Tokens live in `src/ui/theme.tsx`; never hard-code a hex value in a scene.
 
 How the guide applies to video:
@@ -67,10 +68,11 @@ How the guide applies to video:
 - Logo: every video ends on our lockup, `public/brand/alert-global-tech-lockup-ivory.png`,
   centred on the Deep Ink end card. Scenes before it carry the wordmark top-left
   (`alert-global-tech-wordmark-ivory.png`, cut from the same file). Only one logo is
-  on screen at a time. Ivory artwork only, so no logo on ivory scenes until an Ink
-  file is supplied. Never recolour, stretch, redraw or typeset it.
+  on screen at a time. On ivory or lime grounds use the Ink versions (`alert-global-tech-wordmark-ink.png`,
+  `alert-global-tech-lockup-ink.png`), made from the supplied file's own transparency, shape untouched
+  (`public/brand/README.md`); swap in official Ink files when the designer supplies them. Never recolour, stretch, redraw or typeset it.
 - Calls to action: one per video, title-style capitals: Talk to an Expert,
-  Request a Quote, Learn More.
+  Request a Quote, Learn More, Book a Call, Book a Sprint.
 - Stories (9x16): keep the top and bottom 250px clear (`safeY` in `useLayout`).
 - No emoji, no exclamation marks, no hype words, no shadows on headlines.
 - Never describe customers as "small and mid-sized businesses" or "SMBs".

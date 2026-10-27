@@ -1,6 +1,6 @@
 # Alert Global Tech — Brand Guidelines 2026
 
-The visual identity and brand book for Alert Global Tech, the US arm of Alert Informática. Built from *Brand Evolution 2026* (ALERT_BRANDING.pdf, Ana Chaguri). Revised 21 Oct 2026 after a page-by-page check against the deck. This is the standing reference for the website, LinkedIn, profile images, banners and email.
+The visual identity and brand book for Alert Global Tech, the US arm of Alert Informática. Built from *Brand Evolution 2026* (ALERT_BRANDING.pdf, Ana Chaguri). Revised 21 Oct 2026 after a page-by-page check against the deck; calls to action updated 27 Oct 2026 to match those in use. This is the standing reference for the website, LinkedIn, profile images, banners and email.
 
 > A more striking identity is not the end goal. It is the tool for a more recognisable brand, clearer communication of our solutions, and more business opportunities. — Brand Evolution 2026 (translated)
 
@@ -15,7 +15,7 @@ Voice (deck: social tone of voice): clear and direct; modern and confident; focu
 Rules that always apply:
 - Describe what Alert does and the problem it solves. Never call customers "small and mid-sized businesses" or "SMBs".
 - Name real products: Dell, HP, Lenovo, Apple, Cisco, Fortinet, Ubiquiti, Microsoft 365, Copilot, SharePoint. Sourced through TD SYNNEX; training through Certiport.
-- Calls to action in title-style capitals, one per piece: Talk to an Expert, Request a Quote, Learn More.
+- Calls to action in title-style capitals, one per piece: Talk to an Expert, Request a Quote, Learn More, Book a Call, Book a Sprint.
 - Short sentences. No hype words, no exclamation marks, no emoji.
 - Never invent numbers, clients, testimonials or prices. The deck's "+40%", "300+ stores" and "20 employees, 20 laptops" are layout placeholders, not facts.
 - Service in English, Spanish and Portuguese — say so as a concrete offer.
