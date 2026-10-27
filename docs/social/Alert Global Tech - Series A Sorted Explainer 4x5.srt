@@ -1,0 +1,76 @@
+1
+00:00:01,600 --> 00:00:06,300
+Here's what happens to IT when a startup raises its Series A.
+
+2
+00:00:06,700 --> 00:00:10,360
+The first big customer asks for SOC 2.
+
+3
+00:00:10,600 --> 00:00:14,180
+Suddenly every laptop, every account and every leaver
+
+4
+00:00:14,280 --> 00:00:17,140
+has to be managed, and provable.
+
+5
+00:00:18,600 --> 00:00:21,400
+New hires need a laptop ready on day one.
+
+6
+00:00:21,500 --> 00:00:25,300
+People who leave need theirs returned, wiped and logged.
+
+7
+00:00:25,400 --> 00:00:28,820
+Usually that falls on a founder or an ops lead.
+
+8
+00:00:29,600 --> 00:00:33,100
+So we built the Series A Compliance bundle.
+
+9
+00:00:36,700 --> 00:00:40,960
+Business laptops from Dell and HP, financed monthly.
+
+10
+00:00:43,100 --> 00:00:47,720
+Every device managed and secured with Microsoft Intune and Defender.
+
+11
+00:00:49,500 --> 00:00:53,960
+Microsoft 365 and Copilot, set up from day one.
+
+12
+00:00:55,900 --> 00:00:58,680
+And device evidence for the SOC 2 audit,
+
+13
+00:00:58,780 --> 00:01:02,280
+with onboarding and offboarding handled for you.
+
+14
+00:01:02,600 --> 00:01:05,220
+One monthly price per employee,
+
+15
+00:01:05,400 --> 00:01:08,260
+so founders keep cash for the runway.
+
+16
+00:01:08,600 --> 00:01:11,400
+One supplier, from quote to setup,
+
+17
+00:01:11,500 --> 00:01:16,480
+in English, Spanish or Portuguese, sourced through TD SYNNEX.
+
+18
+00:01:17,600 --> 00:01:22,100
+If your portfolio companies are heading into Series A, let's talk.
+
+19
+00:01:22,200 --> 00:01:23,620
+Book a Call.
+

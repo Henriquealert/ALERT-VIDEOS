@@ -1,0 +1,97 @@
+ALERT GLOBAL TECH - DAY ONE, SORTED.
+Brand film for startup founders. Script and shot list as built (re-cut 23 Oct 2026: faster,
+denser voiceover, an on-screen line on every beat, a 30 s cut with its own script).
+
+Main cut: 60 s, 24 fps. 16x9 (1920x1080) and 9x16 (1080x1920, 250 px kept clear top and bottom).
+Feed cut: 30 s, 24 fps, 4x5 (1080x1350).
+Voiceover: ElevenLabs, voice "Ray D - Adult Male Energetic and Engaging American", model eleven_v4.
+Music and sound design: original, synthesised for this film (scripts/make-day-one-audio.py).
+Call to action: Request a Quote. URL: alertglobaltech.com
+Times below are when the words are spoken; the picture changes on the same frames.
+
+
+MAIN CUT (60 s)
+
+1. HOOK  0:00-0:03.75  Deep Ink
+   Pixel cursors and pointing hands swarm in, each dragging in one letter; the headline holds,
+   then crumbles into falling lime, blue and ivory blocks.
+   On screen: NEW HIRE STARTS MONDAY (lime dot)
+   VO 0:00.6: "New hire. Starts Monday. And nothing's ready."
+
+2. THE EMPTY DESK  0:03.75-0:07.25  Deep Ink
+   Fast push-in on a flat desk: empty chair, sealed laptop box, lime sticky note "laptop?".
+   On screen, stamped as they're said: NO LAPTOP. / NO LOGIN. / NO IDEA WHO TO CALL.
+   VO 0:04: "No laptop. No login. No idea who to call."
+
+3. CHAOS  0:07.25-0:16  Retro desktop, Electric Blue to deep blue
+   Dialog windows pop up on each question, then flood the screen; "Are we cooked?" lands last.
+   Dialogs: Who ordered the laptops? / Mac or Windows? / How many Microsoft 365 licences? /
+   Copilot or not? / Is the Wi-Fi password still password? / Which vendor was that? / Are we cooked?
+   VO 0:07.5: "Then the questions hit. Mac or Windows? How many Microsoft 365 licences?
+   Copilot or not? Is the Wi-Fi password still 'password'?"
+
+4. EVERY TAB OPEN  0:16-0:18.3  Deep Ink
+   A cursor drags a solid Electric Blue highlight across the second line as it's said.
+   On screen: ONE FOUNDER. EVERY TAB OPEN (lime dot)
+   VO 0:16.1: "One founder. Every tab open."
+
+5. THE TANGLE  0:18.3-0:25.25  Deep Ink
+   Blue rails and crosshairs knot LAPTOPS, LICENCES, WI-FI, SECURITY, TRAINING; cursors get
+   lost; the camera pulls back. One line at a time, bottom-left:
+   LAPTOPS HERE. / LICENCES THERE. / WI-FI? WHOEVER PICKS UP. /
+   SECURITY AND TRAINING: STILL ON THE LIST.
+   VO 0:18.5: "Laptops from one place. Licences from another. Wi-Fi from whoever picks up.
+   Security and training? Still on the list."
+   Music: hard cut at 0:25.25.
+
+6. THE FIX  0:25.25-0:46.5  Soft Ivory
+   Headline top-left changes with the voice: ONE CALL TO ALERT. / ONE QUOTE. ONE SUPPLIER. /
+   SET UP, NOT JUST SHIPPED. / ENGLISH, SPANISH OR PORTUGUESE. (blue dot)
+   Cards land on the words: message card "We're hiring six people this quarter."; quote card
+   whose rows appear as each is named (Dell or Apple laptops, Microsoft 365, Copilot, Ubiquiti
+   Wi-Fi, Fortinet firewall, Total), every quantity and price [00]; setup checklist ticking on
+   each word (Sourced through TD SYNNEX / Configured / Licences assigned / Certiport training
+   booked); then READY FOR MONDAY (lime dot).
+   VO 0:25.3: "Or make one call to Alert. Tell us who's starting. We quote the lot: Dell or Apple
+   laptops, Microsoft 365, Copilot, Ubiquiti Wi-Fi and a Fortinet firewall. One quote. One
+   supplier. Sourced through TD SYNNEX. Configured, licences assigned, Certiport training booked.
+   Set up, not just shipped. In English, Spanish or Portuguese."
+
+7. RESOLUTION  0:46.5-0:50  Deep Ink
+   Lines snap into three stepped blocks (lime, blue, outline); the blue-to-sky arrow rises out
+   top right. On screen: LOGGED IN ON DAY ONE. then BACK TO BUILDING. (lime dots)
+   VO 0:46.6: "Your new hire logs in on day one. You get back to building."
+
+8. END CARD  0:50-1:00  Acid Lime
+   Lime wipe; Ink a!ert wordmark top-left (the only logo in the film).
+   DAY ONE, sorted (ink dot) - "sorted" in Instrument Serif Italic, landing on the word.
+   Ink pill: Request a Quote. Below: alertglobaltech.com
+   VO 0:50.2: "Hardware, software and AI, sorted. Request a Quote at alertglobaltech.com."
+
+
+FEED CUT (30 s, 4x5) - its own script and take
+
+0:00-0:03.2   Hook. "New hire starts Monday. Nothing's ready."
+0:03.2-0:07.5 Chaos, one window per question. "Mac or Windows? How many licences?
+              Copilot or not? Are we cooked?"
+0:07.5-0:09.6 Every tab open. "One founder. Every tab open."
+0:09.6-0:21.6 The fix: ONE CALL TO ALERT. / ONE QUOTE. ONE SUPPLIER. /
+              ENGLISH, SPANISH OR PORTUGUESE. with the quote, checklist and Ready for Monday cards.
+              "Or one call to Alert. Laptops, Microsoft 365, Copilot, Wi-Fi and security, on one
+              quote. Configured, licences assigned, training booked. In English, Spanish or
+              Portuguese."
+0:21.6-0:23.4 Resolution: BACK TO BUILDING. "So you get back to building."
+0:23.4-0:30   End card. "Hardware, software and AI, sorted. Request a Quote."
+
+
+NOTES ON THE BUILD
+- No numbers, prices, clients or dates are invented. All quantities and prices are [00].
+- Changed from the original brief at Henrique's request (too slow, too few words): the voiceover
+  is rewritten and longer, "Picture this." is replaced by the No laptop / No login lines, and
+  the 30 s cut now shows the fix (the brief's beats 1, 3, 7, 8 left out the product).
+- Fonts: only the supplied brand fonts (Archivo Narrow, DM Sans, Instrument Serif). Headlines that
+  the brief set in Archivo ExtraBold use Archivo Narrow Bold caps; DM Mono tags use DM Sans caps.
+- Colours: the four brand colours plus the blue gradient stops only. The "teal" desktop and
+  "grey" dialogs in the brief are an Electric Blue to deep blue desktop with ivory dialogs.
+- The Ink wordmark is made from the approved Ivory file's shape (see public/brand/README.md).
+- The voice licence follows the ElevenLabs account plan. Confirm commercial use before publishing.

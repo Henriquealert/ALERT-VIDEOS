@@ -4,6 +4,29 @@ import { VideoSpec } from "./spec";
 import { FPS, TOTAL_FRAMES } from "./timing";
 import sample from "../data/specs/data-quality-article.json";
 import { LAPTOPS_SORTED, LaptopsSorted } from "./videos/LaptopsSorted";
+import { DAY_ONE_16X9, DAY_ONE_9X16, DAY_ONE_FEED, DayOneSorted } from "./videos/DayOneSorted";
+import {
+  SECURITY_SORTED_16X9,
+  SECURITY_SORTED_4X5,
+  SECURITY_SORTED_COVER_16X9,
+  SECURITY_SORTED_COVER_4X5,
+  SecuritySorted,
+  SecuritySortedCover,
+} from "./videos/SecuritySorted";
+import { MEETINGS_SORTED, MeetingsSorted } from "./videos/MeetingsSorted";
+import { DATA_SORTED, DATA_SORTED_4X5, DataSorted } from "./videos/DataSorted";
+import { AI_ROLLOUT_4X5, AiRollout } from "./videos/AiRollout";
+import {
+  SPREADSHEETS_SORTED,
+  SPREADSHEETS_SORTED_4X5,
+  SPREADSHEETS_SORTED_COVER,
+  SPREADSHEETS_SORTED_COVER_4X5,
+  SpreadsheetsSorted,
+  SpreadsheetsSortedCover,
+} from "./videos/SpreadsheetsSorted";
+import { SERIES_A_SORTED, SeriesASorted } from "./videos/SeriesASorted";
+import { SERIES_A_PROMO_16X9, SERIES_A_PROMO_4X5, SeriesAPromo } from "./videos/SeriesAPromo";
+import { SERIES_A_CINEMATIC_16X9, SERIES_A_CINEMATIC_9X16, SERIES_A_CINEMATIC_THUMB, SeriesACinematic, SeriesACinematicThumb } from "./videos/SeriesACinematic";
 import { TECH_UPDATES_WIN11, TECH_UPDATES_WIN11_4X5, TechUpdatesWindows11 } from "./videos/TechUpdatesWindows11";
 
 const FORMATS = [
@@ -31,6 +54,27 @@ export const RemotionRoot: React.FC = () => (
     {/* One-off videos with fixed copy */}
     <Composition id="LaptopsSorted-9x16" component={LaptopsSorted} {...LAPTOPS_SORTED} />
     <Composition id="TechUpdates-Windows11-9x16" component={TechUpdatesWindows11} {...TECH_UPDATES_WIN11} />
+    <Composition id="MeetingsSorted-9x16" component={MeetingsSorted} {...MEETINGS_SORTED} />
+    <Composition id="DataSorted-9x16" component={DataSorted} {...DATA_SORTED} />
+    <Composition id="DataSorted-4x5" component={DataSorted} {...DATA_SORTED_4X5} />
     <Composition id="TechUpdates-Windows11-4x5" component={TechUpdatesWindows11} {...TECH_UPDATES_WIN11_4X5} />
+    <Composition id="DayOneSorted-16x9" component={DayOneSorted} {...DAY_ONE_16X9} defaultProps={{ cut: "full" as const }} />
+    <Composition id="DayOneSorted-9x16" component={DayOneSorted} {...DAY_ONE_9X16} defaultProps={{ cut: "full" as const }} />
+    <Composition id="DayOneSorted-Feed-4x5" component={DayOneSorted} {...DAY_ONE_FEED} defaultProps={{ cut: "feed" as const }} />
+    <Composition id="SecuritySorted-4x5" component={SecuritySorted} {...SECURITY_SORTED_4X5} />
+    <Composition id="SecuritySorted-16x9" component={SecuritySorted} {...SECURITY_SORTED_16X9} />
+    <Composition id="SecuritySorted-Cover-4x5" component={SecuritySortedCover} {...SECURITY_SORTED_COVER_4X5} />
+    <Composition id="AiRollout-4x5" component={AiRollout} {...AI_ROLLOUT_4X5} />
+    <Composition id="SeriesASorted-4x5" component={SeriesASorted} {...SERIES_A_SORTED} />
+    <Composition id="SecuritySorted-Cover-16x9" component={SecuritySortedCover} {...SECURITY_SORTED_COVER_16X9} />
+    <Composition id="SpreadsheetsSorted-9x16" component={SpreadsheetsSorted} {...SPREADSHEETS_SORTED} />
+    <Composition id="SpreadsheetsSorted-Cover-9x16" component={SpreadsheetsSortedCover} {...SPREADSHEETS_SORTED_COVER} />
+    <Composition id="SpreadsheetsSorted-4x5" component={SpreadsheetsSorted} {...SPREADSHEETS_SORTED_4X5} />
+    <Composition id="SpreadsheetsSorted-Cover-4x5" component={SpreadsheetsSortedCover} {...SPREADSHEETS_SORTED_COVER_4X5} />
+    <Composition id="SeriesAPromo-16x9" component={SeriesAPromo} {...SERIES_A_PROMO_16X9} />
+    <Composition id="SeriesAPromo-4x5" component={SeriesAPromo} {...SERIES_A_PROMO_4X5} />
+    <Composition id="SeriesACinematic-16x9" component={SeriesACinematic} {...SERIES_A_CINEMATIC_16X9} />
+    <Composition id="SeriesACinematic-9x16" component={SeriesACinematic} {...SERIES_A_CINEMATIC_9X16} />
+    <Composition id="SeriesACinematic-Thumbnail" component={SeriesACinematicThumb} {...SERIES_A_CINEMATIC_THUMB} />
   </>
 );

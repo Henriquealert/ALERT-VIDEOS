@@ -1,0 +1,130 @@
+{
+ "fps": 30,
+ "durationInFrames": 2580,
+ "scenes": [
+  0,
+  180,
+  540,
+  840,
+  1080,
+  1860,
+  2280,
+  2580
+ ],
+ "lines": {
+  "open": 48,
+  "soc2": 201,
+  "managed": 318,
+  "dayone": 558,
+  "lastday": 645,
+  "falls": 762,
+  "bundle": 888,
+  "c1": 1101,
+  "c2": 1293,
+  "c3": 1485,
+  "c4": 1677,
+  "price": 1878,
+  "runway": 1962,
+  "supplier": 2058,
+  "languages": 2145,
+  "talk": 2328,
+  "cta": 2466
+ },
+ "captions": [
+  [
+   48,
+   189,
+   "Here's what happens to IT when a startup raises its Series A."
+  ],
+  [
+   201,
+   311,
+   "The first big customer asks for SOC 2."
+  ],
+  [
+   318,
+   425,
+   "Suddenly every laptop, every account and every leaver"
+  ],
+  [
+   428,
+   514,
+   "has to be managed, and provable."
+  ],
+  [
+   558,
+   642,
+   "New hires need a laptop ready on day one."
+  ],
+  [
+   645,
+   759,
+   "People who leave need theirs returned, wiped and logged."
+  ],
+  [
+   762,
+   865,
+   "Usually that falls on a founder or an ops lead."
+  ],
+  [
+   888,
+   993,
+   "So we built the Series A Compliance bundle."
+  ],
+  [
+   1101,
+   1229,
+   "Business laptops from Dell and HP, financed monthly."
+  ],
+  [
+   1293,
+   1432,
+   "Every device managed and secured with Microsoft Intune and Defender."
+  ],
+  [
+   1485,
+   1619,
+   "Microsoft 365 and Copilot, set up from day one."
+  ],
+  [
+   1677,
+   1760,
+   "And device evidence for the SOC 2 audit,"
+  ],
+  [
+   1763,
+   1868,
+   "with onboarding and offboarding handled for you."
+  ],
+  [
+   1878,
+   1957,
+   "One monthly price per employee,"
+  ],
+  [
+   1962,
+   2048,
+   "so founders keep cash for the runway."
+  ],
+  [
+   2058,
+   2142,
+   "One supplier, from quote to setup,"
+  ],
+  [
+   2145,
+   2294,
+   "in English, Spanish or Portuguese, sourced through TD SYNNEX."
+  ],
+  [
+   2328,
+   2463,
+   "If your portfolio companies are heading into Series A, let's talk."
+  ],
+  [
+   2466,
+   2509,
+   "Book a Call."
+  ]
+ ]
+}

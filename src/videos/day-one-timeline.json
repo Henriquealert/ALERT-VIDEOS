@@ -1,0 +1,261 @@
+{
+ "fps": 24,
+ "full": {
+  "voOffset": 0.5,
+  "scenes": [
+   [
+    "hook",
+    90
+   ],
+   [
+    "desk",
+    84
+   ],
+   [
+    "chaos",
+    210
+   ],
+   [
+    "tabs",
+    55
+   ],
+   [
+    "tangle",
+    167
+   ],
+   [
+    "fix",
+    510
+   ],
+   [
+    "resolve",
+    84
+   ],
+   [
+    "end",
+    240
+   ]
+  ],
+  "hook": {
+   "crumble": 66
+  },
+  "desk": [
+   [
+    6,
+    "No laptop"
+   ],
+   [
+    29,
+    "No login"
+   ],
+   [
+    51,
+    "No idea who to call"
+   ]
+  ],
+  "chaos": {
+   "main": [
+    6,
+    39,
+    63,
+    148,
+    116,
+    165
+   ],
+   "flood": [
+    172,
+    203
+   ],
+   "cooked": 209
+  },
+  "tabs": {
+   "drag": [
+    26,
+    48
+   ]
+  },
+  "tangle": [
+   [
+    5,
+    "Laptops here"
+   ],
+   [
+    36,
+    "Licences there"
+   ],
+   [
+    66,
+    "Wi-Fi? Whoever picks up"
+   ],
+   [
+    109,
+    "Security and training: still on the list"
+   ]
+  ],
+  "fix": {
+   "headlines": [
+    [
+     2,
+     "One call to Alert"
+    ],
+    [
+     256,
+     "One quote. One supplier"
+    ],
+    [
+     419,
+     "Set up, not just shipped"
+    ],
+    [
+     459,
+     "English, Spanish or Portuguese"
+    ]
+   ],
+   "message": 52,
+   "quote": 79,
+   "rows": [
+    107,
+    139,
+    177,
+    195,
+    223,
+    256
+   ],
+   "checklist": 284,
+   "ticks": [
+    300,
+    337,
+    354,
+    382
+   ],
+   "ready": 483
+  },
+  "resolve": {
+   "snap": 2,
+   "blocks": 12,
+   "arrow": 30,
+   "lines": [
+    [
+     3,
+     "Logged in on day one"
+    ],
+    [
+     56,
+     "Back to building"
+    ]
+   ]
+  },
+  "end": {
+   "head": 4,
+   "sorted": 53,
+   "cta": 70,
+   "url": 89
+  }
+ },
+ "feed": {
+  "voOffset": 0.4,
+  "scenes": [
+   [
+    "hook",
+    77
+   ],
+   [
+    "chaos",
+    103
+   ],
+   [
+    "tabs",
+    50
+   ],
+   [
+    "fix",
+    288
+   ],
+   [
+    "resolve",
+    44
+   ],
+   [
+    "end",
+    158
+   ]
+  ],
+  "hook": {
+   "crumble": 56
+  },
+  "desk": [],
+  "chaos": {
+   "main": [
+    16,
+    4,
+    27,
+    64,
+    52,
+    70
+   ],
+   "flood": [
+    72,
+    78
+   ],
+   "cooked": 81
+  },
+  "tabs": {
+   "drag": [
+    29,
+    48
+   ]
+  },
+  "tangle": [],
+  "fix": {
+   "headlines": [
+    [
+     13,
+     "One call to Alert"
+    ],
+    [
+     153,
+     "One quote. One supplier"
+    ],
+    [
+     245,
+     "English, Spanish or Portuguese"
+    ]
+   ],
+   "message": 0,
+   "quote": 48,
+   "rows": [
+    58,
+    73,
+    108,
+    123,
+    135,
+    153
+   ],
+   "checklist": 168,
+   "ticks": [
+    173,
+    180,
+    197,
+    224
+   ],
+   "ready": 257
+  },
+  "resolve": {
+   "snap": 1,
+   "blocks": 7,
+   "arrow": 14,
+   "lines": [
+    [
+     8,
+     "Back to building"
+    ]
+   ]
+  },
+  "end": {
+   "head": 4,
+   "sorted": 45,
+   "cta": 62,
+   "url": 77
+  }
+ }
+}

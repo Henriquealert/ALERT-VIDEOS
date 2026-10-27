@@ -1,0 +1,139 @@
+{
+ "fps": 30,
+ "bpm": 125,
+ "total": 1140,
+ "beatFrames": 14.399999999999999,
+ "scenes": {
+  "open": 0,
+  "more": 115,
+  "prove": 274,
+  "sidejob": 418,
+  "sorted": 504,
+  "bundle": 605,
+  "supplier": 907,
+  "end": 1037
+ },
+ "passes": [
+  605,
+  677,
+  749,
+  821,
+  907
+ ],
+ "slams": [
+  115,
+  130,
+  158,
+  173,
+  202,
+  216
+ ],
+ "langs": [
+  979,
+  994,
+  1008
+ ],
+ "pip": {
+  "shrink": 331,
+  "punch": 360
+ },
+ "typing": [
+  {
+   "frame": 14,
+   "text": "what happens after",
+   "cps": 22
+  },
+  {
+   "frame": 612,
+   "text": "Dell · HP — financed monthly",
+   "cps": 30
+  },
+  {
+   "frame": 756,
+   "text": "Every device managed and secured",
+   "cps": 32
+  }
+ ],
+ "vo": [
+  {
+   "text": "What happens after the Series A?",
+   "start": 14,
+   "end": 65
+  },
+  {
+   "text": "More people.",
+   "start": 115,
+   "end": 138
+  },
+  {
+   "text": "More laptops.",
+   "start": 158,
+   "end": 188
+  },
+  {
+   "text": "More access to manage.",
+   "start": 202,
+   "end": 246
+  },
+  {
+   "text": "Then your first big customer asks one question.",
+   "start": 276,
+   "end": 351
+  },
+  {
+   "text": "Can you prove it's secure?",
+   "start": 360,
+   "end": 398
+  },
+  {
+   "text": "That's when IT stops being a side job.",
+   "start": 420,
+   "end": 491
+  },
+  {
+   "text": "So we built the Series A Compliance bundle.",
+   "start": 506,
+   "end": 582
+  },
+  {
+   "text": "Dell and HP laptops, financed monthly.",
+   "start": 606,
+   "end": 677
+  },
+  {
+   "text": "Microsoft 365 and Copilot.",
+   "start": 678,
+   "end": 751
+  },
+  {
+   "text": "Every device managed and secured.",
+   "start": 752,
+   "end": 807
+  },
+  {
+   "text": "And SOC 2 device evidence, built in.",
+   "start": 822,
+   "end": 899
+  },
+  {
+   "text": "One supplier, from quote to setup.",
+   "start": 909,
+   "end": 970
+  },
+  {
+   "text": "In English, Spanish or Portuguese.",
+   "start": 975,
+   "end": 1037
+  },
+  {
+   "text": "Series A, sorted.",
+   "start": 1039,
+   "end": 1078
+  },
+  {
+   "text": "Book a Call.",
+   "start": 1094,
+   "end": 1110
+  }
+ ]
+}
