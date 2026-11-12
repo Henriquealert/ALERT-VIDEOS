@@ -215,6 +215,19 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   and `npx remotion still SpreadsheetsSorted-Cover-4x5 out/"Alert Global Tech - Spreadsheets Sorted Thumbnail LinkedIn 4x5.png"`.
   Post copy, description and alt text: `docs/social/Alert Global Tech - Spreadsheets Sorted LinkedIn Post.md`.
 
+- `TheDot-16x9` / `TheDot-9x16` — "The Dot": 24 s text-led brand film, 30 fps, 1920×1080 and 1080×1920 (Henrique's brief,
+  12 Nov 2026). One dot is the main character: cursor, typing, routing hub, step hops, then the full stop of
+  "NEW TEAM, SORTED". It is one layer above every scene (`src/dot/TheDot.tsx`); its whole path is the keyframe table in
+  `src/dot/keyframes.ts`. Scene and beat frames: `src/videos/the-dot/timeline.ts`; layout per aspect ratio:
+  `src/videos/the-dot/geometry.ts`; props (zod): `src/videos/the-dot/schema.ts`. DM Sans in place of the brief's Helvetica
+  (brand fonts only). Hard cuts ink, ink, ink, blue, ivory, lime, ink. Logos: `public/logo/*.svg` when supplied, otherwise
+  the approved Ivory PNGs (monogram cut by `python3 scripts/make-the-dot-monogram.py`). Music, SFX and voiceover are drop-ins,
+  skipped with a warning when missing; list: `docs/Alert Global Tech - The Dot README.md`.
+  Voiceover: `npm run vo` (ElevenLabs, key and voice ID from `.env`; lines and start frames in `src/videos/the-dot/vo-lines.ts`;
+  fails on any line that runs past its scene; never time-stretch). Cut-downs `TheDot-Network-*` and `TheDot-Copilot-*`
+  still need their own cards before rendering. CTA Request a Quote.
+  `npm run render:16x9` → `out/Alert Global Tech - The Dot 16x9.mp4`, `npm run render:9x16` → `... 9x16.mp4`.
+
 ## Formats
 
 Register one composition per format, all driven by the same spec:

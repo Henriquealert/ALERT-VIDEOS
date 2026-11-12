@@ -39,3 +39,8 @@ Royalty-free music and SFX only. Record every file here before using it.
 | Alert Global Tech - AI Rollout Voiceover Take.mp3 | ElevenLabs text-to-speech, voice "Jerry B. - Premium Luxury Commercial" (Dg1lUQiSAGVHkoQMG3QX), model eleven_v4, generated 26 Oct 2026 | ElevenLabs terms for the account's plan (commercial use needs a paid plan; confirm before publishing) | Raw take, 44.2 s |
 | Alert Global Tech - AI Rollout Voiceover.wav | The take above, cut into 7 lines and placed by `scripts/mix-ai-rollout-voiceover.py` | As above | Voice stem |
 | Alert Global Tech - AI Rollout Mix.wav | Music + voiceover, music about 8 LU under the voice and ducked 5 dB while it speaks | As above | What the video plays; -14 LUFS, -1.5 dBFS peak |
+
+## The Dot (pending)
+
+`public/music/pulse.mp3`, `public/sfx/tick.wav` and `public/sfx/land.wav` are not supplied yet. Record the source and
+licence of each here when they are added (royalty-free only).

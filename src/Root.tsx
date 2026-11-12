@@ -27,6 +27,7 @@ import {
 import { SERIES_A_SORTED, SeriesASorted } from "./videos/SeriesASorted";
 import { SERIES_A_PROMO_16X9, SERIES_A_PROMO_4X5, SeriesAPromo } from "./videos/SeriesAPromo";
 import { SERIES_A_CINEMATIC_16X9, SERIES_A_CINEMATIC_9X16, SERIES_A_CINEMATIC_THUMB, SeriesACinematic, SeriesACinematicThumb } from "./videos/SeriesACinematic";
+import { THE_DOT_COMPOSITIONS } from "./videos/TheDot";
 import { TECH_UPDATES_WIN11, TECH_UPDATES_WIN11_4X5, TechUpdatesWindows11 } from "./videos/TechUpdatesWindows11";
 
 const FORMATS = [
@@ -75,6 +76,9 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="SeriesAPromo-4x5" component={SeriesAPromo} {...SERIES_A_PROMO_4X5} />
     <Composition id="SeriesACinematic-16x9" component={SeriesACinematic} {...SERIES_A_CINEMATIC_16X9} />
     <Composition id="SeriesACinematic-9x16" component={SeriesACinematic} {...SERIES_A_CINEMATIC_9X16} />
+    {THE_DOT_COMPOSITIONS.map((c) => (
+      <Composition key={c.id} {...c} />
+    ))}
     <Composition id="SeriesACinematic-Thumbnail" component={SeriesACinematicThumb} {...SERIES_A_CINEMATIC_THUMB} />
   </>
 );
