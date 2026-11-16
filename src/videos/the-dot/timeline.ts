@@ -1,5 +1,5 @@
 // "The Dot": scene timeline at 30 fps, 720 frames (24 s).
-// Plain data, no React: read by the video, src/dot/keyframes.ts and scripts/generate-vo.ts.
+// Plain data, no React: read by the video and src/dot/keyframes.ts.
 
 export const FPS = 30;
 export const DURATION = 720;
@@ -58,7 +58,12 @@ export const T = {
   s5Exit: [496, 509] as const,
   s5Badge: [404, 416] as const,
   // S6: the dot falls in and lands as the headline's full stop (spring, damping 12).
-  s6Land: 566, // first contact; land.wav plays here, vo-s6 starts at 572
+  s6Land: 566, // first contact; land.wav plays here
+  // Scene lines (on-screen copy, no voiceover): fade in at these frames, hold to the cut.
+  s3Line: 160,
+  s4Line: 285,
+  s5Line: 398,
+  lineIn: 10,
   // S7: end card.
   s7Glide: [631, 646] as const,
   s7Line: [636, 652] as const,

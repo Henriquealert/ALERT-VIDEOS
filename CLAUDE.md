@@ -221,10 +221,9 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   `src/dot/keyframes.ts`. Scene and beat frames: `src/videos/the-dot/timeline.ts`; layout per aspect ratio:
   `src/videos/the-dot/geometry.ts`; props (zod): `src/videos/the-dot/schema.ts`. DM Sans in place of the brief's Helvetica
   (brand fonts only). Hard cuts ink, ink, ink, blue, ivory, lime, ink. Logos: `public/logo/*.svg` when supplied, otherwise
-  the approved Ivory PNGs (monogram cut by `python3 scripts/make-the-dot-monogram.py`). Music, SFX and voiceover are drop-ins,
-  skipped with a warning when missing; list: `docs/Alert Global Tech - The Dot README.md`.
-  Voiceover: `npm run vo` (ElevenLabs, key and voice ID from `.env`; lines and start frames in `src/videos/the-dot/vo-lines.ts`;
-  fails on any line that runs past its scene; never time-stretch). Cut-downs `TheDot-Network-*` and `TheDot-Copilot-*`
+  the approved Ivory PNGs (monogram cut by `python3 scripts/make-the-dot-monogram.py`). No voiceover (removed on request, 16 Nov 2026):
+  scenes 3 to 5 carry one line of copy each, top-left (`sceneLines` prop). Music and SFX are drop-ins, skipped with a
+  warning when missing; list: `docs/Alert Global Tech - The Dot README.md`. Cut-downs `TheDot-Network-*` and `TheDot-Copilot-*`
   still need their own cards before rendering. CTA Request a Quote.
   `npm run render:16x9` → `out/Alert Global Tech - The Dot 16x9.mp4`, `npm run render:9x16` → `... 9x16.mp4`.
 

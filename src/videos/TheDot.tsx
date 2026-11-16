@@ -1,4 +1,3 @@
-import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { useEffect, useMemo, useState } from "react";
 import {
   AbsoluteFill,
@@ -15,18 +14,17 @@ import { TheDot } from "../dot/TheDot";
 import { C, F } from "../ui/theme";
 import { optionalAsset } from "./the-dot/assets";
 import { buildGeometry } from "./the-dot/geometry";
-import { S2Type, S3Break, S4Route, S5Steps, S6Headline, S7End } from "./the-dot/scenes";
+import { S2Type, S3Break, S4Route, S5Steps, S6Headline, S7End, SceneLine } from "./the-dot/scenes";
 import { THE_DOT_COPILOT, THE_DOT_DEFAULTS, THE_DOT_NETWORK, theDotSchema, type TheDotProps } from "./the-dot/schema";
 import { DURATION, FPS, SCENES, sceneAt, T, TICK_FRAMES } from "./the-dot/timeline";
-import { VO_SETS, type VoLine } from "./the-dot/vo-lines";
 
-// "The Dot": 24 s text-led brand film. One round dot is the main character, from a blinking
+// "The Dot": 24 s text-led brand film, no voiceover (the copy is on screen). One round dot is the main character, from a blinking
 // cursor to the full stop of the headline. Grounds change on hard cuts; the dot is one layer
 // above every scene (src/dot/), its path in src/dot/keyframes.ts.
 
 const GROUND = { ink: C.ink, blue: C.blue, ivory: C.ivory, lime: C.lime } as const;
 const SFX_VOLUME = 0.6;
-const MUSIC = { base: 0.35, ducked: 0.18, ramp: 5 };
+const MUSIC_VOLUME = 0.35;
 
 // Wait for the brand faces before measuring any text.
 const useFontsReady = () => {
@@ -47,63 +45,19 @@ const useFontsReady = () => {
   return ready;
 };
 
-// Voiceover lines that exist, with their measured lengths (frames) for music ducking.
-const useVoiceover = (lines: VoLine[]) => {
-  const present = useMemo(
-    () => lines.map((l) => ({ ...l, src: optionalAsset(`vo/${l.file}`, `voiceover ${l.file}`) })).filter((l) => l.src),
-    [lines],
-  );
-  const [lengths, setLengths] = useState<number[] | null>(null);
-  const [handle] = useState(() => delayRender("The Dot: voiceover lengths"));
-  useEffect(() => {
-    Promise.all(present.map((l) => getAudioDurationInSeconds(l.src as string)))
-      .then((secs) => {
-        const frames = secs.map((s) => Math.ceil(s * FPS));
-        present.forEach((l, i) => {
-          const over = l.from + frames[i] - l.sceneEnd;
-          if (over > 0) console.warn(`[The Dot] ${l.file} runs ${over} frames past the end of its scene.`);
-        });
-        setLengths(frames);
-        continueRender(handle);
-      })
-      .catch((e) => {
-        console.error("[The Dot] could not read voiceover lengths", e);
-        setLengths(present.map((l) => l.sceneEnd - l.from));
-        continueRender(handle);
-      });
-  }, [present, handle]);
-  return present.map((l, i) => ({ ...l, src: l.src as string, frames: lengths?.[i] ?? 0 }));
-};
-
-const Soundtrack: React.FC<{ voSet: TheDotProps["voSet"] }> = ({ voSet }) => {
-  const vo = useVoiceover(Object.values(VO_SETS[voSet]));
+// No voiceover: music bed plus two SFX, all optional drop-ins.
+const Soundtrack: React.FC = () => {
   const music = optionalAsset("music/pulse.mp3", "music");
   const tick = optionalAsset("sfx/tick.wav", "cursor ticks");
   const land = optionalAsset("sfx/land.wav", "the landing thud");
 
-  // 0.35, ducked to 0.18 under any voice line; fade in 0-30, out 690-720.
-  const musicVolume = (f: number) => {
-    const duck = Math.max(
-      0,
-      ...vo.map((l) =>
-        interpolate(f, [l.from - MUSIC.ramp, l.from, l.from + l.frames, l.from + l.frames + MUSIC.ramp], [0, 1, 1, 0], {
-          extrapolateLeft: "clamp",
-          extrapolateRight: "clamp",
-        }),
-      ),
-    );
-    const fade = interpolate(f, [0, 30, DURATION - 30, DURATION], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-    return (MUSIC.base + (MUSIC.ducked - MUSIC.base) * duck) * fade;
-  };
+  // 0.35, fade in 0-30, out 690-720.
+  const musicVolume = (f: number) =>
+    MUSIC_VOLUME * interpolate(f, [0, 30, DURATION - 30, DURATION], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <>
       {music ? <Audio src={music} volume={musicVolume} /> : null}
-      {vo.map((l) => (
-        <Sequence key={l.file} from={l.from} layout="none">
-          <Audio src={l.src} />
-        </Sequence>
-      ))}
       {tick
         ? TICK_FRAMES.map((f) => (
             <Sequence key={`tick-${f}`} from={f} layout="none">
@@ -133,6 +87,9 @@ const Film: React.FC<TheDotProps> = (p) => {
     <AbsoluteFill style={{ background: GROUND[SCENES[scene].ground] }}>
       {inS("s2") ? <S2Type {...sp} /> : null}
       {inS("s3") ? <S3Break {...sp} /> : null}
+      {inS("s3") ? <SceneLine {...sp} id="s3" at={T.s3Line} color={C.ivory} /> : null}
+      {inS("s4") ? <SceneLine {...sp} id="s4" at={T.s4Line} color={C.ivory} /> : null}
+      {inS("s5") ? <SceneLine {...sp} id="s5" at={T.s5Line} color={C.ink} /> : null}
       {inS("s4") ? <S4Route {...sp} /> : null}
       {inS("s5") ? <S5Steps {...sp} /> : null}
       {inS("s6") ? <S6Headline {...sp} /> : null}
@@ -147,7 +104,7 @@ export const TheDotFilm: React.FC<TheDotProps> = (props) => {
   return (
     <AbsoluteFill style={{ background: C.ink }}>
       {ready ? <Film {...props} /> : null}
-      <Soundtrack voSet={props.voSet} />
+      <Soundtrack />
     </AbsoluteFill>
   );
 };

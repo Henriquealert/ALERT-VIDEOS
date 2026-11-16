@@ -101,6 +101,29 @@ const Hairlines: React.FC<{ g: Geometry; lines: { a: Pt; b: Pt; o?: number }[]; 
   </svg>
 );
 
+// One line of copy for scenes 3-5: DM Sans Bold, sentence case, top-left; fades in, holds to the cut.
+export const SceneLine: React.FC<SceneProps & { id: "s3" | "s4" | "s5"; at: number; color: string }> = ({ g, frame, id, at, color }) => {
+  const t = ease(frame, at, at + T.lineIn);
+  return (
+    <>
+      {g.sceneLines[id].map((l, j) => (
+        <Line
+          key={j}
+          text={l.text}
+          left={g.margin}
+          baseline={l.baseline + (1 - t) * 1.2 * g.u}
+          size={g.fsLine}
+          weight={700}
+          color={color}
+          lh={g.lineLH}
+          ls={HEADLINE_LS}
+          style={{ opacity: t }}
+        />
+      ))}
+    </>
+  );
+};
+
 // ---------- S2: the request line, typed ----------
 export const S2Type: React.FC<SceneProps> = ({ g, p, frame }) => {
   const n = Math.max(0, Math.min(p.requestLine.length, Math.floor((frame - T.typeStart) / T.framesPerChar)));

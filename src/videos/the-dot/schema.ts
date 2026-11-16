@@ -10,8 +10,14 @@ export const theDotSchema = z.object({
   headline: z.string().default("NEW TEAM, SORTED"),
   brandLine: z.string().default("Hardware, software and AI, sorted"),
   cta: z.string().default("REQUEST A QUOTE · ALERTGLOBAL.TECH"),
-  // Which voiceover files to play (see vo-lines.ts).
-  voSet: z.enum(["main", "network", "copilot"]).default("main"),
+  // One line of copy for scenes 3, 4 and 5 (the film has no voiceover; the text carries it).
+  sceneLines: z
+    .object({ s3: z.string(), s4: z.string(), s5: z.string() })
+    .default({
+      s3: "That's laptops, licences, Copilot and setup.",
+      s4: "One supplier routes it all.",
+      s5: "From quote to setup, in English, Spanish or Portuguese.",
+    }),
 });
 
 export type TheDotProps = z.infer<typeof theDotSchema>;
@@ -20,14 +26,12 @@ export const THE_DOT_DEFAULTS: TheDotProps = theDotSchema.parse({});
 
 // Cut-downs: same build, different props.
 // TODO: these two still use the default cards/destinations (laptops, licences...).
-// Give each its own card and destination content (and S3/S4 voiceover) before rendering.
+// Give each its own card and destination content (and S3 scene line) before rendering.
 export const THE_DOT_NETWORK: TheDotProps = theDotSchema.parse({
   requestLine: "Office move next month.",
   headline: "NETWORK, SORTED",
-  voSet: "network",
 });
 export const THE_DOT_COPILOT: TheDotProps = theDotSchema.parse({
   requestLine: "Sales wants AI.",
   headline: "COPILOT, SORTED",
-  voSet: "copilot",
 });

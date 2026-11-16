@@ -80,7 +80,9 @@ export const buildGeometry = (W: number, H: number, p: TheDotProps) => {
   const destW = p.destinations.map((d) => measure(d, fsCard, 400));
   const n = p.cards.length;
   const stackH = n * cardH + (n - 1) * cardGap;
-  const hub: Pt = { x: cx, y: cy };
+  // 9x16: the map sits a little low, leaving room for the scene line at the top.
+  const my = portrait ? cy + 5 * u : cy;
+  const hub: Pt = { x: cx, y: my };
   const reach = portrait ? 16 * u : 24 * u; // hub to the near edge of the columns
   // 9x16: stagger the columns sideways so the routing lines fan out instead of overlapping.
   const fan = (i: number) => (portrait ? (i - (n - 1) / 2) * 8 * u : 0);
@@ -88,15 +90,15 @@ export const buildGeometry = (W: number, H: number, p: TheDotProps) => {
   // Slot i: where card i sits on the routing map (input side).
   const cardSlot: Box[] = p.cards.map((_, i) =>
     portrait
-      ? { cx: cx - fan(i), cy: cy - reach - stackH + cardH / 2 + i * (cardH + cardGap), w: cardW[i], h: cardH }
-      : { cx: cx - reach - cardW[i] / 2, cy: cy - stackH / 2 + cardH / 2 + i * (cardH + cardGap), w: cardW[i], h: cardH },
+      ? { cx: cx - fan(i), cy: my - reach - stackH + cardH / 2 + i * (cardH + cardGap), w: cardW[i], h: cardH }
+      : { cx: cx - reach - cardW[i] / 2, cy: my - stackH / 2 + cardH / 2 + i * (cardH + cardGap), w: cardW[i], h: cardH },
   );
   // Where each card drifts to when the line breaks: further out on the input side, spread wide.
   const cardScatter: Pt[] = cardSlot.map((s, i) => {
     const k = i - (n - 1) / 2;
     return portrait
-      ? { x: s.cx + (i % 2 === 0 ? -1 : 1) * 9 * u, y: s.cy - 6 * u + k * 2.2 * u }
-      : { x: s.cx - (i % 2 === 0 ? 9 : 4) * u, y: cy + k * (cardH + cardGap) * 1.55 };
+      ? { x: s.cx + (i % 2 === 0 ? -1 : 1) * 9 * u, y: s.cy - 2 * u + k * 2.2 * u }
+      : { x: s.cx - (i % 2 === 0 ? 9 : 4) * u, y: my + k * (cardH + cardGap) * 1.55 };
   });
   // Card point a hairline attaches to (the edge facing the hub).
   const cardAnchor = (c: Pt, w: number): Pt =>
@@ -109,7 +111,7 @@ export const buildGeometry = (W: number, H: number, p: TheDotProps) => {
   // Destination labels (opposite side). `anchor` is where the routing line ends.
   const destText: { left: number; baseline: number; anchor: Pt; centre: Pt }[] = p.destinations.map((_, i) => {
     if (portrait) {
-      const top = cy + reach + i * (cardH + cardGap);
+      const top = my + reach + i * (cardH + cardGap);
       const centre = { x: cx + fan(i), y: top + cardH / 2 };
       return {
         left: centre.x - destW[i] / 2,
@@ -118,7 +120,7 @@ export const buildGeometry = (W: number, H: number, p: TheDotProps) => {
         centre,
       };
     }
-    const y = cy - stackH / 2 + cardH / 2 + i * (cardH + cardGap);
+    const y = my - stackH / 2 + cardH / 2 + i * (cardH + cardGap);
     const left = cx + reach;
     return { left, baseline: y + (METRICS.cap * fsCard) / 2, anchor: { x: left - 1.2 * u, y }, centre: { x: left + destW[i] / 2, y } };
   });
@@ -163,6 +165,16 @@ export const buildGeometry = (W: number, H: number, p: TheDotProps) => {
   const fsBadge = (portrait ? 2.6 : 2.1) * u;
   const badge = { left: margin, bottom: H - Math.max(safeY, margin), fs: fsBadge };
 
+  // ---- S3-S5: one line of copy each, top-left (the film has no voiceover) ----
+  const fsLine = (portrait ? 4.4 : 3.6) * u;
+  const lineLH = 1.08;
+  const sceneLine = (text: string) => {
+    const lines = wrap(text, fsLine, 700, W - margin * 2, HEADLINE_LS);
+    const first = Math.max(safeY, margin) + METRICS.cap * fsLine;
+    return lines.map((l, j) => ({ text: l, baseline: first + j * lineLH * fsLine }));
+  };
+  const sceneLines = { s3: sceneLine(p.sceneLines.s3), s4: sceneLine(p.sceneLines.s4), s5: sceneLine(p.sceneLines.s5) };
+
   // ---- S6: headline with the dot as its full stop ----
   const headline = p.headline.toUpperCase();
   const headLines = portrait ? splitAfterComma(headline) : [headline];
@@ -204,6 +216,7 @@ export const buildGeometry = (W: number, H: number, p: TheDotProps) => {
     fsReq, dotC, reqLeft, reqTop, reqBaseline, reqW, typedDot, wordCentres,
     fsCard, cardPadX, cardH, cardW, cardSlot, cardScatter, cardAnchor,
     hub, monoH, dotHub, hubR, destText, fromHub,
+    fsLine, lineLH, sceneLines,
     fsStep, steps, stepDot, hopArc, arrows, badge,
     headLines, fsHead, headLeft, headTop, headBaselines, dotLand, landAt,
     fsBrand, brandLines, brandLH, brandTop, brandBaselines, dotBrand, brandStop, fsCta, ctaTop, wordmark,

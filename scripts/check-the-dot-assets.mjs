@@ -14,4 +14,3 @@ check("logo/wordmark.svg", "using brand/alert-global-tech-wordmark-ivory.png", "
 check("music/pulse.mp3", "rendering without music");
 check("sfx/tick.wav", "rendering without cursor ticks");
 check("sfx/land.wav", "rendering without the landing thud");
-for (const s of [2, 3, 4, 5, 6, 7]) check(`vo/vo-s${s}.mp3`, "line skipped (npm run vo)");
