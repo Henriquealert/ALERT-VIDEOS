@@ -215,6 +215,20 @@ Fixed-copy videos live in `src/videos/` and are registered in `src/Root.tsx`:
   and `npx remotion still SpreadsheetsSorted-Cover-4x5 out/"Alert Global Tech - Spreadsheets Sorted Thumbnail LinkedIn 4x5.png"`.
   Post copy, description and alt text: `docs/social/Alert Global Tech - Spreadsheets Sorted LinkedIn Post.md`.
 
+- `CopilotChatRollout-4x5` — "Copilot Chat rollout, sorted." LinkedIn feed video, four rollout steps for Microsoft 365
+  Copilot Chat. 20 s, 1080×1350, 30 fps, 600 frames, no voiceover. Fixed copy from Henrique's brief (18 Nov 2026);
+  the eligibility line carries "Source: Microsoft". Seven scenes with crisp cuts at 0, 75, 135, 225, 315, 405, 495
+  (120 BPM, 1 beat = 15 frames); hold from 540. Core four colours, solid only; DM Sans Bold stands in for the brief's
+  Helvetica (brand fonts only). Header rail on every scene ("ALERT GLOBAL TECH ——— COPILOT CHAT", step counter: 00/04
+  on scenes 1–2, 01–04 on the steps, 04/04 on the close). Wordmark top-left on scenes 1–6 (Ink on the Ivory scene),
+  lockup only on the close; CTA Talk to an Expert, URL alertglobal.tech. Starter prompts in scene 6 are illustrative.
+  Music and card clicks (CLICKS match the cut frames in the video code; -18 LUFS):
+  `python3 scripts/make-copilot-chat-rollout-audio.py "public/audio/Alert Global Tech - Copilot Chat Rollout Music.wav"`
+  `npx remotion render CopilotChatRollout-4x5 out/"Alert Global Tech - Copilot Chat Rollout Video.mp4" --crf=18`
+  Thumbnail, a 4 s seamless loop of the held end card, plus a still:
+  `npx remotion render CopilotChatRollout-Thumbnail-4x5 out/"Alert Global Tech - Copilot Chat Rollout Thumbnail Loop.mp4" --crf=18 --muted`
+  `npx remotion still CopilotChatRollout-Thumbnail-4x5 out/"Alert Global Tech - Copilot Chat Rollout Thumbnail.png" --image-format=png`
+
 ## Formats
 
 Register one composition per format, all driven by the same spec:

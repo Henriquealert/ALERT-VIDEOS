@@ -27,6 +27,7 @@ import {
 import { SERIES_A_SORTED, SeriesASorted } from "./videos/SeriesASorted";
 import { SERIES_A_PROMO_16X9, SERIES_A_PROMO_4X5, SeriesAPromo } from "./videos/SeriesAPromo";
 import { SERIES_A_CINEMATIC_16X9, SERIES_A_CINEMATIC_9X16, SERIES_A_CINEMATIC_THUMB, SeriesACinematic, SeriesACinematicThumb } from "./videos/SeriesACinematic";
+import { COPILOT_CHAT_ROLLOUT, COPILOT_CHAT_ROLLOUT_THUMB, CopilotChatRollout, CopilotChatRolloutThumb } from "./videos/CopilotChatRollout";
 import { TECH_UPDATES_WIN11, TECH_UPDATES_WIN11_4X5, TechUpdatesWindows11 } from "./videos/TechUpdatesWindows11";
 
 const FORMATS = [
@@ -75,6 +76,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="SeriesAPromo-4x5" component={SeriesAPromo} {...SERIES_A_PROMO_4X5} />
     <Composition id="SeriesACinematic-16x9" component={SeriesACinematic} {...SERIES_A_CINEMATIC_16X9} />
     <Composition id="SeriesACinematic-9x16" component={SeriesACinematic} {...SERIES_A_CINEMATIC_9X16} />
+    <Composition id="CopilotChatRollout-4x5" component={CopilotChatRollout} {...COPILOT_CHAT_ROLLOUT} />
+    <Composition id="CopilotChatRollout-Thumbnail-4x5" component={CopilotChatRolloutThumb} {...COPILOT_CHAT_ROLLOUT_THUMB} />
     <Composition id="SeriesACinematic-Thumbnail" component={SeriesACinematicThumb} {...SERIES_A_CINEMATIC_THUMB} />
   </>
 );
